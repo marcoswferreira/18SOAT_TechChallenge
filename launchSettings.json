@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:{ServicePort}/swagger",
+      //"sslPort": 44343,
+      "serviceActions": {
+        "siaes-api": "StartDebugging",
+        "siaes-db": "StartWithoutDebugging"
+      }
+    }
+  }
+}

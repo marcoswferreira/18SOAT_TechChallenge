@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  siaes-db:
+    image: postgres:16-alpine
+    container_name: siaes-postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U siaes_user -d siaes_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  siaes-api:
+    build:
+      context: .
+      dockerfile: /src/SIAES.API/Dockerfile
+    container_name: siaes-api
+    restart: always
+    depends_on:
+      siaes-db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
