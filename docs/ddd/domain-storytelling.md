@@ -11,7 +11,7 @@ Nesta página, documentamos o fluxo de negócio **atual (As-Is)** da oficina mec
 
 ## Cenário 1: Chegada, Diagnóstico e Orçamento
 
-![Fluxo Cenário 1: Chegada, Diagnóstico e Orçamento](./images/cenario1.png)
+![Fluxo Cenário 1: Chegada, Diagnóstico e Orçamento](../images/cenario1.png)
 
 1. O **Cliente** chega à oficina e solicita um atendimento ao **Atendente**.
 2. O **Atendente** anota os dados do **Cliente** e do veículo em uma *Ficha de Papel* ou *Planilha Genérica*. (Problema: Perda de histórico de clientes e veículos).
@@ -23,7 +23,7 @@ Nesta página, documentamos o fluxo de negócio **atual (As-Is)** da oficina mec
 
 ## Cenário 2: Execução do Serviço e Retirada de Peças
 
-![Fluxo Cenário 2: Execução do Serviço e Retirada de Peças](./images/cenario2.png)
+![Fluxo Cenário 2: Execução do Serviço e Retirada de Peças](../images/cenario2.png)
 
 1. O **Cliente** autoriza o orçamento via telefone ou mensagem com o **Atendente**.
 2. O **Atendente** avisa verbalmente ou devolve a *Ficha de Papel* ao **Mecânico** indicando que o serviço está aprovado.
@@ -34,7 +34,7 @@ Nesta página, documentamos o fluxo de negócio **atual (As-Is)** da oficina mec
 
 ## Cenário 3: Entrega e Finalização
 
-![Fluxo Cenário 3: Entrega e Finalização](./images/cenario3.png)
+![Fluxo Cenário 3: Entrega e Finalização](../images/cenario3.png)
 
 1. O **Mecânico** termina o serviço, guarda as ferramentas e avisa o **Atendente**.
 2. O **Atendente** entra em contato com o **Cliente** avisando que o carro está pronto.
