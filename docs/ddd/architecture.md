@@ -59,7 +59,7 @@ Os testes automatizados estão localizados na pasta `tests/` e seguem a pirâmid
 Esta seção lista os itens arquiteturais ou técnicos que ainda precisam ser definidos ou implementados:
 
 - [ ] **Estratégia de Migrations**: Definir como as migrations do EF Core serão rodadas.
-- [ ] **Tratamento Global de Erros**: Implementar um `ExceptionMiddleware` padronizado para retornar erros consistentes (ex: RFC 7807 Problem Details).
+- [x] **Tratamento Global de Erros**: Implementar um `ExceptionMiddleware` padronizado para retornar erros consistentes (ex: RFC 7807 Problem Details).
 - [ ] **Observabilidade e Logs**: Integrar ferramenta para tracing e logs centralizados.
 - [ ] **Autenticação e Autorização**: Concluir a integração e configuração do JWT e controle de permissões por roles/policies.
-- [ ] **Pipelines de CI/CD**: Criar Github Actions para rodar os testes, a análise do SonarQube.
+- [x] **Pipelines de CI/CD**: Criar Github Actions para rodar os testes, a análise do SonarQube.
