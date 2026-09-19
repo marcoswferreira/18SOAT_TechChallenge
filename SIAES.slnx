@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/ci.yml" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Application/Application.csproj" />
+    <Project Path="src/Domain/Domain.csproj" />
+    <Project Path="src/Infrastructure/Infrastructure.csproj" />
+    <Project Path="src/SIAES.API/SIAES.API.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/IntegrationTests/IntegrationTests.csproj" />
+    <Project Path="tests/UnitTests/UnitTests.csproj" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>
