@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
@@ -50,6 +51,13 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder.UseNpgsql(connectionString);
 
-        return new ApplicationDbContext(optionsBuilder.Options);
+        var designTimeUserContext = new DesignTimeUserContext();
+
+        return new ApplicationDbContext(optionsBuilder.Options, designTimeUserContext);
+    }
+
+    private sealed class DesignTimeUserContext : IUserContext
+    {
+        public string? UserId => "EFCore_DesignTime";
     }
 }

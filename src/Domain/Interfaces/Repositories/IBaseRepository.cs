@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace Domain.Repositories;
+namespace Domain.Interfaces.Repositories;
 
 /// <summary>
 /// Generic repository interface (Port) — defines the contract for data access.
@@ -76,4 +76,8 @@ public interface IBaseRepository<T> where T : class
     /// Returns true if at least one row was affected.
     /// </summary>
     bool SaveChanges();
+
+    Task<T> InsertAsync(T entity, CancellationToken cancellationToken = default);
+    Task InsertRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
+    Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

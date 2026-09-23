@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities;
+﻿namespace Domain.Common.Entities;
 
 /// <summary>
 /// Marker interface for Aggregate Roots.

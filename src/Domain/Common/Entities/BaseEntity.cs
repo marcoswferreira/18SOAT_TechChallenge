@@ -1,6 +1,6 @@
 ﻿using Domain.Events;
 
-namespace Domain.Entities;
+namespace Domain.Common.Entities;
 
 /// <summary>
 /// Base class for all entities in the domain.

@@ -7,18 +7,6 @@ namespace SIAES.API.Extensions;
 
 public static class ServiceExtensions
 {
-    public static void AddCorsExtensions(this IServiceCollection services)
-    {
-        //services.AddCors(options =>
-        //{
-        //    options.AddPolicy(name: "AllowAngular",
-        //        configurePolicy: policy =>
-        //        {
-        //            policy.WithOrigins("https://localhost:5173");
-        //        });
-        //});
-    }
-
     public static void AddSwaggerExtensions(this IServiceCollection services)
     {
         services.AddSwaggerGen();
@@ -42,7 +30,6 @@ public static class ServiceExtensions
     {
         services.AddApiVersioning(options =>
         {
-            options.DefaultApiVersion = new ApiVersion(1);
             options.ReportApiVersions = true;
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.ApiVersionReader = ApiVersionReader.Combine(
