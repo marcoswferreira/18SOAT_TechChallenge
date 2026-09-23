@@ -1,4 +1,4 @@
-﻿using Domain.Repositories;
+﻿using Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
@@ -14,6 +14,22 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         _dbContext = context ?? throw new ArgumentException(null, nameof(context));
         _dbSet = _dbContext.Set<T>();
+    }
+
+    public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.SaveChangesAsync(cancellationToken) > 0;
+    }
+
+    public async Task<T> InsertAsync(T entity, CancellationToken cancellationToken = default)
+    {
+        var entry = await _dbSet.AddAsync(entity, cancellationToken);
+        return entry.Entity;
+    }
+
+    public async Task InsertRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    {
+        await _dbSet.AddRangeAsync(entities, cancellationToken);
     }
 
     public bool SaveChanges()
@@ -68,4 +84,5 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         _dbContext.Entry(entity).State = EntityState.Modified;
         _dbSet.Update(entity);
     }
+
 }

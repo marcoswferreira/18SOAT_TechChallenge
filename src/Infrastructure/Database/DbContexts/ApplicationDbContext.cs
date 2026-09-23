@@ -1,43 +1,74 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Common.Entities;
+using Domain.Entities;
+using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.DbContexts;
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
+    IUserContext userContext) : DbContext(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
+    private readonly IUserContext _userContext = userContext;
+
+    public DbSet<User> Users => Set<User>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        ApplySoftDeleteQueryFilters(modelBuilder);
+        // Mapeia automaticamente todas as classes de configuração do assembly atual
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
-    // ─── DbSets ──────────────────────────────────────────────────────────────
-    // Add one DbSet<T> per aggregate root.
-
-    /// <summary>Sample aggregate root. Replace/extend with your own entities.</summary>
-    //public DbSet<Customer> Customers => Set<Customer>();
-
-    // ─── Model Configuration ─────────────────────────────────────────────────
-    protected override void OnModelCreating(ModelBuilder builder)
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        // Configure the Customer aggregate root.
-        //builder.Entity<Customer>(entity =>
-        //{
-        //    entity.HasKey(c => c.Id);
+        ApplyAuditInformation();
+        return base.SaveChangesAsync(cancellationToken);
+    }
 
-        //    entity.Property(c => c.Name)
-        //          .IsRequired()
-        //          .HasMaxLength(200);
+    private void ApplyAuditInformation()
+    {
+        var currentUserId = _userContext.UserId ?? "System";
 
-            // The Email property is a Value Object (record type).
-            // EF Core doesn't know how to store it directly, so we map
-            // to/from its inner string value using HasConversion.
-            //entity.Property(c => c.Email)
-                  //.HasConversion(
-                      //email => email.Value,               // VO  → column  (string)
-                      //value => Email.Create(value))       // column → VO    (re-hydrate)
-                  //.IsRequired()
-                  //.HasMaxLength(320);                     // RFC 5321 max email length
+        foreach (var entry in ChangeTracker.Entries<AuditableBaseEntity>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.SetCreatedInfo(currentUserId);
+                    break;
 
-            //entity.Property(c => c.IsActive).IsRequired();
-            //entity.Property(c => c.CreatedAt).IsRequired();
-        //});
+                case EntityState.Modified:
+                    entry.Entity.SetUpdatedInfo(currentUserId);
+                    break;
+
+                case EntityState.Deleted when entry.Entity is SoftDeleteBaseEntity softDeleteEntity:
+                    // Trata Soft Delete: altera o estado de Deleted para Modified
+                    entry.State = EntityState.Modified;
+                    softDeleteEntity.Delete(currentUserId);
+                    break;
+            }
+        }
+    }
+
+    private static void ApplySoftDeleteQueryFilters(ModelBuilder modelBuilder)
+    {
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(SoftDeleteBaseEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                modelBuilder.Entity(entityType.ClrType)
+                    .HasQueryFilter(ConvertFilterToLambda(entityType.ClrType));
+            }
+        }
+    }
+
+    private static System.Linq.Expressions.LambdaExpression ConvertFilterToLambda(Type entityType)
+    {
+        var parameter = System.Linq.Expressions.Expression.Parameter(entityType, "e");
+        var property = System.Linq.Expressions.Expression.Property(parameter, nameof(SoftDeleteBaseEntity.IsDeleted));
+        var comparison = System.Linq.Expressions.Expression.Equal(property, System.Linq.Expressions.Expression.Constant(false));
+
+        return System.Linq.Expressions.Expression.Lambda(comparison, parameter);
     }
 }

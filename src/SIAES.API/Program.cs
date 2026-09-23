@@ -2,15 +2,12 @@ using Microsoft.AspNetCore.Http.Features;
 using SIAES.API.Extensions;
 using Infrastructure.Database.Extensions;
 using System.Diagnostics;
+using Infrastructure.Security.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Infrastructure ────────────────────────────────────────────────────────────
-// Registers ApplicationDbContext with the PostgreSQL provider.
-// Reads the "Default" connection string from appsettings.json.
-builder.Services.AddPostgreeSqlInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
-// ── Presentation / API ───────────────────────────────────────────────────────
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,22 +28,28 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 
+builder.Services.AddSecurityServices(builder.Configuration);
+
 var app = builder.Build();
 
 // ── Database Migration ────────────────────────────────────────────────────────
 // Automatically applies any pending EF Core migrations before the app starts
 // serving requests. Safe to call on every startup — it's a no-op when the DB
 // is already up-to-date.
-//await app.MigrateDatabaseAsync();
 
-// ── HTTP Pipeline ─────────────────────────────────────────────────────────────
+await app.MigrateDatabaseAsync();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

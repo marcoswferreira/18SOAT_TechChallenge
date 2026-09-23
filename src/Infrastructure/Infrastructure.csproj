@@ -6,6 +6,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="EntityFramework" Version="6.5.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.4" />
@@ -15,6 +17,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.4">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.19.2" />
 
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
 		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.2.1" />
