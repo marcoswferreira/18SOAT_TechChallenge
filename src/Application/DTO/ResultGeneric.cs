@@ -1,17 +1,10 @@
 ﻿namespace Application.Dto;
 
-public class ResultGeneric<T>
+public class ResultGeneric<T>(T value, bool isSuccess, List<string> errors)
 {
-    public T Value { get; }
-    public bool IsSuccess { get; }
-    public List<string> Errors { get; }
-
-    private ResultGeneric(T value, bool isSuccess, List<string> errors)
-    {
-        Value = value;
-        IsSuccess = isSuccess;
-        Errors = errors ?? [];
-    }
+    public T Value { get; } = value;
+    public bool IsSuccess { get; } = isSuccess;
+    public List<string> Errors { get; } = errors ?? [];
 
     public static ResultGeneric<T> Success(T value) => new(value, true, []);
 

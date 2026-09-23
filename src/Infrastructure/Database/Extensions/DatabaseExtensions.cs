@@ -1,8 +1,6 @@
-﻿using Domain.Interfaces;
-using Domain.Interfaces.Repositories;
+﻿using Domain.Interfaces.Repositories;
 using Infrastructure.Database.DbContexts;
 using Infrastructure.Database.Repositories;
-using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,9 +19,8 @@ namespace Infrastructure.Database.Extensions;
 /// </summary>
 public static class SqlServerExtensions
 {
-    public static IServiceCollection AddInfrastructureServices(
-   this IServiceCollection services,
-   IConfiguration configuration)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
+                                                                    IConfiguration configuration)
     {
         AddPostgreeSqlInfrastructure(services,configuration);
 
@@ -38,9 +35,8 @@ public static class SqlServerExtensions
     ///
     /// Call this in the service registration section of Program.cs BEFORE app.Build().
     /// </summary>
-    private static IServiceCollection AddPostgreeSqlInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    private static void AddPostgreeSqlInfrastructure(this IServiceCollection services,
+                                                          IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException(
@@ -49,8 +45,6 @@ public static class SqlServerExtensions
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));
-
-        return services;
     }
 
     /// <summary>

@@ -56,7 +56,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
         return new ApplicationDbContext(optionsBuilder.Options, designTimeUserContext);
     }
 
-    private class DesignTimeUserContext : IUserContext
+    private sealed class DesignTimeUserContext : IUserContext
     {
         public string? UserId => "EFCore_DesignTime";
     }
