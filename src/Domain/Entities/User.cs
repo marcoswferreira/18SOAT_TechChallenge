@@ -1,4 +1,5 @@
-﻿using Domain.Common.Entities;
+using Domain.Common.Entities;
+using Domain.Constants;
 
 namespace Domain.Entities;
 
@@ -10,6 +11,40 @@ public class User : SoftDeleteBaseEntity
 
     public string? RefreshTokenHash { get; private set; }
     public DateTime? RefreshTokenExpiresAt { get; private set; }
+
+    public User() { }
+
+    public User(string email, string passwordHash, string role)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(email);
+        ArgumentException.ThrowIfNullOrWhiteSpace(passwordHash);
+        ArgumentException.ThrowIfNullOrWhiteSpace(role);
+
+        Email = email.Trim().ToLowerInvariant();
+        PasswordHash = passwordHash;
+        Role = role;
+    }
+
+    public void Update(string email, string role)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(email);
+        ArgumentException.ThrowIfNullOrWhiteSpace(role);
+
+        Email = email.Trim().ToLowerInvariant();
+        Role = role;
+    }
+
+    public void UpdatePassword(string newPasswordHash)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(newPasswordHash);
+        PasswordHash = newPasswordHash;
+    }
+
+    public void UpdateRole(string role)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(role);
+        Role = role;
+    }
 
     public void SetRefreshToken(string tokenHash, TimeSpan duration)
     {

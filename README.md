@@ -102,20 +102,26 @@ cd 18SOAT_TechChallenge
 docker-compose up -d --build
 ```
 
+> ℹ️ **Carga Inicial e Banco de Dados Automático:**
+> Na inicialização da API, o Entity Framework Core verifica se as tabelas do PostgreSQL foram criadas. Caso contrário, ele aplica as migrações/cria o esquema e popula automaticamente os usuários padrão de demonstração descritos no README.
+
 ### 3. Acessar a aplicação
 
-<!-- TODO: Confirmar porta e URL -->
+A API estará disponível em: `http://localhost:8082`
 
-A API estará disponível em: `http://localhost:8000`
-
-
+---
 
 ## 🧪 Instruções para Execução dos Testes
 
-### Testes unitários
+### Testes unitários do Domínio
 
 ```bash
 dotnet test tests/Domain.UnitTests
+```
+
+### Testes unitários da Aplicação
+
+```bash
 dotnet test tests/Application.UnitTests
 ```
 
@@ -125,27 +131,21 @@ dotnet test tests/Application.UnitTests
 dotnet test tests/IntegrationTests
 ```
 
-### Executar todos os testes
+### Executar todos os testes da solução
 
 ```bash
-dotnet test
+dotnet test SIAES.slnx
 ```
-
-<!-- TODO: Adicionar informações sobre cobertura de testes, se configurada -->
 
 ---
 
 ## 📖 Documentação da API (Swagger)
 
-<!-- TODO: Confirmar URL do Swagger -->
-
-Com a aplicação em execução, acesse a documentação interativa:
+Com a aplicação em execução, acesse a documentação interativa para testar os endpoints:
 
 ```
-http://localhost:8000/swagger
+http://localhost:8082/swagger
 ```
-
-<!-- TODO: Inserir screenshot da interface do Swagger -->
 
 ---
 
@@ -155,25 +155,30 @@ http://localhost:8000/swagger
 
 **Justificativa:**
 
-<!-- TODO: Descrever os critérios e razões da escolha. Sugestões: -->
-
-- ...
-- ...
-- ...
+- **Desempenho e Confiabilidade:** Excelente suporte para transações ACID e integridade relacional.
+- **Ecossistema:** Suporte maduro no Entity Framework Core com Npgsql.
+- **Compliance e Auditoria:** Estruturação para auditoria e Soft Delete nativo via EF Core.
 
 ---
 
 ## 🔐 Autenticação e Credenciais de Demonstração
 
-<!-- TODO: Descrever o mecanismo de autenticação utilizado (JWT, API Key, etc.) -->
-<!-- TODO: Listar usuários/credenciais de demonstração para avaliação -->
+A API possui autenticação JWT com rotação de **Refresh Token** via HTTP-Only Cookies e Headers.
 
-| Perfil        | Usuário / E-mail       | Senha          |
-|---------------|------------------------|----------------|
-| Administrador | `admin@siaes.com`      | `SenhaAdmin1!` |
-| Atendente     | `atendente@siaes.com`  | `SenhaAten1!`  |
+### Credenciais pré-cadastradas (Seeded automaticamente):
 
-> ⚠️ **Nota:** Estas credenciais são apenas para fins de demonstração e avaliação.
+| Perfil        | Usuário / E-mail       | Senha          | Role        |
+|---------------|------------------------|----------------|-------------|
+| Administrador | `admin@siaes.com`      | `SenhaAdmin1!` | `Admin`     |
+| Atendente     | `atendente@siaes.com`  | `SenhaAten1!`  | `Atendente` |
+
+### Como Autenticar no Swagger:
+1. Acesse `http://localhost:8082/swagger`.
+2. Faça uma requisição em `POST /api/v1/auth/login` informando um dos e-mails e senhas acima.
+3. Copie o `accessToken` retornado no corpo da resposta.
+4. Clique no botão **Authorize** no canto superior do Swagger.
+5. Digite `Bearer <seu_access_token>` e confirme.
+6. Agora você pode executar requisições para os endpoints protegidos (`/api/v1/users`, etc.).
 
 ---
 

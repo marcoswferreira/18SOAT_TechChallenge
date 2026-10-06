@@ -1,16 +1,18 @@
+using Application.Extensions;
+using Infrastructure.Database.Extensions;
+using Infrastructure.Security.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using SIAES.API.Extensions;
-using Infrastructure.Database.Extensions;
 using System.Diagnostics;
-using Infrastructure.Security.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerExtensions();
 
 builder.Services.AddApiVersioningExtensions();
 
@@ -32,15 +34,10 @@ builder.Services.AddSecurityServices(builder.Configuration);
 
 var app = builder.Build();
 
-// ── Database Migration ────────────────────────────────────────────────────────
-// Automatically applies any pending EF Core migrations before the app starts
-// serving requests. Safe to call on every startup — it's a no-op when the DB
-// is already up-to-date.
-
-await app.MigrateDatabaseAsync();
 
 if (app.Environment.IsDevelopment())
 {
+    await app.MigrateDatabaseAsync();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

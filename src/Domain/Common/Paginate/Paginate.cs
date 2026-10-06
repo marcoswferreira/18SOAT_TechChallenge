@@ -1,4 +1,4 @@
-﻿namespace Domain.Common.Paginate;
+namespace Domain.Common.Paginate;
 
 public class Paginate<T> : IPaginate<T>
 {
@@ -41,7 +41,7 @@ public class Paginate<T> : IPaginate<T>
     public bool HasNext => Index - From + 1 < Pages;
 }
 
-internal class Paginate<TSource, TResult> : IPaginate<TResult>
+public class Paginate<TSource, TResult> : IPaginate<TResult>
 {
     public Paginate(IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter,
         int index, int size, int from)
