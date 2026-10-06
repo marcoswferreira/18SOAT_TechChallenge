@@ -21,11 +21,22 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '21'
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.0.x
+
+    - name: Install SonarScanner
+      run: dotnet tool install --global dotnet-sonarscanner
 
     - name: Cache NuGet Packages
       uses: actions/cache@v4
@@ -41,11 +52,30 @@ jobs:
     - name: Check Vulnerable Packages
       run: dotnet list SIAES.slnx package --vulnerable --include-transitive 2>&1 | tee vulnerability-report.txt; if grep -q "has the following vulnerable packages" vulnerability-report.txt; then echo "::warning::Vulnerable packages detected"; fi
 
+    - name: SonarCloud Begin
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        dotnet sonarscanner begin \
+          /k:"marcoswferreira_18SOAT_TechChallenge" \
+          /o:"grupoxfiap" \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.token="$SONAR_TOKEN" \
+          /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml"
+
     - name: Build
       run: dotnet build SIAES.slnx --no-restore --configuration Release
 
     - name: Test
-      run: dotnet test SIAES.slnx --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
+      run: |
+        dotnet test SIAES.slnx --no-build --configuration Release \
+          --logger "trx;LogFileName=test-results.trx" \
+          --collect:"XPlat Code Coverage;Format=opencover"
+
+    - name: SonarCloud End
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v4
