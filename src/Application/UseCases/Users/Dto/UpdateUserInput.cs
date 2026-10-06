@@ -1,5 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Application.UseCases.Users.Dto;
 
 public record UpdateUserInput(
-    string Email,
+    [EmailAddress] string Email,
     IList<string> Roles);

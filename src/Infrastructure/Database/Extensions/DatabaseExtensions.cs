@@ -33,7 +33,7 @@ public static class SqlServerExtensions
         var connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException(
                 "Connection string 'DefaultConnection' not found in configuration. " +
-                "Add it to appsettings.json under ConnectionStrings:Default.");
+                "Add it to appsettings.json under ConnectionStrings:DefaultConnection.");
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));

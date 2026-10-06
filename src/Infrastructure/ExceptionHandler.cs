@@ -16,7 +16,7 @@ public class ExceptionHandler(IProblemDetailsService problemDetailsService) : IE
         var statusCode = exception switch
         {
             UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
-            ArgumentException or InvalidOperationException => StatusCodes.Status400BadRequest,
+            ArgumentException or InvalidOperationException or BadHttpRequestException => StatusCodes.Status400BadRequest,
             KeyNotFoundException => StatusCodes.Status404NotFound,
             _ => StatusCodes.Status500InternalServerError
         };
@@ -24,7 +24,7 @@ public class ExceptionHandler(IProblemDetailsService problemDetailsService) : IE
         var title = exception switch
         {
             UnauthorizedAccessException => "Não autorizado",
-            ArgumentException or InvalidOperationException => "Requisição inválida",
+            ArgumentException or InvalidOperationException or BadHttpRequestException => "Requisição inválida",
             KeyNotFoundException => "Recurso não encontrado",
             _ => "Ocorreu um erro no servidor"
         };
