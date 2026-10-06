@@ -31,7 +31,10 @@ public static class ServiceExtensions
 
             c.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
             {
-                [new OpenApiSecuritySchemeReference("Bearer")] = []
+                {
+                    new OpenApiSecuritySchemeReference("Bearer", doc),
+                    new List<string>()
+                }
             });
 
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

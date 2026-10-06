@@ -10,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
+builder.Services.AddSwaggerExtensions();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerExtensions();
 
 builder.Services.AddApiVersioningExtensions();
 
@@ -33,7 +33,6 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddSecurityServices(builder.Configuration);
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
