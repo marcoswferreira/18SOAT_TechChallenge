@@ -58,7 +58,7 @@ jobs:
       run: |
         dotnet sonarscanner begin \
           /k:"marcoswferreira_18SOAT_TechChallenge" \
-          /o:"POS_FIAP" \
+          /o:"grupoxfiap" \
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.token="$SONAR_TOKEN" \
           /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml"
