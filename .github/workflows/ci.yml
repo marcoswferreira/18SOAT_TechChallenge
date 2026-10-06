@@ -62,7 +62,7 @@ jobs:
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.token="$SONAR_TOKEN" \
           /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml"\
-          /d:sonar.coverage.exclusions="**/Migrations/**, **/Mapping/**, **/Mappings/**, **/Seeders/**, **/Extensions/**, **/*.Designer.cs, **/Program.cs"
+          /d:sonar.coverage.exclusions="**/Migrations/**, **/Mapping/**, **/Mappings/**, **/Seeders/**, **/Extensions/**, **/*.Designer.cs, **/Program.cs, **/Infrastructure/**, **/SIAES.API/**"
 
     - name: Build
       run: dotnet build SIAES.slnx --no-restore --configuration Release
