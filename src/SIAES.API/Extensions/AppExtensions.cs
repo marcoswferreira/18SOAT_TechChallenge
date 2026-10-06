@@ -1,4 +1,3 @@
-﻿
 using Asp.Versioning;
 using Microsoft.OpenApi;
 using System.Reflection;
@@ -9,8 +8,6 @@ public static class ServiceExtensions
 {
     public static void AddSwaggerExtensions(this IServiceCollection services)
     {
-        services.AddSwaggerGen();
-
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo
@@ -19,10 +16,33 @@ public static class ServiceExtensions
                 Version = "v1",
                 Description = "Empty",
             });
-            // Set the comments path for the Swagger JSON and UI.
+
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Description = "Insira apenas o token JWT obtido no login",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            };
+
+            c.AddSecurityDefinition("Bearer", securityScheme);
+
+            c.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecuritySchemeReference("Bearer", doc),
+                    new List<string>()
+                }
+            });
+
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            c.IncludeXmlComments(xmlPath);
+            if (File.Exists(xmlPath))
+            {
+                c.IncludeXmlComments(xmlPath);
+            }
         });
     }
 
@@ -36,12 +56,11 @@ public static class ServiceExtensions
                 new UrlSegmentApiVersionReader(),
                 new HeaderApiVersionReader("X-Api-Version"));
         })
-        .AddMvc() // This is needed for controllers
+        .AddMvc()
         .AddApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'V";
             options.SubstituteApiVersionInUrl = true;
         });
     }
-
 }

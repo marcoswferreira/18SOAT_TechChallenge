@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,9 +20,10 @@ public class UserMapping : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(256);
 
-        builder.Property(u => u.Role)
-            .IsRequired()
-            .HasMaxLength(50);
+        builder.HasMany(u => u.Roles)
+            .WithOne(ur => ur.User)
+            .HasForeignKey(ur => ur.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(u => u.RefreshTokenHash)
             .HasMaxLength(128)
@@ -35,7 +36,7 @@ public class UserMapping : IEntityTypeConfiguration<User>
             .IsUnique();
 
         builder.HasIndex(u => u.RefreshTokenHash)
-            .HasFilter("[RefreshTokenHash] IS NOT NULL"); 
+            .HasFilter("\"RefreshTokenHash\" IS NOT NULL"); 
 
         builder.Property(u => u.CreatedAt)
             .IsRequired();

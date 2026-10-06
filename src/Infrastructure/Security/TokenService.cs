@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Domain.Interfaces.Services;
 using Infrastructure.Settings;
 using Microsoft.Extensions.Options;
@@ -25,8 +25,18 @@ public class TokenService(IOptions<JwtSettings> jwtOptions) : ITokenService
             [JwtRegisteredClaimNames.Sub] = user.Id.ToString(),
             [JwtRegisteredClaimNames.Email] = user.Email,
             [JwtRegisteredClaimNames.Jti] = Guid.NewGuid().ToString(),
-            [ClaimTypes.Role] = user.Role
         };
+
+        // Adiciona um claim de role para cada role do usuário
+        var roleClaims = user.Roles.Select(r => r.Role).ToList();
+        if (roleClaims.Count == 1)
+        {
+            claims[ClaimTypes.Role] = roleClaims[0];
+        }
+        else if (roleClaims.Count > 1)
+        {
+            claims[ClaimTypes.Role] = roleClaims;
+        }
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
