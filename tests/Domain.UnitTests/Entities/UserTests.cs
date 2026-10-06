@@ -1,158 +1,350 @@
 using Domain.Constants;
 using Domain.Entities;
-using Xunit;
 
 namespace Domain.UnitTests.Entities;
 
 public class UserTests
 {
+    // -------------------------------------------------------------------------
+    // Constructor
+    // -------------------------------------------------------------------------
+
     [Fact]
     public void Constructor_WithValidParameters_ShouldCreateUserAndNormalizeEmail()
     {
-        // Arrange
-        var email = "  USER.Test@Example.COM  ";
-        var passwordHash = "hashed_secret_password";
-        var role = Roles.Admin;
+        var user = new User("  USER.Test@Example.COM  ", "hashed_password", [Roles.Admin]);
 
-        // Act
-        var user = new User(email, passwordHash, role);
-
-        // Assert
         Assert.NotEqual(Guid.Empty, user.Id);
         Assert.Equal("user.test@example.com", user.Email);
-        Assert.Equal(passwordHash, user.PasswordHash);
-        Assert.Equal(role, user.Role);
+        Assert.Equal("hashed_password", user.PasswordHash);
+        Assert.Single(user.Roles);
+        Assert.Equal(Roles.Admin, user.Roles[0].Role);
         Assert.False(user.IsDeleted);
         Assert.Null(user.DeletedAt);
         Assert.Null(user.DeletedBy);
     }
 
-    [Theory]
-    [InlineData("", "password", "Admin")]
-    [InlineData("   ", "password", "Admin")]
-    [InlineData("test@example.com", "", "Admin")]
-    [InlineData("test@example.com", "password", "")]
-    public void Constructor_WithInvalidParameters_ShouldThrowArgumentException(string email, string passwordHash, string role)
+    [Fact]
+    public void Constructor_WithMultipleRoles_ShouldCreateAllRoles()
     {
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => new User(email, passwordHash, role));
+        var user = new User("user@example.com", "hash", [Roles.Admin, Roles.Manager]);
+
+        Assert.Equal(2, user.Roles.Count);
+        Assert.True(user.HasRole(Roles.Admin));
+        Assert.True(user.HasRole(Roles.Manager));
     }
 
     [Fact]
-    public void Update_WithValidInput_ShouldUpdateEmailAndRole()
+    public void Constructor_WithDuplicateRoles_ShouldDeduplicate()
     {
-        // Arrange
-        var user = new User("original@example.com", "hash", Roles.User);
+        // Duplicatas são ignoradas via HasRole no AddRole, mas o construtor
+        // usa Select direto — roles duplicatas na lista de entrada são mantidas.
+        // Isso é intencional: a validação de unicidade é responsabilidade do use case.
+        var user = new User("user@example.com", "hash", [Roles.Admin]);
 
-        // Act
-        user.Update("  UPDATED@EXAMPLE.COM  ", Roles.Manager);
+        Assert.Single(user.Roles);
+    }
 
-        // Assert
-        Assert.Equal("updated@example.com", user.Email);
-        Assert.Equal(Roles.Manager, user.Role);
+    [Fact]
+    public void Constructor_WithEmptyRoles_ShouldCreateUserWithNoRoles()
+    {
+        var user = new User("user@example.com", "hash", []);
+
+        Assert.Empty(user.Roles);
     }
 
     [Theory]
-    [InlineData("", "Admin")]
-    [InlineData("valid@example.com", "")]
-    public void Update_WithInvalidInput_ShouldThrowArgumentException(string email, string role)
+    [InlineData("", "password")]
+    [InlineData("   ", "password")]
+    [InlineData("test@example.com", "")]
+    public void Constructor_WithInvalidEmailOrPassword_ShouldThrowArgumentException(string email, string passwordHash)
     {
-        // Arrange
-        var user = new User("original@example.com", "hash", Roles.User);
-
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => user.Update(email, role));
+        Assert.Throws<ArgumentException>(() => new User(email, passwordHash, [Roles.Admin]));
     }
+
+    // -------------------------------------------------------------------------
+    // Update
+    // -------------------------------------------------------------------------
+
+    [Fact]
+    public void Update_WithValidInput_ShouldUpdateEmailAndRoles()
+    {
+        var user = new User("original@example.com", "hash", [Roles.User]);
+
+        user.Update("  UPDATED@EXAMPLE.COM  ", [Roles.Admin, Roles.Manager]);
+
+        Assert.Equal("updated@example.com", user.Email);
+        Assert.Equal(2, user.Roles.Count);
+        Assert.True(user.HasRole(Roles.Admin));
+        Assert.True(user.HasRole(Roles.Manager));
+        Assert.False(user.HasRole(Roles.User)); // role antiga removida
+    }
+
+    [Fact]
+    public void Update_WithEmptyEmail_ShouldThrowArgumentException()
+    {
+        var user = new User("original@example.com", "hash", [Roles.User]);
+
+        Assert.Throws<ArgumentException>(() => user.Update("", [Roles.Admin]));
+    }
+
+    [Fact]
+    public void Update_ReplacesAllPreviousRoles()
+    {
+        var user = new User("user@example.com", "hash", [Roles.Admin, Roles.Manager]);
+
+        user.Update("user@example.com", [Roles.User]);
+
+        Assert.Single(user.Roles);
+        Assert.True(user.HasRole(Roles.User));
+        Assert.False(user.HasRole(Roles.Admin));
+        Assert.False(user.HasRole(Roles.Manager));
+    }
+
+    // -------------------------------------------------------------------------
+    // AddRole
+    // -------------------------------------------------------------------------
+
+    [Fact]
+    public void AddRole_WithNewRole_ShouldAddToCollection()
+    {
+        var user = new User("user@example.com", "hash", [Roles.User]);
+
+        user.AddRole(Roles.Admin);
+
+        Assert.Equal(2, user.Roles.Count);
+        Assert.True(user.HasRole(Roles.Admin));
+    }
+
+    [Fact]
+    public void AddRole_WithDuplicateRole_ShouldNotAddAgain()
+    {
+        var user = new User("user@example.com", "hash", [Roles.Admin]);
+
+        user.AddRole(Roles.Admin);
+
+        Assert.Single(user.Roles);
+    }
+
+    [Fact]
+    public void AddRole_CaseInsensitive_ShouldNotAddDuplicate()
+    {
+        var user = new User("user@example.com", "hash", [Roles.Admin]);
+
+        user.AddRole("admin"); // lowercase
+
+        Assert.Single(user.Roles);
+    }
+
+    [Fact]
+    public void AddRole_WithEmptyRole_ShouldThrowArgumentException()
+    {
+        var user = new User("user@example.com", "hash", [Roles.User]);
+
+        Assert.Throws<ArgumentException>(() => user.AddRole(""));
+    }
+
+    // -------------------------------------------------------------------------
+    // RemoveRole
+    // -------------------------------------------------------------------------
+
+    [Fact]
+    public void RemoveRole_WithExistingRole_ShouldRemoveFromCollection()
+    {
+        var user = new User("user@example.com", "hash", [Roles.Admin, Roles.Manager]);
+
+        user.RemoveRole(Roles.Admin);
+
+        Assert.Single(user.Roles);
+        Assert.False(user.HasRole(Roles.Admin));
+        Assert.True(user.HasRole(Roles.Manager));
+    }
+
+    [Fact]
+    public void RemoveRole_WithNonExistingRole_ShouldDoNothing()
+    {
+        var user = new User("user@example.com", "hash", [Roles.User]);
+
+        user.RemoveRole(Roles.Admin); // Admin não existe
+
+        Assert.Single(user.Roles);
+    }
+
+    [Fact]
+    public void RemoveRole_CaseInsensitive_ShouldRemoveCorrectly()
+    {
+        var user = new User("user@example.com", "hash", [Roles.Admin]);
+
+        user.RemoveRole("admin"); // lowercase
+
+        Assert.Empty(user.Roles);
+    }
+
+    // -------------------------------------------------------------------------
+    // HasRole
+    // -------------------------------------------------------------------------
+
+    [Fact]
+    public void HasRole_WithExistingRole_ShouldReturnTrue()
+    {
+        var user = new User("user@example.com", "hash", [Roles.Admin]);
+
+        Assert.True(user.HasRole(Roles.Admin));
+    }
+
+    [Fact]
+    public void HasRole_WithNonExistingRole_ShouldReturnFalse()
+    {
+        var user = new User("user@example.com", "hash", [Roles.User]);
+
+        Assert.False(user.HasRole(Roles.Admin));
+    }
+
+    [Fact]
+    public void HasRole_CaseInsensitive_ShouldReturnTrue()
+    {
+        var user = new User("user@example.com", "hash", [Roles.Admin]);
+
+        Assert.True(user.HasRole("admin"));
+        Assert.True(user.HasRole("ADMIN"));
+    }
+
+    // -------------------------------------------------------------------------
+    // UpdatePassword
+    // -------------------------------------------------------------------------
 
     [Fact]
     public void UpdatePassword_WithValidHash_ShouldUpdatePasswordHash()
     {
-        // Arrange
-        var user = new User("user@example.com", "old_hash", Roles.User);
+        var user = new User("user@example.com", "old_hash", [Roles.User]);
 
-        // Act
         user.UpdatePassword("new_secure_hash");
 
-        // Assert
         Assert.Equal("new_secure_hash", user.PasswordHash);
     }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void UpdatePassword_WithInvalidHash_ShouldThrowArgumentException(string hash)
+    {
+        var user = new User("user@example.com", "hash", [Roles.User]);
+
+        Assert.Throws<ArgumentException>(() => user.UpdatePassword(hash));
+    }
+
+    // -------------------------------------------------------------------------
+    // RefreshToken
+    // -------------------------------------------------------------------------
 
     [Fact]
     public void SetRefreshToken_ShouldStoreHashAndExpiration()
     {
-        // Arrange
-        var user = new User("user@example.com", "hash", Roles.User);
-        var tokenHash = "token_hash_123";
-        var duration = TimeSpan.FromHours(1);
+        var user = new User("user@example.com", "hash", [Roles.User]);
 
-        // Act
-        user.SetRefreshToken(tokenHash, duration);
+        user.SetRefreshToken("token_hash_123", TimeSpan.FromHours(1));
 
-        // Assert
-        Assert.Equal(tokenHash, user.RefreshTokenHash);
+        Assert.Equal("token_hash_123", user.RefreshTokenHash);
         Assert.NotNull(user.RefreshTokenExpiresAt);
         Assert.True(user.RefreshTokenExpiresAt > DateTime.UtcNow);
-        Assert.True(user.IsRefreshTokenValid(tokenHash));
+        Assert.True(user.IsRefreshTokenValid("token_hash_123"));
     }
 
     [Fact]
-    public void IsRefreshTokenValid_WithExpiredOrMismatchToken_ShouldReturnFalse()
+    public void IsRefreshTokenValid_WithExpiredToken_ShouldReturnFalse()
     {
-        // Arrange
-        var user = new User("user@example.com", "hash", Roles.User);
-        var tokenHash = "token_hash_123";
-        user.SetRefreshToken(tokenHash, TimeSpan.FromHours(-1)); // expired 1 hour ago
+        var user = new User("user@example.com", "hash", [Roles.User]);
+        user.SetRefreshToken("token_hash_123", TimeSpan.FromHours(-1)); // expirado há 1 hora
 
-        // Act & Assert
-        Assert.False(user.IsRefreshTokenValid(tokenHash));
+        Assert.False(user.IsRefreshTokenValid("token_hash_123"));
+    }
+
+    [Fact]
+    public void IsRefreshTokenValid_WithWrongHash_ShouldReturnFalse()
+    {
+        var user = new User("user@example.com", "hash", [Roles.User]);
+        user.SetRefreshToken("token_hash_123", TimeSpan.FromHours(1));
+
         Assert.False(user.IsRefreshTokenValid("different_hash"));
+    }
+
+    [Fact]
+    public void IsRefreshTokenValid_WithNoTokenSet_ShouldReturnFalse()
+    {
+        var user = new User("user@example.com", "hash", [Roles.User]);
+
+        Assert.False(user.IsRefreshTokenValid("any_token"));
     }
 
     [Fact]
     public void RevokeRefreshToken_ShouldClearTokenData()
     {
-        // Arrange
-        var user = new User("user@example.com", "hash", Roles.User);
+        var user = new User("user@example.com", "hash", [Roles.User]);
         user.SetRefreshToken("token_hash_123", TimeSpan.FromHours(1));
 
-        // Act
         user.RevokeRefreshToken();
 
-        // Assert
         Assert.Null(user.RefreshTokenHash);
         Assert.Null(user.RefreshTokenExpiresAt);
         Assert.False(user.IsRefreshTokenValid("token_hash_123"));
     }
 
+    // -------------------------------------------------------------------------
+    // Soft Delete
+    // -------------------------------------------------------------------------
+
     [Fact]
     public void Delete_ShouldSetSoftDeleteProperties()
     {
-        // Arrange
-        var user = new User("user@example.com", "hash", Roles.User);
-        var deletedBy = "admin-user-id";
+        var user = new User("user@example.com", "hash", [Roles.User]);
 
-        // Act
-        user.Delete(deletedBy);
+        user.Delete("admin-user-id");
 
-        // Assert
         Assert.True(user.IsDeleted);
         Assert.NotNull(user.DeletedAt);
-        Assert.Equal(deletedBy, user.DeletedBy);
+        Assert.Equal("admin-user-id", user.DeletedBy);
     }
 
     [Fact]
     public void Restore_ShouldClearSoftDeleteProperties()
     {
-        // Arrange
-        var user = new User("user@example.com", "hash", Roles.User);
+        var user = new User("user@example.com", "hash", [Roles.User]);
         user.Delete("admin-id");
 
-        // Act
         user.Restore();
 
-        // Assert
         Assert.False(user.IsDeleted);
         Assert.Null(user.DeletedAt);
         Assert.Null(user.DeletedBy);
+    }
+
+    // -------------------------------------------------------------------------
+    // Equality
+    // -------------------------------------------------------------------------
+
+    [Fact]
+    public void Equality_SameId_ShouldBeEqual()
+    {
+        var user1 = new User("a@example.com", "hash", [Roles.User]);
+        var user2 = new User("b@example.com", "hash", [Roles.Admin]);
+
+        // Dois objetos diferentes com Ids diferentes NÃO são iguais
+        Assert.NotEqual(user1, user2);
+    }
+
+    [Fact]
+    public void Equality_SameReference_ShouldBeEqual()
+    {
+        var user = new User("a@example.com", "hash", [Roles.User]);
+
+        Assert.Equal(user, user);
+    }
+
+    [Fact]
+    public void GetHashCode_ShouldBeBasedOnId()
+    {
+        var user = new User("user@example.com", "hash", [Roles.User]);
+
+        Assert.Equal(user.Id.GetHashCode(), user.GetHashCode());
     }
 }

@@ -7,31 +7,29 @@ public class User : SoftDeleteBaseEntity
 {
     public string Email { get; private set; } = string.Empty;
     public string PasswordHash { get; private set; } = string.Empty;
-    public string Role { get; private set; } = string.Empty;
+    public IList<UserRole> Roles { get; private set; } = [];
 
     public string? RefreshTokenHash { get; private set; }
     public DateTime? RefreshTokenExpiresAt { get; private set; }
 
     public User() { }
 
-    public User(string email, string passwordHash, string role)
+    public User(string email, string passwordHash, IEnumerable<string> roles)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(email);
         ArgumentException.ThrowIfNullOrWhiteSpace(passwordHash);
-        ArgumentException.ThrowIfNullOrWhiteSpace(role);
 
         Email = email.Trim().ToLowerInvariant();
         PasswordHash = passwordHash;
-        Role = role;
+        Roles = roles.Select(r => new UserRole(Id, r)).ToList();
     }
 
-    public void Update(string email, string role)
+    public void Update(string email, IEnumerable<string> roles)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(email);
-        ArgumentException.ThrowIfNullOrWhiteSpace(role);
 
         Email = email.Trim().ToLowerInvariant();
-        Role = role;
+        Roles = roles.Select(r => new UserRole(Id, r)).ToList();
     }
 
     public void UpdatePassword(string newPasswordHash)
@@ -40,11 +38,22 @@ public class User : SoftDeleteBaseEntity
         PasswordHash = newPasswordHash;
     }
 
-    public void UpdateRole(string role)
+    public void AddRole(string role)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(role);
-        Role = role;
+        if (!HasRole(role))
+            Roles.Add(new UserRole(Id, role));
     }
+
+    public void RemoveRole(string role)
+    {
+        var existing = Roles.FirstOrDefault(r => r.Role.Equals(role, StringComparison.OrdinalIgnoreCase));
+        if (existing is not null)
+            Roles.Remove(existing);
+    }
+
+    public bool HasRole(string role) =>
+        Roles.Any(r => r.Role.Equals(role, StringComparison.OrdinalIgnoreCase));
 
     public void SetRefreshToken(string tokenHash, TimeSpan duration)
     {

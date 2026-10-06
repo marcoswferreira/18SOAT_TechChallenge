@@ -16,9 +16,15 @@ public class UpdateUserUseCase(IUserRepository userRepository)
             throw new KeyNotFoundException($"Usuário com o ID '{id}' não foi encontrado.");
         }
 
-        if (!Roles.IsValid(input.Role))
+        var roles = input.Roles
+            .Select(r => r.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var invalidRoles = roles.Where(r => !Roles.IsValid(r)).ToList();
+        if (invalidRoles.Count > 0)
         {
-            throw new ArgumentException($"Role inválida. As roles permitidas são: {string.Join(", ", Roles.All)}.");
+            throw new ArgumentException($"Roles inválidas: {string.Join(", ", invalidRoles)}. As permitidas são: {string.Join(", ", Roles.All)}.");
         }
 
         var normalizedNewEmail = input.Email.Trim().ToLowerInvariant();
@@ -31,7 +37,7 @@ public class UpdateUserUseCase(IUserRepository userRepository)
             }
         }
 
-        user.Update(input.Email, input.Role);
+        user.Update(input.Email, roles);
 
         await _userRepository.UpdateAsync(user, cancellationToken);
 

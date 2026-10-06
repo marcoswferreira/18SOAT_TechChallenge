@@ -20,11 +20,15 @@ public class CreateUserUseCase(
             throw new ArgumentException("E-mail e senha são obrigatórios.");
         }
 
-        var role = string.IsNullOrWhiteSpace(input.Role) ? Roles.User : input.Role.Trim();
+        var roles = (input.Roles is { Count: > 0 } ? input.Roles : [Roles.User])
+            .Select(r => r.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
-        if (!Roles.IsValid(role))
+        var invalidRoles = roles.Where(r => !Roles.IsValid(r)).ToList();
+        if (invalidRoles.Count > 0)
         {
-            throw new ArgumentException($"Role inválida. As roles permitidas são: {string.Join(", ", Roles.All)}.");
+            throw new ArgumentException($"Roles inválidas: {string.Join(", ", invalidRoles)}. As permitidas são: {string.Join(", ", Roles.All)}.");
         }
 
         var emailExists = await _userRepository.ExistsByEmailAsync(input.Email, cancellationToken);
@@ -34,7 +38,7 @@ public class CreateUserUseCase(
         }
 
         var passwordHash = _passwordHasher.Hash(input.Password);
-        var user = new User(input.Email, passwordHash, role);
+        var user = new User(input.Email, passwordHash, roles);
 
         await _userRepository.AddAsync(user, cancellationToken);
 

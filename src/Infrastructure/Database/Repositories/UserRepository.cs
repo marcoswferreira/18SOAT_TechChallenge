@@ -11,6 +11,7 @@ public class UserRepository(ApplicationDbContext context) : BaseRepository<User>
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbSet
+            .Include(u => u.Roles)
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
     }
 
@@ -18,12 +19,14 @@ public class UserRepository(ApplicationDbContext context) : BaseRepository<User>
     {
         var normalizedEmail = email.Trim().ToLowerInvariant();
         return await _dbSet
+            .Include(u => u.Roles)
             .FirstOrDefaultAsync(u => u.Email == normalizedEmail, cancellationToken);
     }
 
     public async Task<User?> GetByRefreshTokenAsync(string refreshTokenHash, CancellationToken cancellationToken)
     {
         return await _dbSet
+            .Include(u => u.Roles)
             .FirstOrDefaultAsync(u => u.RefreshTokenHash == refreshTokenHash, cancellationToken);
     }
 
@@ -55,6 +58,7 @@ public class UserRepository(ApplicationDbContext context) : BaseRepository<User>
     public async Task<IPaginate<User>> GetPagedAsync(int index, int size, CancellationToken cancellationToken)
     {
         return await _dbSet
+            .Include(u => u.Roles)
             .AsNoTracking()
             .OrderBy(u => u.CreatedAt)
             .ToPaginateAsync(index, size, 0, cancellationToken);

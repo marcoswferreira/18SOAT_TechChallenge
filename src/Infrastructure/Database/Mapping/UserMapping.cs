@@ -20,9 +20,10 @@ public class UserMapping : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(256);
 
-        builder.Property(u => u.Role)
-            .IsRequired()
-            .HasMaxLength(50);
+        builder.HasMany(u => u.Roles)
+            .WithOne(ur => ur.User)
+            .HasForeignKey(ur => ur.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(u => u.RefreshTokenHash)
             .HasMaxLength(128)
