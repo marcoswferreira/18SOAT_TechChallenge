@@ -1,20 +1,23 @@
 using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 using Infrastructure.Database.DbContexts;
 using Infrastructure.Database.Repositories;
 using Infrastructure.Database.Seeders;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Resend;
 
-namespace Infrastructure.Database.Extensions;
+namespace Infrastructure.Extensions;
 
 /// <summary>
 /// Extension methods for registering, migrating, and seeding the database.
 /// </summary>
-public static class SqlServerExtensions
+public static class InfrastructureExtensions
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
                                                                     IConfiguration configuration)
@@ -23,6 +26,16 @@ public static class SqlServerExtensions
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddExceptionHandler<ExceptionHandler>();
+        services.AddHttpClient<IResend, ResendClient>();
+
+        services.AddOptions<ResendClientOptions>()
+                .Configure(options =>
+                {
+                    options.ApiToken = configuration["Resend:ApiToken"]
+                        ?? throw new InvalidOperationException("API Key do Resend não foi configurada.");
+                });
+
+        services.AddScoped<IResendEmailService, ResendEmailService>();
 
         return services;
     }
