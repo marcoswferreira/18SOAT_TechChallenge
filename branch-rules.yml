@@ -1,0 +1,28 @@
+name: Enforce Branch Flow
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  validate-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check merge restrictions
+        run: |
+          TARGET="${{ github.base_ref }}"
+          SOURCE="${{ github.head_ref }}"
+
+          # Regra 1: 'main' só aceita merges vindos de 'develop'
+          if [ "$TARGET" = "main" ] && [ "$SOURCE" != "develop" ]; then
+            echo "Erro: PRs para a 'main' devem vir estritamente da branch 'develop'."
+            exit 1
+          fi
+
+          # Regra 2: 'develop' não aceita merge vindo diretamente da 'main'
+          if [ "$TARGET" = "develop" ] && [ "$SOURCE" = "main" ]; then
+            echo "Erro: PRs para 'develop' não podem vir diretamente da 'main'."
+            exit 1
+          fi
+
+          echo "Fluxo de branches válido: $SOURCE -> $TARGET"
