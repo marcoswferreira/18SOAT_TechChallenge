@@ -1,5 +1,7 @@
 ﻿using Domain.Interfaces;
 using Domain.Interfaces.Services;
+using Infrastructure.Security;
+using Infrastructure.Services;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Infrastructure.Security.Extensions;
+namespace Infrastructure.Extensions;
 
 public static class SecurityExtensions
 {

@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Infrastructure.Security;
+namespace Infrastructure.Services;
 
 public class TokenService(IOptions<JwtSettings> jwtOptions) : ITokenService
 {

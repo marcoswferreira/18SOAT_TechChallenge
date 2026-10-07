@@ -1,6 +1,5 @@
 using Application.Extensions;
-using Infrastructure.Database.Extensions;
-using Infrastructure.Security.Extensions;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using SIAES.API.Extensions;
 using System.Diagnostics;
