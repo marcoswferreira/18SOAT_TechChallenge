@@ -17,6 +17,12 @@ public class AuthController(
     private readonly RefreshTokenUseCase _refreshTokenUseCase = refreshTokenUseCase;
     private readonly RevokeTokenUseCase _revokeTokenUseCase = revokeTokenUseCase;
 
+    /// <summary>
+    /// Login do usuário e geração de token JWT
+    /// </summary>
+    /// <param name="request">As credenciais do usuário</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>Os tokens de acesso e refresh</returns>
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -31,6 +37,12 @@ public class AuthController(
         return Ok(new { accessToken = result.AccessToken });
     }
 
+    /// <summary>
+    /// Refresh do token JWT utilizando o refresh token
+    /// </summary>
+    /// <param name="request">O refresh token</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>Os tokens de acesso e refresh</returns>
     [HttpPost("refresh-token")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -52,6 +64,12 @@ public class AuthController(
         return Ok(new { accessToken = result.AccessToken });
     }
 
+    /// <summary>
+    /// Logout do usuário, revogando o Refresh Token e removendo o cookie correspondente.
+    /// </summary>
+    /// <param name="request">O refresh token</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>Nenhum conteúdo</returns>
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Logout(
@@ -83,5 +101,3 @@ public class AuthController(
         Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     }
 }
-
-public record RefreshTokenRequest(string? RefreshToken);

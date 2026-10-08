@@ -1,6 +1,7 @@
 using Application.UseCases.Users;
 using Application.UseCases.Users.Dto;
 using Asp.Versioning;
+using Domain.Common.Paginate;
 using Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,9 @@ public class UsersController(
     /// <summary>
     /// Cadastra um novo usuário no sistema.
     /// </summary>
+    /// <param name="request">Os dados do usuário a ser cadastrado</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>Os dados do usuário cadastrado</returns>
     [HttpPost]
     [AllowAnonymous] // Permite autorregistro inicial ou criação de conta
     [ProducesResponseType(typeof(UserOutput), StatusCodes.Status201Created)]
@@ -43,6 +47,10 @@ public class UsersController(
     /// <summary>
     /// Lista usuários paginados (Apenas Admin).
     /// </summary>
+    /// <param name="pageIndex">O índice da página</param>
+    /// <param name="pageSize">O tamanho da página</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>Uma lista de usuários paginados</returns>
     [HttpGet]
     [Authorize(Roles = Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -51,13 +59,16 @@ public class UsersController(
         [FromQuery] int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
-        var result = await _getUsersPagedUseCase.ExecuteAsync(pageIndex, pageSize, cancellationToken);
+        IPaginate<UserOutput> result = await _getUsersPagedUseCase.ExecuteAsync(pageIndex, pageSize, cancellationToken);
         return Ok(result);
     }
 
     /// <summary>
-    /// Obtém detalhes de um usuário por ID.
+    /// Obtém os detalhes de um usuário específico pelo seu ID (Apenas Admin).
     /// </summary>
+    /// <param name="id">O ID do usuário</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>Os dados do usuário</returns>
     [HttpGet("{id:guid}")]
     [Authorize]
     [ProducesResponseType(typeof(UserOutput), StatusCodes.Status200OK)]
@@ -66,13 +77,16 @@ public class UsersController(
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
-        var result = await _getUserByIdUseCase.ExecuteAsync(id, cancellationToken);
+        UserOutput result = await _getUserByIdUseCase.ExecuteAsync(id, cancellationToken);
         return Ok(result);
     }
-
     /// <summary>
     /// Atualiza dados de um usuário (Email e Role).
     /// </summary>
+    /// <param name="id">O ID do usuário</param>
+    /// <param name="request">Os dados para atualização</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>Os dados atualizados do usuário</returns>
     [HttpPut("{id:guid}")]
     [Authorize]
     [ProducesResponseType(typeof(UserOutput), StatusCodes.Status200OK)]
@@ -83,13 +97,16 @@ public class UsersController(
         [FromBody] UpdateUserInput request,
         CancellationToken cancellationToken)
     {
-        var result = await _updateUserUseCase.ExecuteAsync(id, request, cancellationToken);
+        UserOutput result = await _updateUserUseCase.ExecuteAsync(id, request, cancellationToken);
         return Ok(result);
     }
 
     /// <summary>
     /// Remove logicamente (Soft Delete) um usuário (Apenas Admin).
     /// </summary>
+    /// <param name="id">O ID do usuário</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>No Content</returns>
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -105,6 +122,10 @@ public class UsersController(
     /// <summary>
     /// Altera a senha do usuário.
     /// </summary>
+    /// <param name="id">O ID do usuário</param>
+    /// <param name="request">Os dados para atualização</param>
+    /// <param name="cancellationToken">O token de cancelamento</param>
+    /// <returns>No Content</returns>
     [HttpPut("{id:guid}/password")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

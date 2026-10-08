@@ -1,5 +1,4 @@
 using Domain.Common.Entities;
-using Domain.Constants;
 
 namespace Domain.Entities;
 
