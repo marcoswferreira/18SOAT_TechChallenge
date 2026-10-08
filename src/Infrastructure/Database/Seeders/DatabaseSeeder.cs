@@ -16,7 +16,10 @@ public static class DatabaseSeeder
             var defaultUsers = new (string Email, string Password, string[] Roles)[]
             {
                 ("admin@siaes.com", "SenhaAdmin1!", [Roles.Admin]),
-                ("atendente@siaes.com", "SenhaAten1!", [Roles.Atendente])
+                ("manager@siaes.com", "SenhaManager1!", [Roles.Manager]),
+                ("atendente@siaes.com", "SenhaAten1!", [Roles.Operacional]),
+                ("mecanico@siaes.com", "SenhaMecanico1!", [Roles.Operacional]),
+                ("usuario@siaes.com", "SenhaUsuario1!", [Roles.User])
             };
 
             var usersAdded = 0;
