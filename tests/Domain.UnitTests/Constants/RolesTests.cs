@@ -14,7 +14,7 @@ public class RolesTests
         Assert.Equal("Admin", Roles.Admin);
         Assert.Equal("User", Roles.User);
         Assert.Equal("Manager", Roles.Manager);
-        Assert.Equal("Atendente", Roles.Atendente);
+        Assert.Equal("Operacional", Roles.Operacional);
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class RolesTests
         Assert.Contains(Roles.Admin, Roles.All);
         Assert.Contains(Roles.User, Roles.All);
         Assert.Contains(Roles.Manager, Roles.All);
-        Assert.Contains(Roles.Atendente, Roles.All);
+        Assert.Contains(Roles.Operacional, Roles.All);
     }
 
     // -------------------------------------------------------------------------
@@ -39,9 +39,9 @@ public class RolesTests
     [InlineData("user")]
     [InlineData("Manager")]
     [InlineData("manager")]
-    [InlineData("Atendente")]
-    [InlineData("atendente")]
-    [InlineData("ATENDENTE")]
+    [InlineData("Operacional")]
+    [InlineData("operacional")]
+    [InlineData("OPERACIONAL")]
     public void IsValid_WithValidRoles_ShouldReturnTrue(string role)
     {
         Assert.True(Roles.IsValid(role));
