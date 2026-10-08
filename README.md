@@ -29,12 +29,39 @@
 
 ## 🎯 Objetivo do Projeto
 
-<!-- TODO: Descrever o objetivo do projeto conforme o enunciado do Tech Challenge -->
+O objetivo principal deste projeto é **desenvolver a primeira versão (MVP) do back-end** para o **SIAES** (*Sistema Integrado de Atendimento e Execução de Serviços*), uma plataforma destinada à gestão operacional e administrativa de oficinas mecânicas.
 
-Desenvolver a primeira versão (MVP) de um sistema back-end para gestão de oficinas mecânicas, contemplando...
+A solução visa substituir processos manuais e desorganizados (baseados em planilhas e anotações) por um sistema centralizado, seguro e escalável, aplicando os princípios do **Domain-Driven Design (DDD)**.
+
+### 🛠️ Problemas Resolvidos pela Solução
+* **Erros na priorização de atendimentos e perda de histórico** de clientes e veículos.
+* **Falhas no controle de estoque** de peças e insumos.
+* **Ineficiência na elaboração, envio e autorização de orçamentos**.
+* **Falta de transparência e acompanhamento do status** do serviço em tempo real pelo cliente.
 
 ---
 
+### 🚀 Escopo do MVP (Funcionalidades Principais)
+
+1. **Gestão e Ciclo de Vida da Ordem de Serviço (OS)**:
+   * Identificação do cliente via **CPF ou CNPJ** e cadastro completo de veículos (placa, marca, modelo e ano).
+   * Inclusão de serviços solicitados, peças e insumos.
+   * **Cálculo e geração automática do orçamento** para envio e aprovação/rejeição pelo cliente.
+   * Controle automatizado dos status da OS (`Recebida` ➔ `Em diagnóstico` ➔ `Aguardando aprovação` ➔ `Em execução` ➔ `Finalizada` ➔ `Entregue`).
+   * **API de consulta pública** para acompanhamento em tempo real pelo cliente.
+
+2. **Gestão Administrativa e Operacional**:
+   * CRUDs completos para **Clientes, Veículos, Serviços e Peças/Insumos**.
+   * **Controle de estoque** com reserva e baixa transacional de peças.
+   * **Monitoramento do tempo médio** de execução dos serviços para otimização da oficina.
+
+3. **Arquitetura, Segurança e Qualidade do Código**:
+   * Arquitetura de **Back-end Monolítico em Camadas** isolando as regras do Domínio.
+   * Proteção das APIs administrativas por **autenticação JWT** e validação rigorosa de dados sensíveis.
+   * Cobertura mínima de **80% em testes automatizados** (unitários e de integração) nos domínios críticos.
+   * Ambiente totalmente conteinerizado via **Dockerfile** e **Docker Compose** para execução local simplificada.
+
+---
 ## 📝 Descrição da Solução
 
 <!-- TODO: Resumir a solução implementada, fluxos principais e escopo do MVP -->
@@ -151,13 +178,19 @@ http://localhost:8082/swagger
 
 ## 🗄️ Banco de Dados — Decisão e Justificativa
 
-**Banco escolhido:** PostgreSQL 16
+Para a camada de persistência e suporte às regras de negócio do **SIAES**, foi adotado o **PostgreSQL 16** (utilizando a imagem oficial `postgres:16-alpine`), integrado ao **Entity Framework Core 10** na camada de Infraestrutura.
 
-**Justificativa:**
+### 📋 Resumo da Justificativa Técnica
 
-- **Desempenho e Confiabilidade:** Excelente suporte para transações ACID e integridade relacional.
-- **Ecossistema:** Suporte maduro no Entity Framework Core com Npgsql.
-- **Compliance e Auditoria:** Estruturação para auditoria e Soft Delete nativo via EF Core.
+* **Garantias ACID e Consistência de Estoque:** Ações de aprovação de orçamento e reserva/baixa de peças exigem transações atômicas e isoladas para evitar concorrência ou vendas sem saldo.
+* **Mapeamento de Agregados do DDD:** Estruturação relacional ideal para representar as fronteiras de consistência dos Agregados (`OrdemDeServico`, `Cliente`, `Veiculo`, `Estoque`) com integridade referencial forte.
+* **Recursos Híbridos (`JSONB`):** Suporte nativo a dados semi-estruturados, permitindo salvar *snapshots* de orçamentos e históricos de diagnósticos sem necessitar de um banco NoSQL secundário.
+* **Integração com o Ecossistema .NET:** Conectividade madura via driver `Npgsql`, com suporte a *EF Core Migrations* aplicadas automaticamente na inicialização do container.
+* **Execução Local Simplificada:** Conteinerização leve com baixo consumo de memória RAM/CPU e suporte a *healthchecks* nativos (`pg_isready`) no Docker Compose.
+
+📄 **Documentação Técnica de Arquitetura (ADR)**  
+Para conferir a análise detalhada de *trade-offs*, mitigações e os motivos do descarte das alternativas (como MongoDB e SQL Server), acesse a **[ADR 001 — Seleção do Banco de Dados Relacional](docs/adrs/adr-001-escolha-do-banco-de-dados.md)**.
+
 
 ---
 
