@@ -14,7 +14,7 @@ public static class ServiceExtensions
             {
                 Title = "SIAES API",
                 Version = "v1",
-                Description = "Empty",
+                Description = "Tech Challenge — Fase 1: MVP do back-end para gestão de oficinas mecânicas, aplicando Domain-Driven Design (DDD), arquitetura em camadas e práticas de Qualidade de Software.",
             });
 
             var securityScheme = new OpenApiSecurityScheme

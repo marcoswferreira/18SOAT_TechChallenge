@@ -179,7 +179,7 @@ A API possui autenticação JWT com rotação de **Refresh Token** via HTTP-Only
 2. Faça uma requisição em `POST /api/v1/auth/login` informando um dos e-mails e senhas acima.
 3. Copie o `accessToken` retornado no corpo da resposta.
 4. Clique no botão **Authorize** no canto superior do Swagger.
-5. Digite `Bearer <seu_access_token>` e confirme.
+5. Digite `<seu_access_token>` e confirme.
 6. Agora você pode executar requisições para os endpoints protegidos (`/api/v1/users`, etc.).
 
 ---
