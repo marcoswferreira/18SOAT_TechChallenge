@@ -5,9 +5,9 @@ public static class Roles
     public const string Admin = "Admin";
     public const string User = "User";
     public const string Manager = "Manager";
-    public const string Atendente = "Atendente";
+    public const string Operacional = "Operacional";
 
-    public static readonly string[] All = [Admin, User, Manager, Atendente];
+    public static readonly string[] All = [Admin, User, Manager, Operacional];
 
     public static bool IsValid(string role)
     {

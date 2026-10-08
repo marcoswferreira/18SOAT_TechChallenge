@@ -170,7 +170,9 @@ A API possui autenticação JWT com rotação de **Refresh Token** via HTTP-Only
 | Perfil        | Usuário / E-mail       | Senha          | Role        |
 |---------------|------------------------|----------------|-------------|
 | Administrador | `admin@siaes.com`      | `SenhaAdmin1!` | `Admin`     |
-| Atendente     | `atendente@siaes.com`  | `SenhaAten1!`  | `Atendente` |
+| Atendente     | `atendente@siaes.com`  | `SenhaAten1!`  | `Operacional` |
+| Mecanico     | `mecanico@siaes.com`   | `SenhaMec1!`   | `Mecanico`  |
+| Usuario     | `usuario@siaes.com`  | `SenhaUsuario1!`  | `User` |
 
 ### Como Autenticar no Swagger:
 1. Acesse `http://localhost:8082/swagger`.
