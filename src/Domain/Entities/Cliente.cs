@@ -6,6 +6,7 @@ public class Cliente
 {
     public Guid Id  { get; private set;  }
     public string CPFCNPJ { get; private set; } = string.Empty; //Value Objects ???
+    public Veiculo Veiculo { get; private set; } 
 
     public Cliente() { }
 

@@ -1,10 +1,9 @@
-using Domain.Common.Entities;
+﻿using Domain.Common.Entities;
 
 namespace Domain.Entities;
 
-public class Veiculo
+public class Veiculo : SoftDeleteBaseEntity
 {
-    public Guid Id { get; private set; }
 
     public Guid ClienteId { get; private set; }
 
@@ -15,6 +14,4 @@ public class Veiculo
     public string Modelo { get; private set; }
 
     public int Ano { get; private set; }
-
-    public Veiculo() { }
 }
