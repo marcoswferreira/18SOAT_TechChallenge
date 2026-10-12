@@ -19,4 +19,9 @@ public sealed record Placa
     {
         return System.Text.RegularExpressions.Regex.IsMatch(valor, @"^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$");
     }
+
+    public override string ToString()
+    {
+        return this.Valor;
+    }
 }

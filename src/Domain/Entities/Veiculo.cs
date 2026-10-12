@@ -17,13 +17,15 @@ public class Veiculo : SoftDeleteBaseEntity
     // Propriedade de navegação
     public Cliente Cliente { get; set; } = null!;
 
-    public Veiculo(Guid clienteId, Placa placa, int ano)
+    public Veiculo(Guid clienteId, Placa placa, string modelo, string marca, int ano)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(ano);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(ano, DateTime.UtcNow.Year);
 
         ClienteId = clienteId;
         Placa = placa;
+        Modelo = modelo;
+        Marca = marca;
         Ano = ano;
 
     }
