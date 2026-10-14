@@ -1,5 +1,6 @@
 using Application.UseCases.Auth;
 using Application.UseCases.Clientes;
+using Application.UseCases.Services;
 using Application.UseCases.Users;
 using Application.UseCases.Veiculos;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,13 @@ public static class ApplicationExtensions
         services.AddScoped<GetVeiculosPagedUseCase>();
         services.AddScoped<UpdateVeiculoUseCase>();
         services.AddScoped<DeleteVeiculoUseCase>();
+
+        // Serviços Use Cases
+        services.AddScoped<CreateServiceUserCase>();
+        services.AddScoped<UpdateServiceUserCase>();
+        services.AddScoped<DeleteServiceUserCase>();
+        services.AddScoped<GetServiceByIdUserCase>();
+        services.AddScoped<GetServicePagedUseCase>();
 
         return services;
     }

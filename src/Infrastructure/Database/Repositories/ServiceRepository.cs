@@ -38,20 +38,29 @@ namespace Infrastructure.Database.Repositories
 
         public async Task<Service?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _dbSet.FirstOrDefaultAsync(s => s.IdService == id, cancellationToken);
+            return await Query().FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
 
         public async Task<Service?> GetByServiceNameAsync(string serviceName, CancellationToken cancellationToken)
         {
-            return await _dbSet.FirstOrDefaultAsync(s => s.ServiceName == serviceName, cancellationToken);
+            return await Query().FirstOrDefaultAsync(s => s.ServiceName == serviceName, cancellationToken);
         }
 
         public async Task<IPaginate<Service>> GetPagedAsync(int index, int size, CancellationToken cancellationToken)
         {
-            return await _dbSet
-                            .AsNoTracking()
-                            .OrderBy(s => s.ServiceName)
-                            .ToPaginateAsync(index, size, 0, cancellationToken);
+            var query = Query(
+                                //predicate: s => s.Ativo, // opcional
+                                //include: q => q.Include(s => s.Categoria), // opcional
+                                orderBy: q => q.OrderBy(s => s.ServiceName), // opcional
+                                enableTracking: false
+                            );
+
+            return await query.ToPaginateAsync(index, size, 0, cancellationToken);
+
+            //return await _dbSet
+            //                .AsNoTracking()
+            //                .OrderBy(s => s.ServiceName)
+            //                .ToPaginateAsync(index, size, 0, cancellationToken);
         }
 
     }

@@ -9,11 +9,11 @@ namespace Application.UnitTests.UseCases.Services
     {
         private readonly IServiceRepository _serviceRepository = Substitute.For<IServiceRepository>();
 
-        private readonly CreateServicesUseCase _useCase;
+        private readonly CreateServiceUserCase _useCase;
 
         public CreateServiceUseCaseTests()
         {
-            _useCase = new CreateServicesUseCase(_serviceRepository);
+            _useCase = new CreateServiceUserCase(_serviceRepository);
         }
 
         // -------------------------------------------------------------------------

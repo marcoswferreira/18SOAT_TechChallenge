@@ -3,7 +3,7 @@ using Domain.Interfaces.Repositories;
 
 namespace Application.UseCases.Services
 {
-    public class CreateServicesUseCase(IServiceRepository serviceRepository)
+    public class CreateServiceUserCase(IServiceRepository serviceRepository)
     {
         private readonly IServiceRepository _serviceRepository = serviceRepository;
 

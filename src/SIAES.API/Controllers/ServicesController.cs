@@ -16,17 +16,17 @@ namespace SIAES.API.Controllers
     [Authorize]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class ServicesController(
-        CreateServicesUseCase createServicesUseCase,
+        CreateServiceUserCase createServicesUseCase,
         UpdateServiceUserCase updateServiceUserCase,
         DeleteServiceUserCase deleteServiceUserCase,
         GetServiceByIdUserCase getServiceByIdUserCase,
-        GetServicesPagedUseCase getServicesPagedUseCase) : ControllerBase
+        GetServicePagedUseCase getServicesPagedUseCase) : ControllerBase
     {
-        private readonly CreateServicesUseCase _createServicesUseCase = createServicesUseCase;
+        private readonly CreateServiceUserCase _createServicesUseCase = createServicesUseCase;
         private readonly UpdateServiceUserCase _updateServiceUserCase = updateServiceUserCase;
         private readonly DeleteServiceUserCase _deleteServiceUserCase = deleteServiceUserCase;
         private readonly GetServiceByIdUserCase _getServiceByIdUserCase = getServiceByIdUserCase;   
-        private readonly GetServicesPagedUseCase _getServicesPagedUseCase = getServicesPagedUseCase;
+        private readonly GetServicePagedUseCase _getServicesPagedUseCase = getServicesPagedUseCase;
 
         /// <summary>
         /// Cadastra um novo serviço no sistema.
