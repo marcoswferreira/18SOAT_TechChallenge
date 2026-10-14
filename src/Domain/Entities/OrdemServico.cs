@@ -9,15 +9,20 @@ public class OrdemServico
     private readonly List<ItemPeca> _pecas = new();
 
     public Guid Id { get; private set; }
+    public Guid ClienteId { get; private set; } // FK para a tabela de Clientes
+    //public Cliente Cliente {get; private set; } = null!; // Propriedade de navegação
     public StatusOrdemServico Status { get; private set; }
     public decimal ValorTotal {  get; private set; }
 
     public IReadOnlyCollection<ItemServico> Servicos => _servicos.AsReadOnly();
     public IReadOnlyCollection<ItemPeca> Pecas => _pecas.AsReadOnly();
 
-    public OrdemServico()
+    private OrdemServico() { }
+
+    public OrdemServico(Guid clienteId)
     {
         Id = Guid.NewGuid();
+        ClienteId = clienteId;
         Status = StatusOrdemServico.Recebida;
         ValorTotal = 0m;
     }
