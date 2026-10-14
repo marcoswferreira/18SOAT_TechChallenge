@@ -1,6 +1,7 @@
 using Domain.Constants;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.ValueObjects;
 using Infrastructure.Database.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,12 @@ namespace Infrastructure.Database.Seeders;
 public static class DatabaseSeeder
 {
     public static async Task SeedAsync(ApplicationDbContext dbContext, IPasswordHasher passwordHasher, ILogger logger)
+    {
+        await SeedUsersAsync(dbContext, passwordHasher, logger);
+        await SeedClientesEVeiculosAsync(dbContext, logger);
+    }
+
+    private static async Task SeedUsersAsync(ApplicationDbContext dbContext, IPasswordHasher passwordHasher, ILogger logger)
     {
         try
         {
@@ -69,6 +76,144 @@ public static class DatabaseSeeder
         catch (Exception ex)
         {
             logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default users.");
+            throw;
+        }
+    }
+
+    private static async Task SeedClientesEVeiculosAsync(ApplicationDbContext dbContext, ILogger logger)
+    {
+        try
+        {
+            var seedData = new (
+                string Nome,
+                string Documento,
+                string? Email,
+                string? Telefone,
+                Endereco Endereco,
+                (string Placa, string Marca, string Modelo, int Ano) Veiculo
+            )[]
+            {
+                (
+                    "Carlos Eduardo Silva",
+                    "12345678909",
+                    "carlos.silva@email.com",
+                    "(11) 98765-4321",
+                    new Endereco("Avenida Paulista", "1000", "Apto 101", "Bela Vista", "São Paulo", "SP", "01310100"),
+                    ("BRA2E19", "Toyota", "Corolla XEi", 2022)
+                ),
+                (
+                    "Mariana Souza Oliveira",
+                    "98765432100",
+                    "mariana.souza@email.com",
+                    "(41) 99887-1122",
+                    new Endereco("Rua das Flores", "250", null, "Centro", "Curitiba", "PR", "80010000"),
+                    ("ABC1234", "Honda", "Civic Touring", 2021)
+                ),
+                (
+                    "Lucas Ferreira Santos",
+                    "11144477735",
+                    "lucas.santos@email.com",
+                    "(21) 97654-3210",
+                    new Endereco("Avenida Atlântica", "1500", "Bloco B", "Copacabana", "Rio de Janeiro", "RJ", "22021001"),
+                    ("RIO2A18", "Volkswagen", "Golf GTI", 2023)
+                ),
+                (
+                    "Juliana Mendes Ribeiro",
+                    "22255588846",
+                    "juliana.mendes@email.com",
+                    "(31) 98123-4567",
+                    new Endereco("Rua da Bahia", "800", "Sala 302", "Lourdes", "Belo Horizonte", "MG", "30160011"),
+                    ("SPX9876", "Chevrolet", "Onix Premier", 2020)
+                ),
+                (
+                    "Transportes & Logística Brasil Ltda",
+                    "11222333000181",
+                    "contato@transbrasil.com.br",
+                    "(81) 3456-7890",
+                    new Endereco("Avenida Boa Viagem", "3200", null, "Boa Viagem", "Recife", "PE", "51020000"),
+                    ("KXZ3B45", "Volvo", "FH 540", 2024)
+                )
+            };
+
+            var clientesAdicionados = 0;
+            var veiculosAdicionados = 0;
+
+            foreach (var item in seedData)
+            {
+                var documentoVo = new Documento(item.Documento);
+                var existingCliente = await dbContext.Clientes
+                    .Include(c => c.Veiculos)
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(c => c.Documento == documentoVo);
+
+                if (existingCliente is null)
+                {
+                    var cliente = new Cliente(
+                        item.Nome,
+                        documentoVo,
+                        item.Email,
+                        item.Telefone,
+                        item.Endereco
+                    );
+
+                    var veiculo = new Veiculo(
+                        cliente.Id,
+                        new Placa(item.Veiculo.Placa),
+                        item.Veiculo.Marca,
+                        item.Veiculo.Modelo,
+                        item.Veiculo.Ano
+                    );
+
+                    cliente.AdicionarVeiculo(veiculo);
+                    await dbContext.Clientes.AddAsync(cliente);
+                    clientesAdicionados++;
+                    veiculosAdicionados++;
+                }
+                else
+                {
+                    var placaVo = new Placa(item.Veiculo.Placa);
+                    var jaPossuiVeiculo = existingCliente.Veiculos.Any(v => v.Placa == placaVo);
+
+                    if (!jaPossuiVeiculo)
+                    {
+                        var veiculoJaExisteNoBanco = await dbContext.Veiculos
+                            .IgnoreQueryFilters()
+                            .AnyAsync(v => v.Placa == placaVo);
+
+                        if (!veiculoJaExisteNoBanco)
+                        {
+                            var veiculo = new Veiculo(
+                                existingCliente.Id,
+                                placaVo,
+                                item.Veiculo.Marca,
+                                item.Veiculo.Modelo,
+                                item.Veiculo.Ano
+                            );
+
+                            existingCliente.AdicionarVeiculo(veiculo);
+                            veiculosAdicionados++;
+                        }
+                    }
+                }
+            }
+
+            if (clientesAdicionados > 0 || veiculosAdicionados > 0)
+            {
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation(
+                    "DatabaseSeeder: Seeded {ClientesCount} cliente(s) e {VeiculosCount} veiculo(s) com sucesso.",
+                    clientesAdicionados,
+                    veiculosAdicionados
+                );
+            }
+            else
+            {
+                logger.LogInformation("DatabaseSeeder: Clientes e veículos padrão já existem no banco de dados.");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default clientes e veículos.");
             throw;
         }
     }
