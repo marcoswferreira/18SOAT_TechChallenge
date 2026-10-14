@@ -1,6 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Application.UseCases.Clientes.Dto;
 
 public record UpdateClienteInput(
-    string CPFCNPJ);
+    string Nome,
+    string? Email,
+    string? Telefone,
+    EnderecoInput Endereco
+);

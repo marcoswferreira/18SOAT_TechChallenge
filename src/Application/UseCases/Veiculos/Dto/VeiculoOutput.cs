@@ -8,7 +8,9 @@ public record VeiculoOutput(
     string Placa,
     string Marca,
     string Modelo,
-    int Ano)
+    int Ano,
+    DateTime CreatedAt
+)
 {
     public static VeiculoOutput FromEntity(Veiculo veiculo) => new(
         veiculo.Id,
@@ -16,6 +18,7 @@ public record VeiculoOutput(
         veiculo.Placa.Valor,
         veiculo.Marca,
         veiculo.Modelo,
-        veiculo.Ano
+        veiculo.Ano,
+        veiculo.CreatedAt
     );
 }

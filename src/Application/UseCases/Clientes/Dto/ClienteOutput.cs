@@ -8,15 +8,17 @@ public record ClienteOutput(
     string CPFCNPJ,
     string? Email,
     string? Telefone,
-    string Endereco
+    EnderecoOutput Endereco,
+    DateTime CreatedAt
 )
 {
     public static ClienteOutput FromEntity(Cliente cliente) => new(
         cliente.Id,
         cliente.Nome,
-        cliente.CPFCNPJ,
+        cliente.Documento.Valor,
         cliente.Email,
         cliente.Telefone,
-        cliente.Endereco
+        EnderecoOutput.FromValueObject(cliente.Endereco),
+        cliente.CreatedAt
     );
 }

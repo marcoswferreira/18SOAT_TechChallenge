@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,36 +11,60 @@ public class VeiculoMapping : IEntityTypeConfiguration<Veiculo>
     {
         builder.ToTable("Veiculos");
 
-        builder.HasKey(u => u.Id);
+        builder.HasKey(v => v.Id);
 
-        builder.Property(u => u.ClienteId)
+        builder.Property(v => v.ClienteId)
             .IsRequired();
 
-        builder.Property(u => u.Modelo)
-            .IsRequired()
-            .HasMaxLength(100);
+        builder.Property(v => v.Placa)
+            .HasConversion(p => p.Valor, v => new Placa(v))
+            .HasColumnName("Placa")
+            .HasMaxLength(7)
+            .IsRequired();
 
-        builder.Property(u => u.Marca)
-            .IsRequired()
-            .HasMaxLength(100);
-
-        builder.Property(u => u.Placa)
-            .IsRequired()
-            .HasMaxLength(7);
-
-        builder.HasIndex(u => u.Placa)
+        builder.HasIndex(v => v.Placa)
             .IsUnique();
 
-        builder.HasOne(u => u.Cliente)
+        builder.Property(v => v.Marca)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(v => v.Modelo)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(v => v.Ano)
+            .IsRequired();
+
+        builder.HasOne(v => v.Cliente)
             .WithMany(c => c.Veiculos)
-            .HasForeignKey(u => u.ClienteId)
+            .HasForeignKey(v => v.ClienteId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
-/*
-        builder.HasOne<Cliente>()
-            .WithMany()
-            .HasForeignKey(u => u.ClienteId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);*/
+
+        // Auditoria e Soft Delete
+        builder.Property(v => v.CreatedAt)
+            .IsRequired();
+
+        builder.Property(v => v.CreatedBy)
+            .HasMaxLength(100)
+            .IsRequired(false);
+
+        builder.Property(v => v.LastModifiedAt)
+            .IsRequired(false);
+
+        builder.Property(v => v.LastModifiedBy)
+            .HasMaxLength(100)
+            .IsRequired(false);
+
+        builder.Property(v => v.IsDeleted)
+            .HasDefaultValue(false);
+
+        builder.Property(v => v.DeletedAt)
+            .IsRequired(false);
+
+        builder.Property(v => v.DeletedBy)
+            .HasMaxLength(100)
+            .IsRequired(false);
     }
 }

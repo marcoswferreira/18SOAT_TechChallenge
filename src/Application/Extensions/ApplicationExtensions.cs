@@ -1,5 +1,7 @@
 using Application.UseCases.Auth;
+using Application.UseCases.Clientes;
 using Application.UseCases.Users;
+using Application.UseCases.Veiculos;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Extensions;
@@ -20,6 +22,20 @@ public static class ApplicationExtensions
         services.AddScoped<UpdateUserUseCase>();
         services.AddScoped<DeleteUserUseCase>();
         services.AddScoped<ChangePasswordUseCase>();
+
+        // Cliente Use Cases
+        services.AddScoped<CreateClienteUseCase>();
+        services.AddScoped<GetClienteByIdUseCase>();
+        services.AddScoped<GetClientesPagedUseCase>();
+        services.AddScoped<UpdateClienteUseCase>();
+        services.AddScoped<DeleteClienteUseCase>();
+
+        // Veiculo Use Cases
+        services.AddScoped<CreateVeiculoUseCase>();
+        services.AddScoped<GetVeiculoByIdUseCase>();
+        services.AddScoped<GetVeiculosPagedUseCase>();
+        services.AddScoped<UpdateVeiculoUseCase>();
+        services.AddScoped<DeleteVeiculoUseCase>();
 
         return services;
     }

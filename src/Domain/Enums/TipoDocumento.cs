@@ -1,6 +1,8 @@
-namespace Domain.Entities;
+namespace Domain.Enums;
+
 public enum TipoDocumento
 {
     CPF,
     CNPJ
 }
+
