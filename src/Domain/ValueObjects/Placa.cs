@@ -26,6 +26,12 @@ public sealed partial record Placa : IValueObject
 
     public bool EhMercosul => char.IsLetter(Valor[4]);
 
+    /// <summary>
+    /// Retorna a placa mascarada para proteção de dados sensíveis em conformidade com a LGPD.
+    /// Exemplo: BRA***9 ou ABC***4.
+    /// </summary>
+    public string Mascarada => $"{Valor[..3]}***{Valor[6..]}";
+
     public override string ToString() => Valor;
 
     public static implicit operator string(Placa placa) => placa.Valor;
@@ -39,4 +45,3 @@ public sealed partial record Placa : IValueObject
 
     private static bool PlacaValida(string valor) => PlacaRegex().IsMatch(valor);
 }
-

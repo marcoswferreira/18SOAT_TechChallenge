@@ -15,7 +15,7 @@ public record ClienteOutput(
     public static ClienteOutput FromEntity(Cliente cliente) => new(
         cliente.Id,
         cliente.Nome,
-        cliente.Documento.Valor,
+        cliente.Documento.Mascarado,
         cliente.Email,
         cliente.Telefone,
         EnderecoOutput.FromValueObject(cliente.Endereco),

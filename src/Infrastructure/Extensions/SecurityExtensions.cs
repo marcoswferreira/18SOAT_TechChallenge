@@ -1,4 +1,4 @@
-﻿using Domain.Interfaces;
+using Domain.Interfaces;
 using Domain.Interfaces.Services;
 using Infrastructure.Security;
 using Infrastructure.Services;
@@ -24,6 +24,9 @@ public static class SecurityExtensions
         services.AddAuthorization();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        var encryptionKey = configuration["EncryptionSettings:Key"] ?? throw new InvalidOperationException("A chave de criptografia de dados sensíveis (LGPD) não foi configurada.");
+        DeterministicEncryption.Initialize(encryptionKey);
     }
 
     private static void AddAuth(this IServiceCollection services, IConfiguration configuration)
@@ -55,6 +58,7 @@ public static class SecurityExtensions
 
     private static void AddSettings(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.Configure<EncryptionSettings>(configuration.GetSection(EncryptionSettings.SectionName));
     }
 }

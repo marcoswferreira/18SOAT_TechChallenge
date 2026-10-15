@@ -15,7 +15,7 @@ public record VeiculoOutput(
     public static VeiculoOutput FromEntity(Veiculo veiculo) => new(
         veiculo.Id,
         veiculo.ClienteId,
-        veiculo.Placa.Valor,
+        veiculo.Placa.Mascarada,
         veiculo.Marca,
         veiculo.Modelo,
         veiculo.Ano,
