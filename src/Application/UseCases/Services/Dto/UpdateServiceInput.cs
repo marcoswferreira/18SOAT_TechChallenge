@@ -4,4 +4,4 @@ using System.Text;
 
 namespace Application.UseCases.Services.Dto;
 
-public record UpdateServiceInput(Guid IdService,string ServiceName);
+public record UpdateServiceInput(Guid Id,string ServiceName);

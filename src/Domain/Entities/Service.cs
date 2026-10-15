@@ -8,16 +8,14 @@ namespace Domain.Entities
 {
     public class Service : SoftDeleteBaseEntity
     {
-        public Guid IdService { get; private set; }
         public string ServiceName { get; private set; }
 
-        public Service() { }
+        //public Service() { }
 
         public Service(string serviceName)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(serviceName);
 
-            this.IdService = Guid.NewGuid();
             this.ServiceName = serviceName;
         }
 
@@ -25,7 +23,6 @@ namespace Domain.Entities
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(serviceName);
 
-            this.IdService = idService;
             this.ServiceName = serviceName;
         }
 

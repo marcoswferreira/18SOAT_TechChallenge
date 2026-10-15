@@ -44,5 +44,6 @@ namespace Application.UnitTests.UseCases.Services
             var result = await _useCase.ExecuteAsync(input, CancellationToken.None);
         }
 
-        
+
     }
+}

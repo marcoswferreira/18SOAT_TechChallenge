@@ -8,12 +8,12 @@ namespace Application.UseCases.Services
     public class UpdateServiceUserCase(IServiceRepository serviceRepository)
     {
         private readonly IServiceRepository _serviceRepository = serviceRepository;
-        public async Task<ServiceOutput> ExecuteAsync(Guid idService, UpdateServiceInput input, CancellationToken cancellationToken)
+        public async Task<ServiceOutput> ExecuteAsync(Guid id, UpdateServiceInput input, CancellationToken cancellationToken)
         {
-            var service = await _serviceRepository.GetByIdAsync(idService, cancellationToken);
+            var service = await _serviceRepository.GetByIdAsync(id, cancellationToken);
             if (service == null)
             {
-                throw new KeyNotFoundException($"Serviço com o ID '{idService}' não encontrado.");
+                throw new KeyNotFoundException($"Serviço com o ID '{id}' não encontrado.");
             }
 
             if (string.IsNullOrWhiteSpace(input.ServiceName))
