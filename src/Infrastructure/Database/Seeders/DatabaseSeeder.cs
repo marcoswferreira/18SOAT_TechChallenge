@@ -14,6 +14,7 @@ public static class DatabaseSeeder
     {
         await SeedUsersAsync(dbContext, passwordHasher, logger);
         await SeedClientesEVeiculosAsync(dbContext, logger);
+        await SeedServicesAsync(dbContext, logger);
     }
 
     private static async Task SeedUsersAsync(ApplicationDbContext dbContext, IPasswordHasher passwordHasher, ILogger logger)
@@ -214,6 +215,66 @@ public static class DatabaseSeeder
         catch (Exception ex)
         {
             logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default clientes e veículos.");
+            throw;
+        }
+    }
+
+    private static async Task SeedServicesAsync(ApplicationDbContext dbContext, ILogger logger)
+    {
+        try
+        {
+            var defaultServices = new (Guid IdService, string ServiceName)[]
+            {
+                (Guid.NewGuid(), "Troca de óleo e filtros"),
+                (Guid.NewGuid(), "Revisão periódica"),
+                (Guid.NewGuid(), "Alinhamento e balanceamento"),
+                (Guid.NewGuid(), "Rodízio de pneus"),
+                (Guid.NewGuid(), "Substituição de fluidos"),
+                (Guid.NewGuid(), "Verificação de correias"),
+                (Guid.NewGuid(), "Troca de pastilhas e discos de freio"),
+                (Guid.NewGuid(), "Reparo e sangria do sistema hidráulico"),
+                (Guid.NewGuid(), "Manutenção do freio de estacionamento"),
+                (Guid.NewGuid(), "Troca de amortecedores e batentes"),
+                (Guid.NewGuid(), "Substituição de molas e bandejas de suspensão"),
+                (Guid.NewGuid(), "Diagnóstico computadorizado"),
+                (Guid.NewGuid(), "Limpeza de bicos injetores"),
+                (Guid.NewGuid(), "Manutenção de alternadores e motores de partida (de arranque)"),
+                (Guid.NewGuid(), "Reparo no sistema de iluminação"),
+
+            };
+
+            var servicesAdded = 0;
+
+            foreach (var (idService, serviceName) in defaultServices)
+            {
+                var existingService = await dbContext.Services
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(u => u.ServiceName == serviceName);
+
+                if (existingService is null)
+                {
+                    // Serviço não existe: cria serviço
+                    var itemService = new Service(idService, serviceName);
+                    await dbContext.Services.AddAsync(itemService);
+                    servicesAdded++;
+                }
+            }
+
+            if (servicesAdded > 0)
+            {
+                await dbContext.SaveChangesAsync();
+
+                logger.LogInformation("DatabaseSeeder: Seeded {Count} initial service(s) successfully.", servicesAdded);
+
+            }
+            else
+            {
+                logger.LogInformation("DatabaseSeeder: Default services already exist in database.");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default services.");
             throw;
         }
     }
