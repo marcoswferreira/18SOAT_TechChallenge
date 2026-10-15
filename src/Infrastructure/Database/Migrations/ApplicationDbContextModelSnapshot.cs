@@ -45,8 +45,8 @@ namespace Infrastructure.Database.Migrations
 
                     b.Property<string>("Documento")
                         .IsRequired()
-                        .HasMaxLength(14)
-                        .HasColumnType("character varying(14)")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
                         .HasColumnName("Documento");
 
                     b.Property<string>("Email")
@@ -370,8 +370,8 @@ namespace Infrastructure.Database.Migrations
 
                     b.Property<string>("Placa")
                         .IsRequired()
-                        .HasMaxLength(7)
-                        .HasColumnType("character varying(7)")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
                         .HasColumnName("Placa");
 
                     b.HasKey("Id");

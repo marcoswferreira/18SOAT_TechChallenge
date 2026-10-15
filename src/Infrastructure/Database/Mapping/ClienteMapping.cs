@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.ValueObjects;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,9 +19,11 @@ public class ClienteMapping : IEntityTypeConfiguration<Cliente>
             .HasMaxLength(150);
 
         builder.Property(c => c.Documento)
-            .HasConversion(d => d.Valor, v => new Documento(v))
+            .HasConversion(
+                d => DeterministicEncryption.Encrypt(d.Valor),
+                v => new Documento(DeterministicEncryption.Decrypt(v)))
             .HasColumnName("Documento")
-            .HasMaxLength(14)
+            .HasMaxLength(256)
             .IsRequired();
 
         builder.HasIndex(c => c.Documento)

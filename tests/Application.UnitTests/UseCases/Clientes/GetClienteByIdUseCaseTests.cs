@@ -29,7 +29,7 @@ public class GetClienteByIdUseCaseTests
 
         Assert.NotNull(result);
         Assert.Equal("Maria", result.Nome);
-        Assert.Equal("52998224725", result.CPFCNPJ);
+        Assert.Equal("529.***.***-25", result.CPFCNPJ);
         Assert.Equal("Rua B", result.Endereco.Logradouro);
     }
 

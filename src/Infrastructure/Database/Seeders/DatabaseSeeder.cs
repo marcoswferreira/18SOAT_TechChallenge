@@ -1,5 +1,6 @@
 using Domain.Constants;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Domain.ValueObjects;
 using Infrastructure.Database.DbContexts;
@@ -14,6 +15,7 @@ public static class DatabaseSeeder
     {
         await SeedUsersAsync(dbContext, passwordHasher, logger);
         await SeedClientesEVeiculosAsync(dbContext, logger);
+        await SeedItensEstoqueAsync(dbContext, logger);
         await SeedServicesAsync(dbContext, logger);
     }
 
@@ -136,16 +138,18 @@ public static class DatabaseSeeder
                 )
             };
 
+            var allClientes = await dbContext.Clientes
+                .Include(c => c.Veiculos)
+                .IgnoreQueryFilters()
+                .ToListAsync();
+
             var clientesAdicionados = 0;
             var veiculosAdicionados = 0;
 
             foreach (var item in seedData)
             {
                 var documentoVo = new Documento(item.Documento);
-                var existingCliente = await dbContext.Clientes
-                    .Include(c => c.Veiculos)
-                    .IgnoreQueryFilters()
-                    .FirstOrDefaultAsync(c => c.Documento == documentoVo);
+                var existingCliente = allClientes.FirstOrDefault(c => c.Documento == documentoVo);
 
                 if (existingCliente is null)
                 {
@@ -167,6 +171,7 @@ public static class DatabaseSeeder
 
                     cliente.AdicionarVeiculo(veiculo);
                     await dbContext.Clientes.AddAsync(cliente);
+                    allClientes.Add(cliente);
                     clientesAdicionados++;
                     veiculosAdicionados++;
                 }
@@ -212,9 +217,66 @@ public static class DatabaseSeeder
                 logger.LogInformation("DatabaseSeeder: Clientes e veículos padrão já existem no banco de dados.");
             }
         }
+        catch (DbUpdateException ex)
+        {
+            logger.LogWarning(ex, "DatabaseSeeder: Conflito de dados ao semear clientes e veículos padrão. A inicialização da aplicação prosseguirá normalmente.");
+        }
         catch (Exception ex)
         {
-            logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default clientes e veículos.");
+            logger.LogWarning(ex, "DatabaseSeeder: Ocorreu um erro ao semear clientes e veículos padrão. A inicialização da aplicação prosseguirá normalmente.");
+        }
+    }
+
+    private static async Task SeedItensEstoqueAsync(ApplicationDbContext dbContext, ILogger logger)
+    {
+        try
+        {
+            var seedData = new (string Codigo, string Nome, string? Descricao, UnidadeMedida Unidade, decimal Preco, decimal Estoque)[]
+            {
+                ("FLT-OLEO-001", "Filtro de óleo", "Filtro de óleo para motores 1.0 a 2.0", UnidadeMedida.Unidade, 35.90m, 20),
+                ("FLT-AR-001", "Filtro de ar do motor", null, UnidadeMedida.Unidade, 42.50m, 15),
+                ("FLT-CAB-001", "Filtro de ar condicionado", "Filtro de cabine", UnidadeMedida.Unidade, 38.00m, 10),
+                ("PST-FREIO-D01", "Pastilha de freio dianteira", "Jogo com 4 pastilhas", UnidadeMedida.Unidade, 129.90m, 8),
+                ("DSC-FREIO-D01", "Disco de freio dianteiro", null, UnidadeMedida.Unidade, 189.90m, 4),
+                ("VELA-IGN-001", "Vela de ignição", null, UnidadeMedida.Unidade, 24.90m, 32),
+                ("BAT-60AH", "Bateria 60Ah", null, UnidadeMedida.Unidade, 489.00m, 3),
+                ("OLEO-5W30", "Óleo de motor 5W30 sintético", null, UnidadeMedida.Litro, 49.90m, 60),
+                ("FLUIDO-FREIO-DOT4", "Fluido de freio DOT 4", null, UnidadeMedida.Litro, 39.90m, 12.5m),
+                ("ADIT-RAD-001", "Aditivo para radiador", "Concentrado, diluir em água", UnidadeMedida.Litro, 29.90m, 18),
+                ("GRAXA-001", "Graxa multiuso", null, UnidadeMedida.Quilo, 54.00m, 5)
+            };
+
+            var itensAdicionados = 0;
+
+            foreach (var item in seedData)
+            {
+                var jaExiste = await dbContext.ItensEstoque
+                    .IgnoreQueryFilters()
+                    .AnyAsync(i => i.Codigo == item.Codigo);
+
+                if (jaExiste)
+                    continue;
+
+                var itemEstoque = new ItemEstoque(item.Codigo, item.Nome, item.Descricao, item.Unidade, item.Preco);
+                itemEstoque.AdicionarEstoque(item.Estoque);
+
+                await dbContext.ItensEstoque.AddAsync(itemEstoque);
+                itensAdicionados++;
+            }
+
+            if (itensAdicionados > 0)
+            {
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("DatabaseSeeder: Seeded {Count} item(ns) de estoque com sucesso.", itensAdicionados);
+            }
+            else
+            {
+                logger.LogInformation("DatabaseSeeder: Itens de estoque padrão já existem no banco de dados.");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default itens de estoque.");
             throw;
         }
     }

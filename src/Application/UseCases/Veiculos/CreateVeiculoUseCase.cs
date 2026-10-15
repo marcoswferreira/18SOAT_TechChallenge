@@ -1,5 +1,6 @@
 using Application.Dto;
 using Application.UseCases.Veiculos.Dto;
+using Application.UseCases.Veiculos.Validators;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Domain.ValueObjects;
@@ -16,24 +17,7 @@ public class CreateVeiculoUseCase(
     public async Task<ResultGeneric<VeiculoOutput>> ExecuteAsync(CreateVeiculoInput input, CancellationToken cancellationToken)
     {
         var errors = new List<string>();
-
-        if (input.ClienteId == Guid.Empty)
-            errors.Add("O identificador do cliente é obrigatório.");
-
-        if (string.IsNullOrWhiteSpace(input.Placa))
-            errors.Add("A placa do veículo é obrigatória.");
-        else if (!Placa.EhValida(input.Placa))
-            errors.Add("A placa informada é inválida.");
-
-        if (string.IsNullOrWhiteSpace(input.Marca))
-            errors.Add("A marca do veículo é obrigatória.");
-
-        if (string.IsNullOrWhiteSpace(input.Modelo))
-            errors.Add("O modelo do veículo é obrigatório.");
-
-        var limiteAnoMaximo = DateTime.UtcNow.Year + 1;
-        if (input.Ano < 1900 || input.Ano > limiteAnoMaximo)
-            errors.Add($"O ano do veículo deve ser entre 1900 e {limiteAnoMaximo}.");
+        VeiculoValidator.ValidateCreate(input, errors);
 
         if (errors.Count > 0)
             return ResultGeneric<VeiculoOutput>.Failure(errors);
