@@ -25,7 +25,7 @@ public static class SecurityExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-        var encryptionKey = configuration["EncryptionSettings:Key"] ?? configuration["JwtSettings:Secret"];
+        var encryptionKey = configuration["EncryptionSettings:Key"] ?? throw new InvalidOperationException("A chave de criptografia de dados sensíveis (LGPD) não foi configurada.");
         DeterministicEncryption.Initialize(encryptionKey);
     }
 
@@ -58,6 +58,7 @@ public static class SecurityExtensions
 
     private static void AddSettings(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.Configure<EncryptionSettings>(configuration.GetSection(EncryptionSettings.SectionName));
     }
 }
