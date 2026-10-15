@@ -10,6 +10,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     private readonly IUserContext _userContext = userContext;
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Cliente> Clientes => Set<Cliente>();
+    public DbSet<Veiculo> Veiculos => Set<Veiculo>();
+    public DbSet<ItemEstoque> ItensEstoque => Set<ItemEstoque>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

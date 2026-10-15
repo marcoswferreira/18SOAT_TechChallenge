@@ -25,8 +25,11 @@ public static class InfrastructureExtensions
         AddPostgreeSqlInfrastructure(services, configuration);
 
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddExceptionHandler<ExceptionHandler>();
+        services.AddScoped<IClienteRepository, ClienteRepository>();
+        services.AddScoped<IVeiculoRepository, VeiculoRepository>();
+        services.AddScoped<IItemEstoqueRepository, ItemEstoqueRepository>();
         services.AddHttpClient<IResend, ResendClient>();
+        services.AddExceptionHandler<ExceptionHandler>();
 
         services.AddOptions<ResendClientOptions>()
                 .Configure(options =>
