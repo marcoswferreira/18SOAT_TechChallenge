@@ -22,6 +22,17 @@ public class DocumentoTests
     }
 
     [Theory]
+    [InlineData("52998224725", "529.***.***-25")]
+    [InlineData("529.982.247-25", "529.***.***-25")]
+    [InlineData("11222333000181", "11.***.***/****-81")]
+    [InlineData("11.222.333/0001-81", "11.***.***/****-81")]
+    public void Mascarado_ShouldObfuscateSensitiveDocumentData(string input, string expectedMascarado)
+    {
+        var documento = new Documento(input);
+        Assert.Equal(expectedMascarado, documento.Mascarado);
+    }
+
+    [Theory]
     [InlineData("")]
     [InlineData("   ")]
     public void Constructor_WithNullOrWhitespace_ShouldThrowArgumentException(string input)
@@ -54,4 +65,3 @@ public class DocumentoTests
         Assert.True(doc1 == doc2);
     }
 }
-

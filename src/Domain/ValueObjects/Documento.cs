@@ -37,6 +37,17 @@ public sealed record Documento : IValueObject
         _ => Valor
     };
 
+    /// <summary>
+    /// Retorna o documento mascarado para proteção de dados sensíveis em conformidade com a LGPD.
+    /// Exemplo: 529.***.***-25 para CPF e 11.***.***/****-81 para CNPJ.
+    /// </summary>
+    public string Mascarado => Tipo switch
+    {
+        TipoDocumento.CPF => $"{Valor[..3]}.***.***-{Valor[9..]}",
+        TipoDocumento.CNPJ => $"{Valor[..2]}.***.***/****-{Valor[12..]}",
+        _ => Valor
+    };
+
     public override string ToString() => Valor;
 
     public static implicit operator string(Documento documento) => documento.Valor;
@@ -103,4 +114,3 @@ public sealed record Documento : IValueObject
         return numero[13] - '0' == digito2;
     }
 }
-

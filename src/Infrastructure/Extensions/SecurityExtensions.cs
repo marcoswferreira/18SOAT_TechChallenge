@@ -1,4 +1,4 @@
-﻿using Domain.Interfaces;
+using Domain.Interfaces;
 using Domain.Interfaces.Services;
 using Infrastructure.Security;
 using Infrastructure.Services;
@@ -24,6 +24,9 @@ public static class SecurityExtensions
         services.AddAuthorization();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        var encryptionKey = configuration["EncryptionSettings:Key"] ?? configuration["JwtSettings:Secret"];
+        DeterministicEncryption.Initialize(encryptionKey);
     }
 
     private static void AddAuth(this IServiceCollection services, IConfiguration configuration)

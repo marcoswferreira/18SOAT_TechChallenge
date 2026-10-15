@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.ValueObjects;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,9 +18,11 @@ public class VeiculoMapping : IEntityTypeConfiguration<Veiculo>
             .IsRequired();
 
         builder.Property(v => v.Placa)
-            .HasConversion(p => p.Valor, v => new Placa(v))
+            .HasConversion(
+                p => DeterministicEncryption.Encrypt(p.Valor),
+                v => new Placa(DeterministicEncryption.Decrypt(v)))
             .HasColumnName("Placa")
-            .HasMaxLength(7)
+            .HasMaxLength(256)
             .IsRequired();
 
         builder.HasIndex(v => v.Placa)

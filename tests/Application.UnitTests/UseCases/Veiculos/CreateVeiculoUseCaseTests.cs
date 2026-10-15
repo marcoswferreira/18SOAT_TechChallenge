@@ -35,7 +35,7 @@ public class CreateVeiculoUseCaseTests
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value);
         Assert.Equal(clienteId, result.Value.ClienteId);
-        Assert.Equal("BRA2E19", result.Value.Placa);
+        Assert.Equal("BRA***9", result.Value.Placa);
         Assert.Equal("Toyota", result.Value.Marca);
         Assert.Equal("Corolla", result.Value.Modelo);
         Assert.Equal(2022, result.Value.Ano);

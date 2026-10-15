@@ -32,7 +32,7 @@ public class CreateClienteUseCaseTests
         Assert.NotNull(result.Value);
         Assert.Empty(result.Errors);
         Assert.Equal("João Silva", result.Value.Nome);
-        Assert.Equal("52998224725", result.Value.CPFCNPJ);
+        Assert.Equal("529.***.***-25", result.Value.CPFCNPJ);
         Assert.Equal("joao@email.com", result.Value.Email);
         Assert.Equal("(11) 99999-8888", result.Value.Telefone);
         Assert.Equal("Rua das Flores", result.Value.Endereco.Logradouro);
