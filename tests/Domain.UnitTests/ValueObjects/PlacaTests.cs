@@ -21,6 +21,16 @@ public class PlacaTests
     }
 
     [Theory]
+    [InlineData("BRA2E19", "BRA***9")]
+    [InlineData("abc-1234", "ABC***4")]
+    [InlineData("ABC1234", "ABC***4")]
+    public void Mascarada_ShouldObfuscateSensitivePlateData(string input, string expectedMascarada)
+    {
+        var placa = new Placa(input);
+        Assert.Equal(expectedMascarada, placa.Mascarada);
+    }
+
+    [Theory]
     [InlineData("")]
     [InlineData("   ")]
     public void Constructor_WithNullOrWhitespace_ShouldThrowArgumentException(string input)
@@ -51,4 +61,3 @@ public class PlacaTests
         Assert.True(placa1 == placa2);
     }
 }
-

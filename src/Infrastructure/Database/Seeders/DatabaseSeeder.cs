@@ -137,16 +137,18 @@ public static class DatabaseSeeder
                 )
             };
 
+            var allClientes = await dbContext.Clientes
+                .Include(c => c.Veiculos)
+                .IgnoreQueryFilters()
+                .ToListAsync();
+
             var clientesAdicionados = 0;
             var veiculosAdicionados = 0;
 
             foreach (var item in seedData)
             {
                 var documentoVo = new Documento(item.Documento);
-                var existingCliente = await dbContext.Clientes
-                    .Include(c => c.Veiculos)
-                    .IgnoreQueryFilters()
-                    .FirstOrDefaultAsync(c => c.Documento == documentoVo);
+                var existingCliente = allClientes.FirstOrDefault(c => c.Documento == documentoVo);
 
                 if (existingCliente is null)
                 {
@@ -168,6 +170,7 @@ public static class DatabaseSeeder
 
                     cliente.AdicionarVeiculo(veiculo);
                     await dbContext.Clientes.AddAsync(cliente);
+                    allClientes.Add(cliente);
                     clientesAdicionados++;
                     veiculosAdicionados++;
                 }
@@ -213,10 +216,13 @@ public static class DatabaseSeeder
                 logger.LogInformation("DatabaseSeeder: Clientes e veículos padrão já existem no banco de dados.");
             }
         }
+        catch (DbUpdateException ex)
+        {
+            logger.LogWarning(ex, "DatabaseSeeder: Conflito de dados ao semear clientes e veículos padrão. A inicialização da aplicação prosseguirá normalmente.");
+        }
         catch (Exception ex)
         {
-            logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default clientes e veículos.");
-            throw;
+            logger.LogWarning(ex, "DatabaseSeeder: Ocorreu um erro ao semear clientes e veículos padrão. A inicialização da aplicação prosseguirá normalmente.");
         }
     }
 

@@ -26,7 +26,7 @@ public class GetVeiculoByIdUseCaseTests
         var result = await _useCase.ExecuteAsync(id, CancellationToken.None);
 
         Assert.NotNull(result);
-        Assert.Equal("BRA2E19", result.Placa);
+        Assert.Equal("BRA***9", result.Placa);
         Assert.Equal("Toyota", result.Marca);
     }
 
