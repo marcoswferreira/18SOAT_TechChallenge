@@ -1,5 +1,6 @@
 using Application.UseCases.Auth;
 using Application.UseCases.Clientes;
+using Application.UseCases.ItensEstoque;
 using Application.UseCases.Services;
 using Application.UseCases.Users;
 using Application.UseCases.Veiculos;
@@ -37,6 +38,14 @@ public static class ApplicationExtensions
         services.AddScoped<GetVeiculosPagedUseCase>();
         services.AddScoped<UpdateVeiculoUseCase>();
         services.AddScoped<DeleteVeiculoUseCase>();
+
+        // ItemEstoque Use Cases
+        services.AddScoped<CreateItemEstoqueUseCase>();
+        services.AddScoped<GetItemEstoqueByIdUseCase>();
+        services.AddScoped<GetItensEstoquePagedUseCase>();
+        services.AddScoped<UpdateItemEstoqueUseCase>();
+        services.AddScoped<DeleteItemEstoqueUseCase>();
+        services.AddScoped<RegistrarEntradaEstoqueUseCase>();
 
         // Serviços Use Cases
         services.AddScoped<CreateServiceUserCase>();
