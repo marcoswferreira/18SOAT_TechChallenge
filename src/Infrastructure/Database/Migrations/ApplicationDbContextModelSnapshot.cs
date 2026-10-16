@@ -210,7 +210,7 @@ namespace Infrastructure.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.Service", b =>
+            modelBuilder.Entity("Domain.Entities.Servico", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,7 +237,7 @@ namespace Infrastructure.Database.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
-                    b.Property<string>("ServiceName")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("text");
 
