@@ -1,9 +1,12 @@
 ﻿using Application.UseCases.Servicos;
 using Application.UseCases.Servicos.Dto;
+using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using NSubstitute;
+using System.Threading;
+using Xunit;
 
-namespace Apolication.UnitTests.UseCases.Servicos
+namespace Application.UnitTests.UseCases.Servicos
 {
     public class CreateServicoUseCaseTests
     {
@@ -16,34 +19,37 @@ namespace Apolication.UnitTests.UseCases.Servicos
             _useCase = new CreateServicoUserCase(_servicoRepository);
         }
 
-        // -------------------------------------------------------------------------
-        // Happy paths
-        // -------------------------------------------------------------------------
         [Fact]
         public async Task ExecuteAsync_WithValidInput_ShouldCreateServiceAndReturnOutput()
         {
-            var input = new CreateServicoInput("Test Service");
+            var input = new CreateServicoInput("  Test Service  ");
+            _servicoRepository.GetByServiceNameAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+                .Returns((Servico?)null);
+
             var result = await _useCase.ExecuteAsync(input, CancellationToken.None);
+
+            Assert.NotNull(result);
+            Assert.Equal("Test Service", result.Nome);
+
+            await _servicoRepository.Received(1).AddSync(Arg.Is<Servico>(s => s.Nome == "Test Service"), Arg.Any<CancellationToken>());
         }
 
-
-        // -------------------------------------------------------------------------
-        // Validation errors
-        // -------------------------------------------------------------------------
         [Fact]
         public async Task ExecuteAsync_WithDuplicateServiceName_ShouldThrowException()
         {
             var input = new CreateServicoInput("Test Service");
-            var result = await _useCase.ExecuteAsync(input, CancellationToken.None);
+            _servicoRepository.GetByServiceNameAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+                .Returns(new Servico("Test Service"));
 
+            await Assert.ThrowsAsync<InvalidOperationException>(() => _useCase.ExecuteAsync(input, CancellationToken.None));
         }
 
+        [Fact]
         public async Task ExecuteAsync_WithNoServiceName_ShouldThrowException()
         {
-            var input = new CreateServicoInput("");
-            var result = await _useCase.ExecuteAsync(input, CancellationToken.None);
+            var input = new CreateServicoInput("   ");
+
+            await Assert.ThrowsAsync<ArgumentException>(() => _useCase.ExecuteAsync(input, CancellationToken.None));
         }
-
-
     }
 }
