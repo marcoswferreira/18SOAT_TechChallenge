@@ -1,19 +1,19 @@
-﻿using Application.UseCases.Services;
-using Application.UseCases.Services.Dto;
+﻿using Application.UseCases.Servicos;
+using Application.UseCases.Servicos.Dto;
 using Domain.Interfaces.Repositories;
 using NSubstitute;
 
-namespace Application.UnitTests.UseCases.Services
+namespace Apolication.UnitTests.UseCases.Servicos
 {
-    public class CreateServiceUseCaseTests
+    public class CreateServicoUseCaseTests
     {
-        private readonly IServiceRepository _serviceRepository = Substitute.For<IServiceRepository>();
+        private readonly IServicoRepository _servicoRepository = Substitute.For<IServicoRepository>();
 
-        private readonly CreateServiceUserCase _useCase;
+        private readonly CreateServicoUserCase _useCase;
 
-        public CreateServiceUseCaseTests()
+        public CreateServicoUseCaseTests()
         {
-            _useCase = new CreateServiceUserCase(_serviceRepository);
+            _useCase = new CreateServicoUserCase(_servicoRepository);
         }
 
         // -------------------------------------------------------------------------
@@ -22,7 +22,7 @@ namespace Application.UnitTests.UseCases.Services
         [Fact]
         public async Task ExecuteAsync_WithValidInput_ShouldCreateServiceAndReturnOutput()
         {
-            var input = new CreateServiceInput("Test Service");
+            var input = new CreateServicoInput("Test Service");
             var result = await _useCase.ExecuteAsync(input, CancellationToken.None);
         }
 
@@ -33,14 +33,14 @@ namespace Application.UnitTests.UseCases.Services
         [Fact]
         public async Task ExecuteAsync_WithDuplicateServiceName_ShouldThrowException()
         {
-            var input = new CreateServiceInput("Test Service");
+            var input = new CreateServicoInput("Test Service");
             var result = await _useCase.ExecuteAsync(input, CancellationToken.None);
 
         }
 
         public async Task ExecuteAsync_WithNoServiceName_ShouldThrowException()
         {
-            var input = new CreateServiceInput("");
+            var input = new CreateServicoInput("");
             var result = await _useCase.ExecuteAsync(input, CancellationToken.None);
         }
 

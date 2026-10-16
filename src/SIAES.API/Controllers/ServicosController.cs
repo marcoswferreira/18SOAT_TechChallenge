@@ -1,12 +1,8 @@
-﻿using Application.UseCases.Services;
-using Application.UseCases.Services.Dto;
-using Application.UseCases.Users;
-using Application.UseCases.Users.Dto;
+﻿using Application.UseCases.Servicos;
+using Application.UseCases.Servicos.Dto;
 using Asp.Versioning;
 using Domain.Common.Paginate;
-using Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SIAES.API.Controllers
@@ -15,18 +11,18 @@ namespace SIAES.API.Controllers
     [ApiVersion("1.0")]
     [Authorize]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class ServicesController(
-        CreateServiceUserCase createServicesUseCase,
-        UpdateServiceUserCase updateServiceUserCase,
-        DeleteServiceUserCase deleteServiceUserCase,
-        GetServiceByIdUserCase getServiceByIdUserCase,
-        GetServicePagedUseCase getServicesPagedUseCase) : ControllerBase
+    public class ServicosController(
+        CreateServicoUserCase createServicosUseCase,
+        UpdateServicoUserCase updateServicoUserCase,
+        DeleteServicoUserCase deleteServicoUserCase,
+        GetServicoByIdUserCase getServicoByIdUserCase,
+        GetServicoPagedUseCase getServicosPagedUseCase) : ControllerBase
     {
-        private readonly CreateServiceUserCase _createServicesUseCase = createServicesUseCase;
-        private readonly UpdateServiceUserCase _updateServiceUserCase = updateServiceUserCase;
-        private readonly DeleteServiceUserCase _deleteServiceUserCase = deleteServiceUserCase;
-        private readonly GetServiceByIdUserCase _getServiceByIdUserCase = getServiceByIdUserCase;   
-        private readonly GetServicePagedUseCase _getServicesPagedUseCase = getServicesPagedUseCase;
+        private readonly CreateServicoUserCase _createServicosUseCase = createServicosUseCase;
+        private readonly UpdateServicoUserCase _updateServicoUserCase = updateServicoUserCase;
+        private readonly DeleteServicoUserCase _deleteServicoUserCase = deleteServicoUserCase;
+        private readonly GetServicoByIdUserCase _getServicoByIdUserCase = getServicoByIdUserCase;   
+        private readonly GetServicoPagedUseCase _getServicosPagedUseCase = getServicosPagedUseCase;
 
         /// <summary>
         /// Cadastra um novo serviço no sistema.
@@ -35,11 +31,11 @@ namespace SIAES.API.Controllers
         /// <param name="cancellationToken">O token de cancelamento</param>
         /// <returns>Os dados do serviço cadastrado</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(ServiceOutput), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ServicoOutput), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] CreateServiceInput request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create([FromBody] CreateServicoInput request, CancellationToken cancellationToken)
         {
-            var result = await _createServicesUseCase.ExecuteAsync(request, cancellationToken);
+            var result = await _createServicosUseCase.ExecuteAsync(request, cancellationToken);
 
             //return CreatedAtAction(nameof(GetById), new { version = "1.0", id = result. }, result);
             return CreatedAtAction(nameof(GetById), new { version = "1.0", id = 1 }, result);
@@ -48,47 +44,47 @@ namespace SIAES.API.Controllers
         /// <summary>
         /// Atualiza dados de um serviço (Nome do Serviço).
         /// </summary>
-        /// <param name="idService">O ID do serviço</param>
+        /// <param name="id">O ID do serviço</param>
         /// <param name="request">Os dados do serviço para atualização</param>
         /// <param name="cancellationToken">O token de cancelamento</param>
         /// <returns>Os dados atualizados do serviço</returns>
-        [HttpPut("{idService:guid}")]
-        [ProducesResponseType(typeof(ServiceOutput), StatusCodes.Status200OK)]
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(typeof(ServicoOutput), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update([FromRoute] Guid idService,[FromBody] UpdateServiceInput request,CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromRoute] Guid id,[FromBody] UpdateServicoInput request,CancellationToken cancellationToken)
         {
-            ServiceOutput result = await _updateServiceUserCase.ExecuteAsync(idService, request, cancellationToken);
+            ServicoOutput result = await _updateServicoUserCase.ExecuteAsync(id, request, cancellationToken);
             return Ok(result);
         }
 
         /// <summary>
         /// Remove logicamente (Soft Delete) um serviço.
         /// </summary>
-        /// <param name="idService">O ID do serviço</param>
+        /// <param name="id">O ID do serviço</param>
         /// <param name="cancellationToken">O token de cancelamento</param>
         /// <returns>No Content</returns>
-        [HttpDelete("{idService:guid}")]
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] Guid idService,CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete([FromRoute] Guid id,CancellationToken cancellationToken)
         {
-            await _deleteServiceUserCase.ExecuteAsync(idService, cancellationToken);
+            await _deleteServicoUserCase.ExecuteAsync(id, cancellationToken);
             return NoContent();
         }
 
         /// <summary>
         /// Obtém os detalhes de um serviço específico pelo seu ID.
         /// </summary>
-        /// <param name="idService">O ID do serviço</param>
+        /// <param name="id">O ID do serviço</param>
         /// <param name="cancellationToken">O token de cancelamento</param>
         /// <returns>Os dados do serviço</returns>
-        [HttpGet("{idService:guid}")]
-        [ProducesResponseType(typeof(UserOutput), StatusCodes.Status200OK)]
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ServicoOutput), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById([FromRoute] Guid idService ,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetById([FromRoute] Guid id,CancellationToken cancellationToken)
         {
-            ServiceOutput result = await _getServiceByIdUserCase.ExecuteAsync(idService, cancellationToken);
+            ServicoOutput result = await _getServicoByIdUserCase.ExecuteAsync(id, cancellationToken);
             return Ok(result);
         }
 
@@ -103,7 +99,7 @@ namespace SIAES.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetPaged([FromQuery] int pageIndex = 0,[FromQuery] int pageSize = 10,CancellationToken cancellationToken = default)
         {
-            IPaginate<ServiceOutput> result = await _getServicesPagedUseCase.ExecuteAsync(pageIndex, pageSize, cancellationToken);
+            IPaginate<ServicoOutput> result = await _getServicosPagedUseCase.ExecuteAsync(pageIndex, pageSize, cancellationToken);
             return Ok(result);
         }
     }
