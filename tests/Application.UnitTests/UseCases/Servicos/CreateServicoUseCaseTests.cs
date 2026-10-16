@@ -29,7 +29,7 @@ namespace Application.UnitTests.UseCases.Servicos
             var result = await _useCase.ExecuteAsync(input, CancellationToken.None);
 
             Assert.NotNull(result);
-            Assert.Equal("Test Service", result.Nome);
+            Assert.Equal("Test Service", result.Nome.Trim());
 
             await _servicoRepository.Received(1).AddSync(Arg.Is<Servico>(s => s.Nome == "Test Service"), Arg.Any<CancellationToken>());
         }

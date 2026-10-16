@@ -14,12 +14,12 @@ namespace Application.UseCases.Servicos
                 throw new ArgumentException("O nome do serviço é obrigatório.");
             }
 
-            if (await _servicoRepository.GetByServiceNameAsync(servicoInputs.nome, cancellationToken) != null)
+            if (await _servicoRepository.GetByServiceNameAsync(servicoInputs.nome.Trim(), cancellationToken) != null)
             {
                 throw new InvalidOperationException($"Já existe um serviço com esse nome '{servicoInputs.nome}'.");
             }
 
-            var servico = new Domain.Entities.Servico(servicoInputs.nome);
+            var servico = new Domain.Entities.Servico(servicoInputs.nome.Trim());
             await _servicoRepository.AddSync(servico, cancellationToken);
             
             return ServicoOutput.FromEntity(servico);

@@ -21,7 +21,7 @@ namespace Application.UseCases.Servicos
                 throw new ArgumentException("O nome do serviço é obrigatório.");
             }
 
-            servico.Update(input.Nome);
+            servico.Update(input.Nome.Trim());
 
             await _servicoRepository.UpdateSync(servico, cancellationToken);
 

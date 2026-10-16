@@ -14,14 +14,14 @@ namespace Domain.Entities
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(nome);
 
-            this.Nome = nome;
+            this.Nome = nome.Trim();
         }
 
         public Servico(Guid id, string nome)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(nome);
 
-            this.Nome = nome;
+            this.Nome = nome.Trim();
         }
 
         public void Update(string nome)
