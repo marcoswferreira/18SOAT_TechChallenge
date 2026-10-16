@@ -37,8 +37,7 @@ namespace SIAES.API.Controllers
         {
             var result = await _createServicosUseCase.ExecuteAsync(request, cancellationToken);
 
-            //return CreatedAtAction(nameof(GetById), new { version = "1.0", id = result. }, result);
-            return CreatedAtAction(nameof(GetById), new { version = "1.0", id = 1 }, result);
+            return CreatedAtAction(nameof(GetById), new { version = "1.0", id = result.Id }, result);
         }
 
         /// <summary>
