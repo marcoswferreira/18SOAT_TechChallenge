@@ -1,8 +1,0 @@
-var items = await Query(
-    null,
-    orderBy: q => q.OrderBy(c => c.ServiceName),
-    null,
-    false
-).ToListAsync(cancellationToken);
-
-var resultadoPaginado = items.Skip(index * size).Take(size).ToList();
