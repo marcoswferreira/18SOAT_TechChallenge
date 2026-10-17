@@ -1,52 +1,33 @@
 ﻿using Application.Dto;
 using Application.Services;
 using Asp.Versioning;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SIAES.API.Controllers;
-
 
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/cliente/ordens-servico")]
 public class ClienteOrdensServicoController(OrdemServicoService service) : ControllerBase
 {
-    /// <summary>
-    /// Consulta o status de uma Ordem de Serviço pelo ID/Código enviado ao cliente.
-    /// </summary>
+    /// <summary>Consulta o status de uma OS pelo ID.</summary>
     [HttpGet("{id:guid}/status")]
-    [ProducesResponseType(typeof(ConsultaStatusClienteResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ConsultaStatusClienteResponse), 200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> ObterStatusPorId(Guid id, CancellationToken ct)
     {
-        try
-        {
-            var status = await service.ConsultarStatusPorIdAsync(id, ct);
-            return Ok(status);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { mensagem = ex.Message });
-        }
+        var resultado = await service.ConsultarStatusPorIdAsync(id, ct);
+        return Ok(resultado);
     }
 
-    /// <summary>
-    /// Consulta todas as Ordens de Serviço vinculadas ao CPF ou CNPJ do cliente.
-    /// </summary>
+    /// <summary>Consulta todas as OS de um cliente pelo CPF ou CNPJ.</summary>
     [HttpGet("documento/{documento}/status")]
-    [ProducesResponseType(typeof(IEnumerable<ConsultaStatusClienteResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ObterStatusPorDocumento(string documento, CancellationToken ct)
+    [ProducesResponseType(typeof(IEnumerable<ConsultaStatusClienteResponse>), 200)]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> ObterStatusPorDocumento(
+        string documento, CancellationToken ct)
     {
-        try
-        {
-            var ordens = await service.ConsultarStatusPorDocumentoAsync(documento, ct);
-            return Ok(ordens);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { erro = ex.Message });
-        }
+        var resultado = await service.ConsultarStatusPorDocumentoAsync(documento, ct);
+        return Ok(resultado);
     }
 }
