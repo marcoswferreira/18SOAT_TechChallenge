@@ -7,37 +7,28 @@ namespace Infrastructure.Database.Repositories;
 
 public class OrdemServicoRepository(DbContext context) : IOrdemServicoRepository
 {
-    // 1. Consulta pública por ID da OS
-    public async Task<OrdemServico?> ObterPorIdAsync(Guid id, CancellationToken ct)
+    public Task AdicionarAsync(OrdemServico ordemServico, CancellationToken ct = default)
     {
-        return await context.Set<OrdemServico>()
-            .FirstOrDefaultAsync(os => os.Id == id, ct);
-
-        //return await context.Set<OrdemServico>()
-        //    .Include(os => os.Cliente)
-        //    .FirstOrDefaultAsync(os => os.Id == id, ct);
+        throw new NotImplementedException();
     }
 
-    // 2. Consulta pública por CPF/CNPJ do Cliente
-    public async Task<IEnumerable<OrdemServico>> ObterPorDocumentoClienteAsync(CpfCnpj documento, CancellationToken ct)
+    public Task<IEnumerable<OrdemServico>> ListarTodasAsync(CancellationToken ct = default)
     {
-        return await context.Set<OrdemServico>()
-            .OrderByDescending(os => os.Id) 
-            .ToListAsync(ct);
-
-        //return await context.Set<OrdemServico>()
-        //    .Include(os => os.Cliente)
-        //    .Where(os => os.Cliente.Documento.Numero == documento.Numero)
-        //    .OrderByDescending(os => os.Id) // traz as mais recentes primeiro
-        //    .ToListAsync(ct);
+        throw new NotImplementedException();
     }
 
-    public async Task SalvarAsync(OrdemServico ordemServico, CancellationToken ct)
+    public Task<IEnumerable<OrdemServico>> ObterPorDocumentoClienteAsync(Documento documento, CancellationToken ct = default)
     {
-        var existe = await context.Set<OrdemServico>().AnyAsync(os => os.Id == ordemServico.Id, ct);
-        if (!existe)
-            await context.Set<OrdemServico>().AddAsync(ordemServico, ct);
+        throw new NotImplementedException();
+    }
 
-        await context.SaveChangesAsync(ct);
+    public Task<OrdemServico?> ObterPorIdAsync(Guid id, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SalvarAlteracoesAsync(CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
     }
 }
