@@ -15,6 +15,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ItemEstoque> ItensEstoque => Set<ItemEstoque>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<Service> Services => Set<Service>();
+    public DbSet<OrdemServico> OrdensServico => Set<OrdemServico>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
