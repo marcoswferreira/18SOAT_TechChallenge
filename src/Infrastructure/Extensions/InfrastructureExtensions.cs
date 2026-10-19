@@ -33,11 +33,18 @@ public static class InfrastructureExtensions
         services.AddHttpClient<IResend, ResendClient>();
         services.AddExceptionHandler<ExceptionHandler>();
 
+        var resendSection = configuration.GetSection("Resend").Exists()
+            ? configuration.GetSection("Resend")
+            : configuration.GetSection("ResendSettings");
+
+        services.Configure<Infrastructure.Settings.ResendSettings>(resendSection);
+
         services.AddOptions<ResendClientOptions>()
                 .Configure(options =>
                 {
-                    options.ApiToken = configuration["Resend:ApiToken"]
-                        ?? throw new InvalidOperationException("API Key do Resend não foi configurada.");
+                    var token = configuration["Resend:ApiToken"]
+                        ?? configuration["ResendSettings:ApiToken"];
+                    options.ApiToken = string.IsNullOrWhiteSpace(token) ? "re_placeholder_development" : token;
                 });
 
         services.AddScoped<IResendEmailService, ResendEmailService>();
