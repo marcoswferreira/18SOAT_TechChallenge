@@ -6,7 +6,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Services.Notifications;
+namespace Infrastructure.Services.Notifications;
 
 public class OrdemServicoNotificationService(
     IResendEmailService emailService,
@@ -202,7 +202,7 @@ public class OrdemServicoNotificationService(
             cliente: c!,
             veiculo: v,
             os: os,
-            mensagemPrincipal: "Registramos a rejeição do orçamento da Ordem de Serviço.",
+            mensagemPrincipal: "Registramos a rejeição do orçamento da Ordem de Serviço. A OS foi cancelada e as reservas de peças foram liberadas no estoque.",
             conteudoAdicional: """
                 <div style="background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 12px 16px; margin: 16px 0; border-radius: 4px;">
                     <p style="margin: 0; font-size: 14px; color: #991b1b;">
@@ -391,3 +391,4 @@ public class OrdemServicoNotificationService(
             """;
     }
 }
+

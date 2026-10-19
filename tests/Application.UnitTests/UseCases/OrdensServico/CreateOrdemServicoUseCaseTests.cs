@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces.Repositories;
 using Domain.ValueObjects;
+using Domain.Interfaces.Services;
 using NSubstitute;
 
 namespace Application.UnitTests.UseCases.OrdensServico;
@@ -13,13 +14,14 @@ public class CreateOrdemServicoUseCaseTests
     private readonly IOrdemServicoRepository _ordemServicoRepository = Substitute.For<IOrdemServicoRepository>();
     private readonly IClienteRepository _clienteRepository = Substitute.For<IClienteRepository>();
     private readonly IVeiculoRepository _veiculoRepository = Substitute.For<IVeiculoRepository>();
+    private readonly IOrdemServicoNotificationService _notificationService = Substitute.For<IOrdemServicoNotificationService>();
     private readonly CreateOrdemServicoUseCase _useCase;
 
     private static Endereco ValidEndereco() => new("Rua B", "123", null, "Centro", "São Paulo", "SP", "01001-000");
 
     public CreateOrdemServicoUseCaseTests()
     {
-        _useCase = new CreateOrdemServicoUseCase(_ordemServicoRepository, _clienteRepository, _veiculoRepository);
+        _useCase = new CreateOrdemServicoUseCase(_ordemServicoRepository, _clienteRepository, _veiculoRepository, _notificationService);
     }
 
     [Fact]
@@ -44,6 +46,7 @@ public class CreateOrdemServicoUseCaseTests
 
         await _ordemServicoRepository.Received(1).InsertAsync(Arg.Any<OrdemServico>(), Arg.Any<CancellationToken>());
         await _ordemServicoRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _notificationService.Received(1).NotificarOrdemServicoCriadaAsync(Arg.Any<OrdemServico>(), cliente, veiculo, Arg.Any<CancellationToken>());
     }
 
     [Fact]

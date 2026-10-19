@@ -69,9 +69,6 @@ public static class ApplicationExtensions
         services.AddScoped<FinalizarOrdemServicoUseCase>();
         services.AddScoped<EntregarVeiculoUseCase>();
 
-        // Serviços de Notificação
-        services.AddScoped<Application.Services.Notifications.IOrdemServicoNotificationService, Application.Services.Notifications.OrdemServicoNotificationService>();
-
         return services;
     }
 }

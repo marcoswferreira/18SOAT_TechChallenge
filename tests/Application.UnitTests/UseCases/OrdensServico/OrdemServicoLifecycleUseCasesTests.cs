@@ -1,3 +1,4 @@
+using Domain.Interfaces.Services;
 using Application.UseCases.OrdensServico;
 using Application.UseCases.OrdensServico.Dto;
 using Domain.Entities;
@@ -13,6 +14,7 @@ public class OrdemServicoLifecycleUseCasesTests
     private readonly IOrdemServicoRepository _osRepo = Substitute.For<IOrdemServicoRepository>();
     private readonly IItemEstoqueRepository _estoqueRepo = Substitute.For<IItemEstoqueRepository>();
     private readonly IServicoRepository _servicoRepo = Substitute.For<IServicoRepository>();
+    private readonly IOrdemServicoNotificationService _notificationService = Substitute.For<IOrdemServicoNotificationService>();
 
     [Fact]
     public async Task IniciarDiagnostico_DeveMudarStatusParaEmDiagnostico()
@@ -78,7 +80,7 @@ public class OrdemServicoLifecycleUseCasesTests
     }
 
     [Fact]
-    public async Task GerarOrcamento_ComItens_DeveMudarParaAguardandoAprovacao()
+    public async Task GerarOrcamento_ComItens_DeveMudarParaAguardandoAprovacao_ENotificarCliente()
     {
         // Arrange
         var os = new OrdemServico(Guid.NewGuid(), Guid.NewGuid());
@@ -86,17 +88,18 @@ public class OrdemServicoLifecycleUseCasesTests
         os.AdicionarServico(new ItemServico("Serviço", 100m, 1));
         _osRepo.GetByIdWithDetailsAsync(os.Id, Arg.Any<CancellationToken>()).Returns(os);
 
-        var useCase = new GerarOrcamentoUseCase(_osRepo);
+        var useCase = new GerarOrcamentoUseCase(_osRepo, _notificationService);
 
         // Act
         var result = await useCase.ExecuteAsync(os.Id, CancellationToken.None);
 
         // Assert
         Assert.Equal(StatusOrdemServico.AguardandoAprovacao.ToString(), result.Status);
+        await _notificationService.Received(1).NotificarOrcamentoParaAprovacaoAsync(os, null, null, Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task AprovarOrcamento_DeveMudarParaEmExecucao()
+    public async Task AprovarOrcamento_DeveMudarParaEmExecucao_ENotificarCliente()
     {
         // Arrange
         var os = new OrdemServico(Guid.NewGuid(), Guid.NewGuid());
@@ -105,17 +108,18 @@ public class OrdemServicoLifecycleUseCasesTests
         os.GerarEEnviarOrcamento();
         _osRepo.GetByIdWithDetailsAsync(os.Id, Arg.Any<CancellationToken>()).Returns(os);
 
-        var useCase = new AprovarOrcamentoUseCase(_osRepo);
+        var useCase = new AprovarOrcamentoUseCase(_osRepo, _notificationService);
 
         // Act
         var result = await useCase.ExecuteAsync(os.Id, CancellationToken.None);
 
         // Assert
         Assert.Equal(StatusOrdemServico.EmExecucao.ToString(), result.Status);
+        await _notificationService.Received(1).NotificarOrcamentoAprovadoAsync(os, null, null, Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task RejeitarOrcamento_DeveCancelarOS_ELiberarReservaNoEstoque()
+    public async Task RejeitarOrcamento_DeveCancelarOS_ELiberarReservaNoEstoque_ENotificarCliente()
     {
         // Arrange
         var os = new OrdemServico(Guid.NewGuid(), Guid.NewGuid());
@@ -130,7 +134,7 @@ public class OrdemServicoLifecycleUseCasesTests
         _osRepo.GetByIdWithDetailsAsync(os.Id, Arg.Any<CancellationToken>()).Returns(os);
         _estoqueRepo.GetByIdAsync(itemEstoque.Id, Arg.Any<CancellationToken>()).Returns(itemEstoque);
 
-        var useCase = new RejeitarOrcamentoUseCase(_osRepo, _estoqueRepo);
+        var useCase = new RejeitarOrcamentoUseCase(_osRepo, _estoqueRepo, _notificationService);
 
         // Act
         var result = await useCase.ExecuteAsync(os.Id, CancellationToken.None);
@@ -140,10 +144,11 @@ public class OrdemServicoLifecycleUseCasesTests
         Assert.Equal(0, itemEstoque.QuantidadeReservada);
         Assert.Equal(10, itemEstoque.QuantidadeDisponivel);
         _estoqueRepo.Received(1).Update(itemEstoque);
+        await _notificationService.Received(1).NotificarOrcamentoRejeitadoAsync(os, null, null, Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task FinalizarOrdemServico_DeveMudarParaFinalizada_EDarBaixaNoEstoque()
+    public async Task FinalizarOrdemServico_DeveMudarParaFinalizada_EDarBaixaNoEstoque_ENotificarCliente()
     {
         // Arrange
         var os = new OrdemServico(Guid.NewGuid(), Guid.NewGuid());
@@ -160,7 +165,7 @@ public class OrdemServicoLifecycleUseCasesTests
         _osRepo.GetByIdWithDetailsAsync(os.Id, Arg.Any<CancellationToken>()).Returns(os);
         _estoqueRepo.GetByIdAsync(itemEstoque.Id, Arg.Any<CancellationToken>()).Returns(itemEstoque);
 
-        var useCase = new FinalizarOrdemServicoUseCase(_osRepo, _estoqueRepo);
+        var useCase = new FinalizarOrdemServicoUseCase(_osRepo, _estoqueRepo, _notificationService);
 
         // Act
         var result = await useCase.ExecuteAsync(os.Id, CancellationToken.None);
@@ -171,10 +176,11 @@ public class OrdemServicoLifecycleUseCasesTests
         Assert.Equal(0, itemEstoque.QuantidadeReservada);
         Assert.Equal(8, itemEstoque.QuantidadeDisponivel);
         _estoqueRepo.Received(1).Update(itemEstoque);
+        await _notificationService.Received(1).NotificarServicoFinalizadoAsync(os, null, null, Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task EntregarVeiculo_DeveMudarParaEntregue()
+    public async Task EntregarVeiculo_DeveMudarParaEntregue_ENotificarCliente()
     {
         // Arrange
         var os = new OrdemServico(Guid.NewGuid(), Guid.NewGuid());
@@ -187,13 +193,14 @@ public class OrdemServicoLifecycleUseCasesTests
 
         _osRepo.GetByIdWithDetailsAsync(os.Id, Arg.Any<CancellationToken>()).Returns(os);
 
-        var useCase = new EntregarVeiculoUseCase(_osRepo);
+        var useCase = new EntregarVeiculoUseCase(_osRepo, _notificationService);
 
         // Act
         var result = await useCase.ExecuteAsync(os.Id, CancellationToken.None);
 
         // Assert
         Assert.Equal(StatusOrdemServico.Entregue.ToString(), result.Status);
+        await _notificationService.Received(1).NotificarVeiculoEntregueAsync(os, null, null, Arg.Any<CancellationToken>());
     }
 }
 

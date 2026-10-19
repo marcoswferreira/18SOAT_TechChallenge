@@ -38,7 +38,7 @@ public class ResendEmailService(
                 throw new InvalidOperationException($"Erro ao enviar e-mail: {response.Exception?.Message}");
             }
 
-            _logger.LogInformation("E-mail enviado com sucesso para {To} com o assunto '{Subject}'. Id: {EmailId}", to, subject, response.Value);
+            _logger.LogInformation("E-mail enviado com sucesso para {To} com o assunto '{Subject}'.", to, subject);
         }
         catch (Exception ex) when (ex is not InvalidOperationException)
         {

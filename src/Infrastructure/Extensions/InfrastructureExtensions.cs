@@ -37,7 +37,7 @@ public static class InfrastructureExtensions
             ? configuration.GetSection("Resend")
             : configuration.GetSection("ResendSettings");
 
-        services.Configure<Infrastructure.Settings.ResendSettings>(resendSection);
+        services.Configure<Settings.ResendSettings>(resendSection);
 
         services.AddOptions<ResendClientOptions>()
                 .Configure(options =>
@@ -48,6 +48,8 @@ public static class InfrastructureExtensions
                 });
 
         services.AddScoped<IResendEmailService, ResendEmailService>();
+        services.AddScoped<IOrdemServicoNotificationService, Services.Notifications.OrdemServicoNotificationService>();
+        services.AddScoped<IOrdemServicoNotificationService, Infrastructure.Services.Notifications.OrdemServicoNotificationService>();
 
         return services;
     }

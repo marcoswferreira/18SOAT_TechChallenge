@@ -1,7 +1,7 @@
-using Application.Services.Notifications;
-using Application.UseCases.OrdensServico.Dto;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
+using Application.UseCases.OrdensServico.Dto;
 
 namespace Application.UseCases.OrdensServico;
 

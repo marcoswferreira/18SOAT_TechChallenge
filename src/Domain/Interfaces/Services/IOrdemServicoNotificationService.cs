@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace Application.Services.Notifications;
+namespace Domain.Interfaces.Services;
 
 public interface IOrdemServicoNotificationService
 {

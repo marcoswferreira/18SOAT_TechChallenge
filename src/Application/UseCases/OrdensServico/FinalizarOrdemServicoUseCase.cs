@@ -1,6 +1,6 @@
-using Application.Services.Notifications;
 using Application.UseCases.OrdensServico.Dto;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 
 namespace Application.UseCases.OrdensServico;
 
