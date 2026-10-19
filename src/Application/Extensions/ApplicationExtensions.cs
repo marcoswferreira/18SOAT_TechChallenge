@@ -57,6 +57,17 @@ public static class ApplicationExtensions
 
         // Ordem de Serviço Use Cases
         services.AddScoped<GetStatusOrdemServicoUseCase>();
+        services.AddScoped<CreateOrdemServicoUseCase>();
+        services.AddScoped<GetOrdemServicoByIdUseCase>();
+        services.AddScoped<GetOrdensServicoPagedUseCase>();
+        services.AddScoped<IniciarDiagnosticoUseCase>();
+        services.AddScoped<AdicionarPecaOrdemServicoUseCase>();
+        services.AddScoped<AdicionarServicoOrdemServicoUseCase>();
+        services.AddScoped<GerarOrcamentoUseCase>();
+        services.AddScoped<AprovarOrcamentoUseCase>();
+        services.AddScoped<RejeitarOrcamentoUseCase>();
+        services.AddScoped<FinalizarOrdemServicoUseCase>();
+        services.AddScoped<EntregarVeiculoUseCase>();
 
         return services;
     }

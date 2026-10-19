@@ -22,6 +22,8 @@ public class OrdemServicoRepository(ApplicationDbContext context) : BaseReposito
             .Include(os => os.Cliente)
             .Include(os => os.Veiculo)
             .Include(os => os.Historico)
+            .Include(os => os.Servicos)
+            .Include(os => os.Pecas)
             .FirstOrDefaultAsync(os => os.Id == id, cancellationToken);
     }
 
