@@ -19,9 +19,12 @@ public class OrdemServicoRepository(ApplicationDbContext context) : BaseReposito
     public async Task<OrdemServico?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbSet
+            .AsSplitQuery()
             .Include(os => os.Cliente)
             .Include(os => os.Veiculo)
             .Include(os => os.Historico)
+            .Include(os => os.Servicos)
+            .Include(os => os.Pecas)
             .FirstOrDefaultAsync(os => os.Id == id, cancellationToken);
     }
 
