@@ -16,7 +16,7 @@ public static class DatabaseSeeder
         await SeedUsersAsync(dbContext, passwordHasher, logger);
         await SeedClientesEVeiculosAsync(dbContext, logger);
         await SeedItensEstoqueAsync(dbContext, logger);
-        await SeedServicesAsync(dbContext, logger);
+        await SeedServicosAsync(dbContext, logger);
     }
 
     private static async Task SeedUsersAsync(ApplicationDbContext dbContext, IPasswordHasher passwordHasher, ILogger logger)
@@ -281,11 +281,11 @@ public static class DatabaseSeeder
         }
     }
 
-    private static async Task SeedServicesAsync(ApplicationDbContext dbContext, ILogger logger)
+    private static async Task SeedServicosAsync(ApplicationDbContext dbContext, ILogger logger)
     {
         try
         {
-            var defaultServices = new (Guid IdService, string ServiceName)[]
+            var defaultServicos = new (Guid IdService, string ServiceName)[]
             {
                 (Guid.NewGuid(), "Troca de óleo e filtros"),
                 (Guid.NewGuid(), "Revisão periódica"),
@@ -305,38 +305,37 @@ public static class DatabaseSeeder
 
             };
 
-            var servicesAdded = 0;
+            var servicosAdded = 0;
 
-            foreach (var (idService, serviceName) in defaultServices)
+            foreach (var (id, nome) in defaultServicos)
             {
-                var existingService = await dbContext.Services
+                var existingServico = await dbContext.Servicos
                     .IgnoreQueryFilters()
-                    .FirstOrDefaultAsync(u => u.ServiceName == serviceName);
+                    .FirstOrDefaultAsync(u => u.Nome == nome);
 
-                if (existingService is null)
+                if (existingServico is null)
                 {
-                    // Serviço não existe: cria serviço
-                    var itemService = new Service(idService, serviceName);
-                    await dbContext.Services.AddAsync(itemService);
-                    servicesAdded++;
+                    var itemServico = new Servico(id, nome);
+                    await dbContext.Servicos.AddAsync(itemServico);
+                    servicosAdded++;
                 }
             }
 
-            if (servicesAdded > 0)
+            if (servicosAdded > 0)
             {
                 await dbContext.SaveChangesAsync();
 
-                logger.LogInformation("DatabaseSeeder: Seeded {Count} initial service(s) successfully.", servicesAdded);
+                logger.LogInformation("DatabaseSeeder: Seeded {Count} initial servico(s) successfully.", servicosAdded);
 
             }
             else
             {
-                logger.LogInformation("DatabaseSeeder: Default services already exist in database.");
+                logger.LogInformation("DatabaseSeeder: Default servicos already exist in database.");
             }
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default services.");
+            logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default servicos.");
             throw;
         }
     }

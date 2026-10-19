@@ -1,4 +1,4 @@
-﻿namespace Domain.Common.Entities;
+namespace Domain.Common.Entities;
 
 /// <summary>
 /// Para entidades que não podem ter os dados fisicamente apagados do banco de dados por 
@@ -9,6 +9,10 @@ public abstract class SoftDeleteBaseEntity : AuditableBaseEntity
     public bool IsDeleted { get; private set; }
     public DateTime? DeletedAt { get; private set; }
     public string? DeletedBy { get; private set; }
+
+    protected SoftDeleteBaseEntity(Guid id) : base(id) { }
+
+    protected SoftDeleteBaseEntity() : base() { }
 
     public void Delete(string deletedBy)
     {
