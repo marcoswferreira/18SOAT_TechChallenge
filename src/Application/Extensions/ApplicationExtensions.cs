@@ -1,6 +1,7 @@
 using Application.UseCases.Auth;
 using Application.UseCases.Clientes;
 using Application.UseCases.ItensEstoque;
+using Application.UseCases.Servicos;
 using Application.UseCases.Users;
 using Application.UseCases.Veiculos;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +46,13 @@ public static class ApplicationExtensions
         services.AddScoped<UpdateItemEstoqueUseCase>();
         services.AddScoped<DeleteItemEstoqueUseCase>();
         services.AddScoped<RegistrarEntradaEstoqueUseCase>();
+
+        // Serviços Use Cases
+        services.AddScoped<CreateServicoUserCase>();
+        services.AddScoped<UpdateServicoUserCase>();
+        services.AddScoped<DeleteServicoUserCase>();
+        services.AddScoped<GetServicoByIdUserCase>();
+        services.AddScoped<GetServicoPagedUseCase>();
 
         return services;
     }

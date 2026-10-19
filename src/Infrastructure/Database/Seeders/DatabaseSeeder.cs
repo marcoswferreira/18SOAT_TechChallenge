@@ -16,6 +16,7 @@ public static class DatabaseSeeder
         await SeedUsersAsync(dbContext, passwordHasher, logger);
         await SeedClientesEVeiculosAsync(dbContext, logger);
         await SeedItensEstoqueAsync(dbContext, logger);
+        await SeedServicosAsync(dbContext, logger);
     }
 
     private static async Task SeedUsersAsync(ApplicationDbContext dbContext, IPasswordHasher passwordHasher, ILogger logger)
@@ -276,6 +277,65 @@ public static class DatabaseSeeder
         catch (Exception ex)
         {
             logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default itens de estoque.");
+            throw;
+        }
+    }
+
+    private static async Task SeedServicosAsync(ApplicationDbContext dbContext, ILogger logger)
+    {
+        try
+        {
+            var defaultServicos = new (Guid IdService, string ServiceName)[]
+            {
+                (Guid.NewGuid(), "Troca de óleo e filtros"),
+                (Guid.NewGuid(), "Revisão periódica"),
+                (Guid.NewGuid(), "Alinhamento e balanceamento"),
+                (Guid.NewGuid(), "Rodízio de pneus"),
+                (Guid.NewGuid(), "Substituição de fluidos"),
+                (Guid.NewGuid(), "Verificação de correias"),
+                (Guid.NewGuid(), "Troca de pastilhas e discos de freio"),
+                (Guid.NewGuid(), "Reparo e sangria do sistema hidráulico"),
+                (Guid.NewGuid(), "Manutenção do freio de estacionamento"),
+                (Guid.NewGuid(), "Troca de amortecedores e batentes"),
+                (Guid.NewGuid(), "Substituição de molas e bandejas de suspensão"),
+                (Guid.NewGuid(), "Diagnóstico computadorizado"),
+                (Guid.NewGuid(), "Limpeza de bicos injetores"),
+                (Guid.NewGuid(), "Manutenção de alternadores e motores de partida (de arranque)"),
+                (Guid.NewGuid(), "Reparo no sistema de iluminação"),
+
+            };
+
+            var servicosAdded = 0;
+
+            foreach (var (id, nome) in defaultServicos)
+            {
+                var existingServico = await dbContext.Servicos
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(u => u.Nome == nome);
+
+                if (existingServico is null)
+                {
+                    var itemServico = new Servico(id, nome);
+                    await dbContext.Servicos.AddAsync(itemServico);
+                    servicosAdded++;
+                }
+            }
+
+            if (servicosAdded > 0)
+            {
+                await dbContext.SaveChangesAsync();
+
+                logger.LogInformation("DatabaseSeeder: Seeded {Count} initial servico(s) successfully.", servicosAdded);
+
+            }
+            else
+            {
+                logger.LogInformation("DatabaseSeeder: Default servicos already exist in database.");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "DatabaseSeeder: An error occurred while seeding default servicos.");
             throw;
         }
     }

@@ -4,6 +4,7 @@ using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.DbContexts;
+
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
     IUserContext userContext) : DbContext(options)
 {
@@ -14,6 +15,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Veiculo> Veiculos => Set<Veiculo>();
     public DbSet<ItemEstoque> ItensEstoque => Set<ItemEstoque>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<Servico> Servicos => Set<Servico>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
