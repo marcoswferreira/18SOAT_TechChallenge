@@ -28,7 +28,7 @@ public static class InfrastructureExtensions
         services.AddScoped<IClienteRepository, ClienteRepository>();
         services.AddScoped<IVeiculoRepository, VeiculoRepository>();
         services.AddScoped<IItemEstoqueRepository, ItemEstoqueRepository>();
-        services.AddScoped<IServiceRepository, ServiceRepository>();
+        services.AddScoped<IServicoRepository, ServicoRepository>();
         services.AddHttpClient<IResend, ResendClient>();
         services.AddExceptionHandler<ExceptionHandler>();
 
