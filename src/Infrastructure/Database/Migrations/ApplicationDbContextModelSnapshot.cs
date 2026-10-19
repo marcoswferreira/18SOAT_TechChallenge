@@ -220,30 +220,38 @@ namespace Infrastructure.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DeletedBy")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Services");
+                    b.HasIndex("Nome");
+
+                    b.ToTable("Servicos", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>

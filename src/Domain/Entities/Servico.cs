@@ -1,34 +1,31 @@
-﻿using Domain.Common.Entities;
-using Domain.Constants;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Domain.Common.Entities;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public class Servico : SoftDeleteBaseEntity
 {
-    public class Servico : SoftDeleteBaseEntity
+    public string Nome { get; private set; } = string.Empty;
+
+    protected Servico() { }
+
+    public Servico(string nome)
     {
-        public string Nome { get; private set; }
+        ArgumentException.ThrowIfNullOrWhiteSpace(nome);
 
-        public Servico(string nome)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(nome);
+        Nome = nome.Trim();
+    }
 
-            this.Nome = nome.Trim();
-        }
+    public Servico(Guid id, string nome) : base(id)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(nome);
 
-        public Servico(Guid id, string nome)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(nome);
+        Nome = nome.Trim();
+    }
 
-            this.Nome = nome.Trim();
-        }
+    public void Update(string nome)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(nome);
 
-        public void Update(string nome)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(nome);
-
-            Nome = nome.Trim();
-        }
+        Nome = nome.Trim();
     }
 }

@@ -309,14 +309,14 @@ public static class DatabaseSeeder
 
             foreach (var (id, nome) in defaultServicos)
             {
-                var existingServico = await dbContext.Services
+                var existingServico = await dbContext.Servicos
                     .IgnoreQueryFilters()
                     .FirstOrDefaultAsync(u => u.Nome == nome);
 
                 if (existingServico is null)
                 {
                     var itemServico = new Servico(id, nome);
-                    await dbContext.Services.AddAsync(itemServico);
+                    await dbContext.Servicos.AddAsync(itemServico);
                     servicosAdded++;
                 }
             }
