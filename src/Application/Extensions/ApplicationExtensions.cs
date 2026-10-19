@@ -1,6 +1,7 @@
 using Application.UseCases.Auth;
 using Application.UseCases.Clientes;
 using Application.UseCases.ItensEstoque;
+using Application.UseCases.OrdensServico;
 using Application.UseCases.Servicos;
 using Application.UseCases.Users;
 using Application.UseCases.Veiculos;
@@ -53,6 +54,9 @@ public static class ApplicationExtensions
         services.AddScoped<DeleteServicoUserCase>();
         services.AddScoped<GetServicoByIdUserCase>();
         services.AddScoped<GetServicoPagedUseCase>();
+
+        // Ordem de Serviço Use Cases
+        services.AddScoped<GetStatusOrdemServicoUseCase>();
 
         return services;
     }

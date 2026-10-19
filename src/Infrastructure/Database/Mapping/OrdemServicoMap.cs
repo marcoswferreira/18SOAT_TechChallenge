@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -36,6 +36,9 @@ public class OrdemServicoMap : IEntityTypeConfiguration<OrdemServico>
             b.Property<int>("Id").ValueGeneratedOnAdd();
             b.HasKey("Id");
 
+            b.Property(s => s.ServicoId)
+                .IsRequired(false);
+
             b.Property(s => s.Descricao)
                 .HasMaxLength(200)
                 .IsRequired();
@@ -58,6 +61,9 @@ public class OrdemServicoMap : IEntityTypeConfiguration<OrdemServico>
             b.Property<int>("Id").ValueGeneratedOnAdd();
             b.HasKey("Id");
 
+            b.Property(p => p.ItemEstoqueId)
+                .IsRequired();
+
             b.Property(p => p.NomePeca)
                 .HasMaxLength(200)
                 .IsRequired();
@@ -66,7 +72,9 @@ public class OrdemServicoMap : IEntityTypeConfiguration<OrdemServico>
                 .HasPrecision(18, 2)
                 .IsRequired();
 
-            b.Property(p => p.Quantidade).IsRequired();
+            b.Property(p => p.Quantidade)
+                .HasPrecision(12, 3)
+                .IsRequired();
 
             b.Ignore(p => p.ValorTotal);
         });

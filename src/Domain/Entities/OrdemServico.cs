@@ -1,4 +1,4 @@
-﻿using Domain.Common;
+using Domain.Common;
 using Domain.Enums;
 using Domain.ValueObjects;
 
@@ -49,11 +49,23 @@ public class OrdemServico
         RecalcularOrcamento();
     }
 
+    public void AdicionarServico(Servico servico, decimal valorUnitario, int quantidade = 1)
+    {
+        var itemServico = ItemServico.Criar(servico, valorUnitario, quantidade);
+        AdicionarServico(itemServico);
+    }
+
     public void AdicionarPeca(ItemPeca peca)
     {
         ArgumentNullException.ThrowIfNull(peca);
         _pecas.Add(peca);
         RecalcularOrcamento();
+    }
+
+    public void AdicionarPeca(ItemEstoque itemEstoque, decimal quantidade, decimal? valorUnitario = null)
+    {
+        var peca = ItemPeca.Criar(itemEstoque, quantidade, valorUnitario);
+        AdicionarPeca(peca);
     }
 
     private void RecalcularOrcamento()
