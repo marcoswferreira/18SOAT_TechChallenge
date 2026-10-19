@@ -210,6 +210,64 @@ namespace Infrastructure.Database.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.OrdemServico", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<decimal>("ValorTotal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<Guid>("VeiculoId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("VeiculoId");
+
+                    b.ToTable("OrdensServico", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.RegistroStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("De")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<DateTime>("Em")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("OrdemServicoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Para")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrdemServicoId", "Para");
+
+                    b.ToTable("OrdensServico_Historico", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Servico", b =>
                 {
                     b.Property<Guid>("Id")
@@ -392,6 +450,111 @@ namespace Infrastructure.Database.Migrations
                     b.ToTable("Veiculos", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.OrdemServico", b =>
+                {
+                    b.HasOne("Domain.Entities.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Veiculo", "Veiculo")
+                        .WithMany()
+                        .HasForeignKey("VeiculoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("Domain.ValueObjects.ItemPeca", "Pecas", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("ItemEstoqueId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("NomePeca")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)");
+
+                            b1.Property<Guid>("OrdemServicoId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Quantidade")
+                                .HasPrecision(12, 3)
+                                .HasColumnType("numeric(12,3)");
+
+                            b1.Property<decimal>("ValorUnitario")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("OrdemServicoId");
+
+                            b1.ToTable("OrdensServico_Pecas", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrdemServicoId");
+                        });
+
+                    b.OwnsMany("Domain.ValueObjects.ItemServico", "Servicos", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Descricao")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)");
+
+                            b1.Property<Guid>("OrdemServicoId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Quantidade")
+                                .HasColumnType("integer");
+
+                            b1.Property<Guid?>("ServicoId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("ValorUnitario")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("OrdemServicoId");
+
+                            b1.ToTable("OrdensServico_Servicos", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrdemServicoId");
+                        });
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Pecas");
+
+                    b.Navigation("Servicos");
+
+                    b.Navigation("Veiculo");
+                });
+
+            modelBuilder.Entity("Domain.Entities.RegistroStatus", b =>
+                {
+                    b.HasOne("Domain.Entities.OrdemServico", null)
+                        .WithMany("Historico")
+                        .HasForeignKey("OrdemServicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.UserRole", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
@@ -417,6 +580,11 @@ namespace Infrastructure.Database.Migrations
             modelBuilder.Entity("Domain.Entities.Cliente", b =>
                 {
                     b.Navigation("Veiculos");
+                });
+
+            modelBuilder.Entity("Domain.Entities.OrdemServico", b =>
+                {
+                    b.Navigation("Historico");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
