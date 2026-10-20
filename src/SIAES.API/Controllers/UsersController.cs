@@ -27,13 +27,13 @@ public class UsersController(
     private readonly ChangePasswordUseCase _changePasswordUseCase = changePasswordUseCase;
 
     /// <summary>
-    /// Cadastra um novo usuário no sistema.
+    /// Cadastra um novo usuário no sistema com perfil padrão 'User' (autocadastro).
     /// </summary>
-    /// <param name="request">Os dados do usuário a ser cadastrado</param>
+    /// <param name="request">Os dados do usuário a ser cadastrado (e-mail e senha)</param>
     /// <param name="cancellationToken">O token de cancelamento</param>
     /// <returns>Os dados do usuário cadastrado</returns>
     [HttpPost]
-    [AllowAnonymous] // Permite autorregistro inicial ou criação de conta
+    [AllowAnonymous] // Permite autorregistro de novos usuários com perfil User
     [ProducesResponseType(typeof(UserOutput), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(

@@ -64,6 +64,7 @@ public static class ApplicationExtensions
         services.AddScoped<AdicionarPecaOrdemServicoUseCase>();
         services.AddScoped<AdicionarServicoOrdemServicoUseCase>();
         services.AddScoped<GerarOrcamentoUseCase>();
+        services.AddScoped<SolicitarAprovacaoAdicionalUseCase>();
         services.AddScoped<AprovarOrcamentoUseCase>();
         services.AddScoped<RejeitarOrcamentoUseCase>();
         services.AddScoped<FinalizarOrdemServicoUseCase>();
