@@ -202,13 +202,13 @@ docker-compose up -d --build
 
 ## 🧪 Instruções para Execução dos Testes
 
-O projeto conta com **339 testes automatizados** cobrindo isoladamente as regras do domínio, os casos de uso da aplicação e as integrações com banco e segurança, mantendo **100% de taxa de sucesso**.
+O projeto conta com **406 testes automatizados** cobrindo isoladamente as regras do domínio, os casos de uso da aplicação, integrações com segurança, arquitetura e **98,6% de cobertura de código em testes de integração nos principais controllers e endpoints HTTP**, mantendo **100% de taxa de sucesso**.
 
 ```
 Passed! - Failed: 0, Passed: 186, Total: 186 - Domain.UnitTests.dll
 Passed! - Failed: 0, Passed: 121, Total: 121 - Application.UnitTests.dll
-Passed! - Failed: 0, Passed:  32, Total:  32 - IntegrationTests.dll
-Total: 339 testes passando
+Passed! - Failed: 0, Passed:  99, Total:  99 - IntegrationTests.dll
+Total: 406 testes passando
 ```
 
 ### Executar todos os testes da solução:
@@ -371,7 +371,7 @@ A API utiliza autenticação JWT com controle de acesso por perfis (`Roles`): `A
 ├── tests/
 │   ├── Domain.UnitTests/                   # 186 testes de regras e invariantes de domínio
 │   ├── Application.UnitTests/              # 121 testes unitários dos Casos de Uso
-│   └── IntegrationTests/                   # 32 testes de infraestrutura, segurança, notificações e arquitetura
+│   └── IntegrationTests/                   # 99 testes de integração (endpoints REST com WebApplicationFactory, segurança, notificações e arquitetura)
 ├── docker-compose.yml                      # Orquestração base dos containers (API + PostgreSQL)
 ├── docker-compose.override.yml             # Ajustes locais: portas, ambiente Development e connection string
 ├── SIAES.slnx                              # Arquivo de solução moderno .NET
