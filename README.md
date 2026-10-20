@@ -46,12 +46,12 @@ O **SIAES** orquestra ponta a ponta as rotinas operacionais de uma oficina mecâ
 
 ### 1. Gestão de Clientes e Veículos (Conformidade LGPD)
 * Cadastro completo de clientes com validação de **CPF ou CNPJ** por meio do Objeto de Valor (`Documento`).
-* **Proteção de Dados Sensíveis**: Documentos pessoais são protegidos com **criptografia determinística AES-256** no banco de dados, permitindo buscas indexadas sem expor o dado em texto puro, e exibição mascarada nas consultas.
-* Cadastro de veículos vinculados ao cliente contendo Placa (com validação Mercosul/legado), Marca, Modelo e Ano.
+* **Proteção de Dados Sensíveis**: o `Documento` do cliente e a `Placa` do veículo são gravados com **criptografia AES-256 determinística** (o que permite busca por igualdade e índice único) e possuem representação mascarada (ex.: `529.***.***-25`).
+* Cadastro de veículos vinculados ao cliente contendo Placa (padrão antigo ou Mercosul), Marca, Modelo e Ano.
 
 ### 2. Catálogo de Serviços e Controle de Estoque
-* **Catálogo de Serviços**: Gestão de serviços padronizados (ex.: Troca de Óleo, Alinhamento, Revisão Geral) com descrição e valor de referência.
-* **Estoque Transacional com Reserva**: Controle rígido de saldo físico (`QuantidadeEmEstoque`) e saldo reservado (`QuantidadeReservada`). Ao vincular uma peça a uma OS, o saldo disponível é imediatamente reservado para evitar vendas duplicadas.
+* **Catálogo de Serviços**: cadastro de tipos de serviço (ex.: troca de óleo e filtros, alinhamento e balanceamento). O valor do serviço é informado ao incluí-lo na OS.
+* **Estoque Transacional com Reserva**: controle de saldo físico (`QuantidadeEmEstoque`) e saldo reservado (`QuantidadeReservada`), com concorrência otimista. Ao vincular uma peça a uma OS, o saldo disponível é imediatamente reservado para evitar uso duplicado.
 
 ### 3. Ciclo de Vida da Ordem de Serviço (OS)
 A Ordem de Serviço é a raiz de agregação central do sistema, implementando uma máquina de estados finita estrita:
@@ -69,6 +69,8 @@ stateDiagram-v2
     Cancelada --> [*]
 ```
 
+> A transição `EmExecucao → AguardandoAprovacao` (aprovação adicional) já existe no Domain, mas ainda não possui endpoint.
+
 * **Geração Automática do Orçamento**: O valor total da OS é calculado a partir da soma dos serviços e peças adicionados.
 * **Consistência de Estoque Integrada ao Ciclo de Vida**:
   * Ao **adicionar peças** à OS ➔ Reserva o saldo no estoque (`itemEstoque.Reservar()`).
@@ -76,14 +78,14 @@ stateDiagram-v2
   * Na **finalização do serviço** ➔ Efetua a baixa definitiva do estoque físico e da reserva (`itemEstoque.BaixarReserva()`).
 
 ### 4. Fluxo de Notificações por E-mail (Integração Resend)
-* Notificação automática e assíncrona ao cliente via **Resend** com templates HTML responsivos em todos os momentos críticos do atendimento:
+* Notificação automática ao cliente via **Resend**, com templates HTML responsivos, nos momentos críticos do atendimento:
   * **Orçamento Disponível para Aprovação**: E-mail detalhado com tabela discriminada de serviços, peças, valores unitários e valor total da OS, com instruções claras para autorização.
   * **Veículo Recebido**: Confirmação da entrada do veículo na oficina e início da triagem.
   * **Orçamento Aprovado**: Confirmação do início da execução dos serviços pela equipe técnica.
   * **Orçamento Rejeitado / Cancelamento**: Confirmação do cancelamento e liberação do veículo.
   * **Veículo Pronto para Retirada**: Notificação de conclusão dos serviços com horário e local de retirada.
   * **Veículo Entregue**: Confirmação de encerramento do atendimento e agradecimento.
-* **Resiliência**: Falhas de comunicação com a API de mensageria externa são tratadas com *graceful fallback* e log de advertência, não comprometendo as transações de banco de dados.
+* **Resiliência**: o envio ocorre **após** a persistência da operação e é aguardado dentro da requisição (sem fila). Cliente sem e-mail cadastrado é ignorado (log informativo); falhas do provedor são capturadas e registradas em log de erro, sem interromper nem desfazer a operação de negócio já gravada.
 
 ### 5. Consulta Pública de Status
 * Endpoints públicos que permitem ao cliente consultar o status atual da sua OS em tempo real informando o **ID da Ordem de Serviço** ou o **CPF/CNPJ**, garantindo transparência sem exigir credenciais administrativas.
@@ -104,7 +106,7 @@ graph TD
     subgraph Application ["Application Layer"]
         UseCases["Casos de Uso (Use Cases)"]
         DTOs["Data Transfer Objects (DTOs)"]
-        AppInterfaces["Portas de Serviços"]
+        Validators["Validators de entrada"]
     end
 
     subgraph Domain ["Domain Layer (Core)"]
@@ -132,7 +134,7 @@ graph TD
 
 | Camada | Projeto | Responsabilidades |
 | :--- | :--- | :--- |
-| **Domain** | `src/Domain` | Núcleo do sistema. Contém entidades ricas com encapsulamento de invariantes (`OrdemServico`, `Cliente`, `ItemEstoque`, `Veiculo`, `Servico`, `User`), Objetos de Valor imutáveis (`Documento`, `Placa`, `Endereco`, `ItemPeca`, `ItemServico`, `RegistroStatus`), exceções de domínio e contratos de repositórios e serviços (`IOrdemServicoRepository`, `IResendEmailService`, `IOrdemServicoNotificationService`). Não possui dependência externa de frameworks. |
+| **Domain** | `src/Domain` | Núcleo do sistema. Contém entidades com encapsulamento de invariantes (`OrdemServico`, `Cliente`, `ItemEstoque`, `Veiculo`, `Servico`, `User`), Objetos de Valor imutáveis (`Documento`, `Placa`, `Endereco`, `ItemPeca`, `ItemServico`, `RegistroStatus`), exceções de domínio e as **portas** (`IOrdemServicoRepository`, `IResendEmailService`, `IOrdemServicoNotificationService`, etc.). Não referencia nenhum outro projeto da solução; o único pacote externo é o EF Core, usado nos helpers de paginação (débito técnico registrado no roadmap). |
 | **Application** | `src/Application` | Orquestração dos fluxos de negócio através de **Use Cases** atômicos (ex.: `CreateOrdemServicoUseCase`, `GerarOrcamentoUseCase`, `FinalizarOrdemServicoUseCase`), DTOs de entrada/saída e validações. Não conhece detalhes de banco de dados ou provedores de mensageria. |
 | **Infrastructure** | `src/Infrastructure` | Implementações técnicas concretas: contexto do banco de dados (`ApplicationDbContext`), mapeamento fluente do EF Core, migrações, repositórios com `AsSplitQuery()`, serviço de notificação com geração de HTML, cliente do **Resend**, criptografia determinística AES-256 e seeders. |
 | **Presentation** | `src/SIAES.API` | Ponto de entrada HTTP RESTful. Configuração da injeção de dependência (IoC), versionamento de API (`v1.0`), autenticação JWT com rotação de tokens, documentação interativa via **Swagger/OpenAPI** e tratamento global de exceções. |
@@ -147,9 +149,9 @@ graph TD
 - **Banco de Dados Relacional**: [PostgreSQL 16-alpine](https://www.postgresql.org/)
 - **Envio de E-mails Transacionais**: [Resend .NET SDK](https://resend.com/)
 - **Segurança & Criptografia**:
-  - [BCrypt.Net-Next](https://github.com/BcryptNet/bcrypt.net) para hash e salt seguro de senhas
-  - `System.Security.Cryptography` com **AES-256** (Criptografia determinística para documentos e CBC para dados sensíveis)
-  - Autenticação e Autorização via **JWT (JSON Web Token)** com Refresh Token rotation
+  - `PasswordHasher` do **ASP.NET Core Identity** (PBKDF2 com salt) para hash de senhas
+  - `System.Security.Cryptography` com **AES-256 determinístico** para proteger `Documento` e `Placa` em repouso (permite busca por igualdade e índice único)
+  - Autenticação e Autorização via **JWT (JSON Web Token)** com *refresh token* (cookie `HttpOnly`) e perfis por `Roles`
 - **Conteinerização**: [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/)
 - **Documentação da API**: [Swagger / Swashbuckle](https://swagger.io/) com suporte a OpenAPI e Versionamento
 - **Testes Automatizados**:
@@ -189,7 +191,7 @@ docker-compose up -d --build
 ```
 
 > ℹ️ **Migrações e Carga Inicial Automáticas:**  
-> Na inicialização da API, o Entity Framework Core aplica automaticamente as migrações pendentes no PostgreSQL e efetua o *seed* dos usuários padrão com credenciais de demonstração.
+> Em ambiente `Development`, a API aplica as migrações pendentes no PostgreSQL e executa o *seed* (usuários de demonstração, clientes, veículos, itens de estoque e serviços padrão) ao iniciar. O `docker-compose.override.yml` — carregado automaticamente pelo `docker-compose up` — já define `ASPNETCORE_ENVIRONMENT=Development`, as portas (`8082` para a API e `5432` para o PostgreSQL) e a *connection string*. Fora de `Development`, migrações, *seed* e Swagger não são executados.
 
 ### 3. Acessar a aplicação
 
@@ -200,13 +202,13 @@ docker-compose up -d --build
 
 ## 🧪 Instruções para Execução dos Testes
 
-O projeto conta com **331 testes automatizados** cobrindo isoladamente as regras do domínio, os casos de uso da aplicação e as integrações com banco e segurança, mantendo **100% de taxa de sucesso**.
+O projeto conta com **339 testes automatizados** cobrindo isoladamente as regras do domínio, os casos de uso da aplicação e as integrações com banco e segurança, mantendo **100% de taxa de sucesso**.
 
 ```
 Passed! - Failed: 0, Passed: 186, Total: 186 - Domain.UnitTests.dll
 Passed! - Failed: 0, Passed: 121, Total: 121 - Application.UnitTests.dll
-Passed! - Failed: 0, Passed:  24, Total:  24 - IntegrationTests.dll
-Total: 331 testes passando
+Passed! - Failed: 0, Passed:  32, Total:  32 - IntegrationTests.dll
+Total: 339 testes passando
 ```
 
 ### Executar todos os testes da solução:
@@ -241,9 +243,9 @@ http://localhost:8082/swagger
 
 | Módulo | Método | Rota | Descrição |
 | :--- | :--- | :--- | :--- |
-| **Auth** | `POST` | `/api/v1/auth/login` | Autenticação com e-mail/senha e emissão de tokens |
-| | `POST` | `/api/v1/auth/refresh-token` | Rotação e renovação do Access Token |
-| | `POST` | `/api/v1/auth/revoke-token` | Revogação de Refresh Token ativo |
+| **Auth** | `POST` | `/api/v1/Auth/login` | Autenticação com e-mail/senha e emissão de tokens |
+| | `POST` | `/api/v1/Auth/refresh-token` | Rotação e renovação do Access Token |
+| | `POST` | `/api/v1/Auth/logout` | Encerra a sessão revogando o *refresh token* ativo |
 | **Ordens de Serviço** | `GET` | `/api/v1/ordens-servico/{id}/status` | **Consulta pública** do status da OS por ID |
 | | `GET` | `/api/v1/ordens-servico/documento/{doc}/status`| **Consulta pública** das OS de um cliente por CPF/CNPJ |
 | | `POST` | `/api/v1/ordens-servico` | Criação de uma nova OS (Status inicial: `Recebida`) |
@@ -254,14 +256,17 @@ http://localhost:8082/swagger
 | | `POST` | `/api/v1/ordens-servico/{id}/servicos` | Adiciona serviço/mão de obra à OS |
 | | `POST` | `/api/v1/ordens-servico/{id}/orcamento` | Gera orçamento e **envia e-mail ao cliente** (`AguardandoAprovacao`) |
 | | `POST` | `/api/v1/ordens-servico/{id}/aprovar` | Registra aprovação do cliente e inicia execução (`EmExecucao`) |
+| | `POST` | `/api/v1/ordens-servico/{id}/solicitar-aprovacao-adicional` | Solicita aprovação adicional de orçamento durante a execução (`AguardandoAprovacao`) |
 | | `POST` | `/api/v1/ordens-servico/{id}/rejeitar` | Rejeita orçamento, cancela OS e **libera reservas de estoque** |
 | | `POST` | `/api/v1/ordens-servico/{id}/finalizar` | Finaliza serviços, **baixa estoque físico** e notifica cliente |
 | | `POST` | `/api/v1/ordens-servico/{id}/entregar` | Registra entrega do veículo e encerra OS (`Entregue`) |
-| **Clientes** | `CRUD` | `/api/v1/clientes` | Gestão de clientes com validação e criptografia de documento |
-| **Veículos** | `CRUD` | `/api/v1/veiculos` | Gestão de veículos e vínculo com clientes |
-| **Estoque** | `CRUD` | `/api/v1/itens-estoque` | Gestão de itens de estoque com entradas e saldo |
-| **Serviços** | `CRUD` | `/api/v1/servicos` | Catálogo de tipos de serviço |
-| **Usuários** | `CRUD` | `/api/v1/users` | Gestão de usuários do sistema com controle de perfis (Roles) |
+| **Clientes** | `CRUD` | `/api/v1/Clientes` | Gestão de clientes com validação e criptografia de documento |
+| **Veículos** | `CRUD` | `/api/v1/Veiculos` | Gestão de veículos e vínculo com clientes |
+| **Estoque** | `CRUD` | `/api/v1/ItensEstoque` | Gestão de itens de estoque (`POST /{id}/entradas` registra entrada) |
+| **Serviços** | `CRUD` | `/api/v1/Servicos` | Catálogo de tipos de serviço |
+| **Usuários** | `CRUD` | `/api/v1/Users` | Gestão de usuários (`PUT /{id}/password` troca a senha) |
+
+> O roteamento do ASP.NET Core não diferencia maiúsculas de minúsculas (`/api/v1/clientes` também funciona). As regras de acesso de cada recurso estão em [Regras de Acesso Atuais](#regras-de-acesso-atuais).
 
 ---
 
@@ -272,7 +277,7 @@ Para a camada de persistência do **SIAES**, foi adotado o **PostgreSQL 16** int
 ### Resumo da Justificativa Técnica:
 * **Garantias ACID e Consistência de Estoque**: Operações de reserva e baixa de peças exigem atomicidade e isolamento para evitar inconsistências sob concorrência.
 * **Mapeamento Natural de Agregados do DDD**: O modelo relacional suporta perfeitamente as fronteiras dos agregados (`OrdemServico`, `Cliente`, `ItemEstoque`, `Veiculo`) com integridade referencial estrita e otimização de consultas com `AsSplitQuery()`.
-* **Segurança e Extensibilidade**: Suporte a dados semiestruturados via `JSONB` e integração de alta performance com .NET através do driver `Npgsql`.
+* **Concorrência no Estoque**: `ItemEstoque` usa *row version* (`xmin` do PostgreSQL) como controle de concorrência otimista, evitando que duas OS reservem o mesmo saldo simultaneamente; a integração com .NET é feita pelo driver `Npgsql`.
 
 📄 **Documentação de Arquitetura**: Consulte a [ADR 001 — Seleção do Banco de Dados Relacional](docs/adrs/adr-001-escolha-do-banco-de-dados.md) para análise detalhada de trade-offs.
 
@@ -280,16 +285,19 @@ Para a camada de persistência do **SIAES**, foi adotado o **PostgreSQL 16** int
 
 ## 🔐 Autenticação e Credenciais de Demonstração
 
-A API utiliza autenticação JWT com controle de acesso baseado em papéis (**Role-Based Access Control - RBAC**).
+A API utiliza autenticação JWT com controle de acesso por perfis (`Roles`): `Admin`, `Manager`, `Operacional` e `User`.
 
 ### Credenciais Pré-cadastradas (Seeded automaticamente):
 
-| Perfil | Usuário / E-mail | Senha | Role | Acesso |
-| :--- | :--- | :--- | :--- | :--- |
-| **Administrador** | `admin@siaes.com` | `SenhaAdmin1!` | `Admin` | Acesso irrestrito a todas as rotas e cadastros |
-| **Atendente** | `atendente@siaes.com` | `SenhaAten1!` | `Operacional` | Abertura de OS, orçamentos, entrega e clientes |
-| **Mecânico** | `mecanico@siaes.com` | `SenhaMec1!` | `Mecanico` | Diagnóstico, inclusão de peças/serviços e finalização |
-| **Usuário** | `usuario@siaes.com` | `SenhaUsuario1!` | `User` | Acesso básico a consultas |
+| Ator | Usuário / E-mail | Senha | Role |
+| :--- | :--- | :--- | :--- |
+| **Administrador** | `admin@siaes.com` | `SenhaAdmin1!` | `Admin` |
+| **Gerente** | `manager@siaes.com` | `SenhaManager1!` | `Manager` |
+| **Atendente** | `atendente@siaes.com` | `SenhaAten1!` | `Operacional` |
+| **Mecânico** | `mecanico@siaes.com` | `SenhaMecanico1!` | `Operacional` |
+| **Usuário** | `usuario@siaes.com` | `SenhaUsuario1!` | `User` |
+
+> `Atendente` e `Mecânico` são papéis de negócio distintos que compartilham o perfil de acesso `Operacional` (ver [Linguagem Ubíqua](docs/ddd/linguagem-ubiqua.md)).
 
 ### Como Autenticar no Swagger:
 1. Acesse `http://localhost:8082/swagger`.
@@ -298,6 +306,21 @@ A API utiliza autenticação JWT com controle de acesso baseado em papéis (**Ro
 4. Clique no botão **Authorize** (cadeado no topo direito do Swagger).
 5. Digite `<seu_access_token>` e confirme.
 6. As requisições aos endpoints protegidos serão autorizadas.
+
+> ℹ️ O *access token* expira em 15 minutos e o *refresh token* em 7 dias. O refresh token é entregue em cookie `HttpOnly`; use `POST /api/v1/Auth/refresh-token` para renová-lo.
+
+### Regras de Acesso Atuais
+
+| Recurso | Quem acessa |
+| :--- | :--- |
+| `Auth` (login, refresh-token, logout) | Anônimo |
+| `Users` | `POST` anônimo (autocadastro com perfil `User` padrão); listar e excluir: `Admin`; demais operações: autenticado |
+| `Clientes` e `Veiculos` | Autenticado; excluir: `Admin` |
+| `ItensEstoque` | Leitura: autenticado; criar, alterar e registrar entrada: `Admin`, `Manager`, `Operacional`; excluir: `Admin`, `Manager` |
+| `Servicos` | Qualquer usuário autenticado |
+| `OrdensServico` | Consultas públicas de status: anônimo; demais operações: `Admin`, `Manager`, `Operacional` |
+
+> ℹ️ As principais pendências de segurança identificadas foram saneadas (proteção de rotas da OS e blindagem do payload de autocadastro contra escalação de privilégios). Demais débitos técnicos e melhorias estão listados no *Roadmap Técnico* de [`docs/ddd/architecture.md`](docs/ddd/architecture.md#8-roadmap-técnico).
 
 ---
 
@@ -317,14 +340,15 @@ A API utiliza autenticação JWT com controle de acesso baseado em papéis (**Ro
 │   │   └── linguagem-ubiqua.md             # Dicionário de termos ubíquos
 │   └── images/                             # Diagramas visuais dos fluxos
 ├── src/
-│   ├── Domain/                             # Núcleo da Aplicação (Core)
-│   │   ├── Common/                         # Entidades base, Aggregates e paginação
+│   ├── Domain/                             # Núcleo da Aplicação (Core - 100% puro sem dependência de EF Core)
+│   │   ├── Common/                         # Entidades base, exceções de domínio e paginação
+│   │   ├── Constants/                      # Roles (Admin, Manager, Operacional, User)
 │   │   ├── Entities/                       # OrdemServico, Cliente, Veiculo, ItemEstoque, etc.
-│   │   ├── Enums/                          # StatusOrdemServico, UnidadeMedida, UserRoleType
+│   │   ├── Enums/                          # StatusOrdemServico, UnidadeMedida, TipoDocumento
 │   │   ├── Interfaces/                     # Contratos de Repositórios e Serviços (Portas)
 │   │   └── ValueObjects/                   # Documento, Placa, Endereco, ItemPeca, ItemServico
 │   ├── Application/                        # Orquestração de Negócio
-│   │   ├── Dto/                            # DTOs transversais de paginação e erro
+│   │   ├── Dto/                            # Tipos de resultado (Result e ResultGeneric)
 │   │   ├── Extensions/                     # Injeção de dependência dos Use Cases
 │   │   └── UseCases/                       # Casos de Uso organizados por domínio
 │   │       ├── Auth/                       # Login, Refresh e Revogação de tokens
@@ -335,20 +359,21 @@ A API utiliza autenticação JWT com controle de acesso baseado em papéis (**Ro
 │   │       ├── Users/                      # Gestão de Usuários
 │   │       └── Veiculos/                   # CRUD de Veículos
 │   ├── Infrastructure/                     # Adaptadores de Entrada/Saída
-│   │   ├── Database/                       # DbContext, Migrations e Repositories
+│   │   ├── Database/                       # DbContext, Migrations, Repositories e Paginate
 │   │   ├── Extensions/                     # Configuração de Infraestrutura e Resend
 │   │   ├── Security/                       # Criptografia AES-256, Hash de senha e UserContext
-│   │   ├── Services/                       # ResendEmailService e OrdemServicoNotificationService
+│   │   ├── Services/                       # ResendEmailService, OrdemServicoNotificationService e TokenService
 │   │   └── Settings/                       # Modelos de configuração fortemente tipados
 │   └── SIAES.API/                          # Camada de Apresentação
 │       ├── Controllers/                    # Controllers RESTful com versionamento
-│       ├── Extensions/                     # Configurações de API, Swagger e CORS
+│       ├── Extensions/                     # Versionamento de API e Swagger
 │       └── Program.cs                      # Bootstrapping e configuração do pipeline HTTP
 ├── tests/
 │   ├── Domain.UnitTests/                   # 186 testes de regras e invariantes de domínio
 │   ├── Application.UnitTests/              # 121 testes unitários dos Casos de Uso
-│   └── IntegrationTests/                   # 24 testes de infraestrutura, criptografia e notificações
-├── docker-compose.yml                      # Orquestração local de containers (API + PostgreSQL)
+│   └── IntegrationTests/                   # 32 testes de infraestrutura, segurança, notificações e arquitetura
+├── docker-compose.yml                      # Orquestração base dos containers (API + PostgreSQL)
+├── docker-compose.override.yml             # Ajustes locais: portas, ambiente Development e connection string
 ├── SIAES.slnx                              # Arquivo de solução moderno .NET
 └── README.md                               # Documentação principal do projeto
 ```

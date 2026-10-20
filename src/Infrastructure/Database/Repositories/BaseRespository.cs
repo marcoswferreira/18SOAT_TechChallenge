@@ -1,6 +1,5 @@
-﻿using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Database.Repositories;
@@ -39,7 +38,7 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public IQueryable<T> Query(Expression<Func<T, bool>>? predicate = null,
                             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-                            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+                            Func<IQueryable<T>, IQueryable<T>>? include = null,
                             bool enableTracking = true)
     {
         IQueryable<T> query = _dbSet;

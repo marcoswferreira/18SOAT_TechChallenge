@@ -2,13 +2,20 @@ using Application.UseCases.OrdensServico;
 using Application.UseCases.OrdensServico.Dto;
 using Asp.Versioning;
 using Domain.Common.Paginate;
+using Domain.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SIAES.API.Controllers;
 
+/// <summary>
+/// Ciclo de vida da Ordem de Serviço. Por padrão, todas as operações exigem autenticação
+/// e um perfil operacional; apenas as duas consultas de status são públicas (<see cref="AllowAnonymousAttribute"/>).
+/// </summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/ordens-servico")]
+[Authorize(Roles = PerfisOperacao)]
 public class OrdensServicoController(
     GetStatusOrdemServicoUseCase getStatusUseCase,
     CreateOrdemServicoUseCase createUseCase,
@@ -18,13 +25,18 @@ public class OrdensServicoController(
     AdicionarPecaOrdemServicoUseCase adicionarPecaUseCase,
     AdicionarServicoOrdemServicoUseCase adicionarServicoUseCase,
     GerarOrcamentoUseCase gerarOrcamentoUseCase,
+    SolicitarAprovacaoAdicionalUseCase solicitarAprovacaoAdicionalUseCase,
     AprovarOrcamentoUseCase aprovarOrcamentoUseCase,
     RejeitarOrcamentoUseCase rejeitarOrcamentoUseCase,
     FinalizarOrdemServicoUseCase finalizarOrdemServicoUseCase,
     EntregarVeiculoUseCase entregarVeiculoUseCase) : ControllerBase
 {
+    /// <summary>Perfis que operam Ordens de Serviço (atendente e mecânico compartilham <see cref="Roles.Operacional"/>).</summary>
+    private const string PerfisOperacao = $"{Roles.Admin},{Roles.Manager},{Roles.Operacional}";
+
     /// <summary>Consulta pública do status de uma OS pelo ID.</summary>
     [HttpGet("{id:guid}/status")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(GetStatusClienteResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ObterStatusPorId(Guid id, CancellationToken ct)
@@ -35,6 +47,7 @@ public class OrdensServicoController(
 
     /// <summary>Consulta pública de todas as OS de um cliente pelo CPF ou CNPJ.</summary>
     [HttpGet("documento/{documento}/status")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(IEnumerable<GetStatusClienteResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ObterStatusPorDocumento(string documento, CancellationToken ct)
@@ -114,6 +127,17 @@ public class OrdensServicoController(
     public async Task<IActionResult> GerarOrcamento(Guid id, CancellationToken ct)
     {
         var resultado = await gerarOrcamentoUseCase.ExecuteAsync(id, ct);
+        return Ok(resultado);
+    }
+
+    /// <summary>Solicita aprovação adicional de orçamento para a OS em execução (retorna para AguardandoAprovacao).</summary>
+    [HttpPost("{id:guid}/solicitar-aprovacao-adicional")]
+    [ProducesResponseType(typeof(OrdemServicoOutput), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> SolicitarAprovacaoAdicional(Guid id, CancellationToken ct)
+    {
+        var resultado = await solicitarAprovacaoAdicionalUseCase.ExecuteAsync(id, ct);
         return Ok(resultado);
     }
 

@@ -2,7 +2,7 @@ namespace Domain.Common.Paginate;
 
 public class Paginate<T> : IPaginate<T>
 {
-    internal Paginate(IEnumerable<T> source, int index, int size, int from)
+    public Paginate(IEnumerable<T> source, int index, int size, int from)
     {
         var enumerable = source as T[] ?? source.ToArray();
 
@@ -26,7 +26,7 @@ public class Paginate<T> : IPaginate<T>
         Pages = (int)(Math.Ceiling(Count / (double)Size));
     }
 
-    internal Paginate()
+    public Paginate()
     {
         Items = Array.Empty<T>();
     }

@@ -202,5 +202,59 @@ public class OrdemServicoLifecycleUseCasesTests
         Assert.Equal(StatusOrdemServico.Entregue.ToString(), result.Status);
         await _notificationService.Received(1).NotificarVeiculoEntregueAsync(os, null, null, Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task SolicitarAprovacaoAdicional_QuandoEmExecucao_DeveMudarParaAguardandoAprovacao_ENotificarCliente()
+    {
+        // Arrange
+        var os = new OrdemServico(Guid.NewGuid(), Guid.NewGuid());
+        os.IniciarDiagnostico();
+        os.AdicionarServico(new ItemServico("Serviço", 100m, 1));
+        os.GerarEEnviarOrcamento();
+        os.AprovarOrcamento();
+        os.ExecutarServico();
+
+        _osRepo.GetByIdWithDetailsAsync(os.Id, Arg.Any<CancellationToken>()).Returns(os);
+
+        var useCase = new SolicitarAprovacaoAdicionalUseCase(_osRepo, _notificationService);
+
+        // Act
+        var result = await useCase.ExecuteAsync(os.Id, CancellationToken.None);
+
+        // Assert
+        Assert.Equal(StatusOrdemServico.AguardandoAprovacao.ToString(), result.Status);
+        _osRepo.Received(1).Update(os);
+        await _osRepo.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _notificationService.Received(1).NotificarOrcamentoParaAprovacaoAsync(os, null, null, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task SolicitarAprovacaoAdicional_QuandoNaoEncontrada_DeveLancarKeyNotFoundException()
+    {
+        // Arrange
+        var idInexistente = Guid.NewGuid();
+        _osRepo.GetByIdWithDetailsAsync(idInexistente, Arg.Any<CancellationToken>()).Returns((OrdemServico?)null);
+
+        var useCase = new SolicitarAprovacaoAdicionalUseCase(_osRepo, _notificationService);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+            useCase.ExecuteAsync(idInexistente, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task SolicitarAprovacaoAdicional_QuandoForaDeEmExecucao_DeveLancarDomainException()
+    {
+        // Arrange (OS em Diagnóstico, não em Execução)
+        var os = new OrdemServico(Guid.NewGuid(), Guid.NewGuid());
+        os.IniciarDiagnostico();
+        _osRepo.GetByIdWithDetailsAsync(os.Id, Arg.Any<CancellationToken>()).Returns(os);
+
+        var useCase = new SolicitarAprovacaoAdicionalUseCase(_osRepo, _notificationService);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<Domain.Common.DomainException>(() =>
+            useCase.ExecuteAsync(os.Id, CancellationToken.None));
+    }
 }
 
