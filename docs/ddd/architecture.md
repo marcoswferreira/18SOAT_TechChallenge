@@ -201,15 +201,15 @@ Cada mudança de status gera um `RegistroStatus` (status anterior, novo status e
 
 ## 7. Estrutura de Testes
 
-Os testes ficam em `tests/` e totalizam **339 testes, todos passando** (`dotnet test SIAES.slnx`):
+Os testes ficam em `tests/` e totalizam **406 testes, todos passando** (`dotnet test SIAES.slnx`):
 
 | Projeto | Testes | Escopo |
 | :--- | :--- | :--- |
 | `Domain.UnitTests` | 186 | Entidades, Value Objects e regras de domínio |
 | `Application.UnitTests` | 121 | Casos de uso, com repositórios e serviços simulados (NSubstitute) |
-| `IntegrationTests` | 32 | Criptografia determinística, segurança e autorização (`OrdensServico`, `Users`), testes de arquitetura (independência do Domain) e `OrdemServicoNotificationService` (com `IResendEmailService` simulado, sem chamadas de rede) |
+| `IntegrationTests` | 99 | Testes ponta a ponta com `WebApplicationFactory` cobrindo **98,6% de cobertura de código em todos os controllers** (`OrdensServico`, `Auth`, `Clientes`, `Veiculos`, `ItensEstoque`, `Servicos`, `Users`), além de testes de segurança/autorização, criptografia determinística LGPD, arquitetura limpa (NetArchTest) e notificações |
 
-Padrão adotado: **Arrange / Act / Assert**, com NSubstitute para dependências. Nenhum teste faz chamada real ao Resend.
+Padrão adotado: **Arrange / Act / Assert**, com test doubles in-memory e NSubstitute para dependências externas. Nenhum teste faz chamada real externa.
 
 No SonarCloud, os diretórios `Infrastructure` e `SIAES.API` (além de migrações, mapeamentos, seeders e extensões) são excluídos da métrica de cobertura (`sonar.coverage.exclusions` em `.github/workflows/ci.yml`).
 
