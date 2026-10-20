@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -17,6 +17,11 @@ namespace Infrastructure.Database.Migrations
             migrationBuilder.RenameTable(
                 name: "Services",
                 newName: "Servicos");
+
+            migrationBuilder.RenameColumn(
+                name: "ServiceName",
+                table: "Servicos",
+                newName: "Nome");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Nome",
@@ -92,8 +97,13 @@ namespace Infrastructure.Database.Migrations
                 name: "Servicos",
                 newName: "Services");
 
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.RenameColumn(
                 name: "Nome",
+                table: "Services",
+                newName: "ServiceName");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "ServiceName",
                 table: "Services",
                 type: "text",
                 nullable: false,
