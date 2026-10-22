@@ -50,6 +50,12 @@ graph TD
 | `Infrastructure` | `Domain`, `Application` | Implementa as portas (repositórios, e-mail, notificações, token, hash de senha). |
 | `SIAES.API` | `Application`, `Infrastructure` | Composition root: registra os casos de uso e os adaptadores na injeção de dependência. |
 
+### 1.2. Diagramas de Componentes (C3 do Modelo C4)
+
+Para a decomposição detalhada dos componentes internos do contêiner da API Backend, consulte os diagramas C3 dedicados:
+- **[C3 — Ordem de Serviço](../architecture/c3-ordem-servico.md)**: Diagrama C3 detalhando os controladores, casos de uso, entidades e adaptadores que sustentam o agregado Ordem de Serviço e seus fluxos com estoque e mensageria.
+- **[C3 — Gerenciamento de Estado (Status)](../architecture/c3-gerenciamento-estado.md)**: Diagrama C3 da Máquina de Estados da OS, invariantes de domínio, persistência do histórico relacional e tratamento de exceções de negócio.
+
 ---
 
 ## 2. Camadas

@@ -380,9 +380,9 @@ A API utiliza autenticação JWT com controle de acesso por perfis (`Roles`): `A
 
 ---
 
-## 📐 Documentação DDD
+## 📐 Documentação DDD e Arquitetura (C4 Model)
 
-A documentação detalhada de **Domain-Driven Design** desenvolvida pelo grupo encontra-se em [`docs/ddd/`](docs/ddd/):
+A documentação detalhada de **Domain-Driven Design** e **Arquitetura de Componentes** desenvolvida pelo grupo encontra-se em [`docs/`](docs/):
 
 | Documento | Descrição |
 | :--- | :--- |
@@ -390,6 +390,8 @@ A documentação detalhada de **Domain-Driven Design** desenvolvida pelo grupo e
 | **[Domain Storytelling](docs/ddd/domain-storytelling.md)** | Narrativas e diagramas dos fluxos operacionais da oficina (*Cenários 1, 2 e 3*) |
 | **[Event Storming](docs/ddd/event-storming.md)** | Mapeamento de eventos de domínio, comandos e reações do sistema |
 | **[Arquitetura](docs/ddd/architecture.md)** | Decisões arquiteturais, camadas e roadmap técnico |
+| **[C3 — Ordem de Serviço](docs/architecture/c3-ordem-servico.md)** | Diagrama C3 (Componentes C4) da Ordem de Serviço, catálogo de componentes e fluxos |
+| **[C3 — Gerenciamento de Estado](docs/architecture/c3-gerenciamento-estado.md)** | Diagrama C3 da Máquina de Estados da OS, regras de transição, invariantes e auditoria |
 | **[ADR 001 — Banco de Dados](docs/adrs/adr-001-escolha-do-banco-de-dados.md)** | Análise comparativa e justificativa da escolha do PostgreSQL |
 
 ---
