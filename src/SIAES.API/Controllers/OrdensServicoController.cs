@@ -3,6 +3,7 @@ using Application.UseCases.OrdensServico.Dto;
 using Asp.Versioning;
 using Domain.Common.Paginate;
 using Domain.Constants;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +30,8 @@ public class OrdensServicoController(
     AprovarOrcamentoUseCase aprovarOrcamentoUseCase,
     RejeitarOrcamentoUseCase rejeitarOrcamentoUseCase,
     FinalizarOrdemServicoUseCase finalizarOrdemServicoUseCase,
-    EntregarVeiculoUseCase entregarVeiculoUseCase) : ControllerBase
+    EntregarVeiculoUseCase entregarVeiculoUseCase,
+    TempoMedioExecucaoUseCase tempoMedioExecucaoUseCase) : ControllerBase
 {
     /// <summary>Perfis que operam Ordens de Serviço (atendente e mecânico compartilham <see cref="Roles.Operacional"/>).</summary>
     private const string PerfisOperacao = $"{Roles.Admin},{Roles.Manager},{Roles.Operacional}";
@@ -183,5 +185,15 @@ public class OrdensServicoController(
     {
         var resultado = await entregarVeiculoUseCase.ExecuteAsync(id, ct);
         return Ok(resultado);
+    }
+
+    /// <summary>Tempo médio de execução das OS finalizadas. Filtro de período opcional (UTC).</summary>
+    [HttpGet("metricas/tempo-medio-execucao")]
+    [ProducesResponseType(typeof(MetricaTempoExecucaoResponse), 200)]
+    public async Task<IActionResult> TempoMedioExecucao([FromQuery] DateTime? de, [FromQuery] DateTime? ate, CancellationToken ct)
+    {
+        var input = new TempoMedioExecucaoInput(de, ate);
+        var response = await tempoMedioExecucaoUseCase.ExecuteAsync(input, ct);
+        return Ok(response);
     }
 }

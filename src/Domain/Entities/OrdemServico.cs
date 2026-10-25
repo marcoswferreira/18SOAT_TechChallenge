@@ -158,6 +158,21 @@ public class OrdemServico
     public void FinalizarServico() => MudarStatus(StatusOrdemServico.Finalizada);
     public void RegistrarEntrega() => MudarStatus(StatusOrdemServico.Entregue);
 
+    public TimeSpan? TempoDeExecucao()
+    {
+        var ordenado = _historico.OrderBy(r => r.Em).ToList();
+
+        if (!ordenado.Any(r => r.Para == StatusOrdemServico.Finalizada))
+            return null;
+
+        var total = TimeSpan.Zero;
+        for (var i = 0; i < ordenado.Count - 1; i++)
+        {
+            if (ordenado[i].Para == StatusOrdemServico.EmExecucao)
+                total += ordenado[i + 1].Em - ordenado[i].Em;
+        }
+        return total;
+    }
 
     private void MudarStatus(StatusOrdemServico novoStatus)
     {
