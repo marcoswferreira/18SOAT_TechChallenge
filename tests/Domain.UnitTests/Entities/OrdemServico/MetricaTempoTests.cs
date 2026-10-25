@@ -31,7 +31,8 @@ public class MetricaTempoTests
         // sem o tempo de espera no meio.
         var os = OrdemServicoBuilder.EmExecucao();
         os.SolicitarAprovacaoAdicional();
-        os.AprovarOrcamentoAdicional();
+        os.AprovarOrcamento();
+        os.ExecutarServico();
         os.FinalizarServico();
 
         var tempo = os.TempoDeExecucao();

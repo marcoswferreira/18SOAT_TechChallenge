@@ -122,39 +122,6 @@ public class OrdemServico
         MudarStatus(StatusOrdemServico.AguardandoAprovacao);
     }
 
-    /// <summary>Cliente aprova o adicional: retoma a execução.</summary>
-    public void AprovarOrcamentoAdicional()
-    {
-        if (Status != StatusOrdemServico.AguardandoAprovacao)
-            throw new DomainException(
-                $"Não é possível aprovar o orçamento adicional com a OS em '{Status}'.");
-
-        MudarStatus(StatusOrdemServico.EmExecucao);
-    }
-
-    /// <summary>
-    /// Cliente rejeita o adicional: a OS fica em AguardandoAprovacao.
-    /// </summary>
-    public void RejeitarOrcamentoAdicional()
-    {
-        if (Status != StatusOrdemServico.AguardandoAprovacao)
-            throw new DomainException(
-                $"Não é possível rejeitar o orçamento adicional com a OS em '{Status}'.");
-
-       // Hotspot em aberto — o atendente decide: RejeitarOs() cancela,
-       // ou ExecutarServico() retoma só com o que já foi aprovado.
-    }
-
-    /// <summary>Atendente cancela a OS que está aguardando decisão.</summary>
-    public void RejeitarOs()
-    {
-        if (Status != StatusOrdemServico.AguardandoAprovacao)
-            throw new DomainException(
-                $"Não é possível rejeitar a OS em '{Status}'.");
-
-        MudarStatus(StatusOrdemServico.Cancelada);
-    }
-
     public void FinalizarServico() => MudarStatus(StatusOrdemServico.Finalizada);
     public void RegistrarEntrega() => MudarStatus(StatusOrdemServico.Entregue);
 
