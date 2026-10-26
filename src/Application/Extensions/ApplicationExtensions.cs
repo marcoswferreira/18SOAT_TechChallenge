@@ -69,6 +69,7 @@ public static class ApplicationExtensions
         services.AddScoped<RejeitarOrcamentoUseCase>();
         services.AddScoped<FinalizarOrdemServicoUseCase>();
         services.AddScoped<EntregarVeiculoUseCase>();
+        services.AddScoped<TempoMedioExecucaoUseCase>();
 
         return services;
     }
