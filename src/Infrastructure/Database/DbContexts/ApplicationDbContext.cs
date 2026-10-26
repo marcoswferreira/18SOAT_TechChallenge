@@ -15,7 +15,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Veiculo> Veiculos => Set<Veiculo>();
     public DbSet<ItemEstoque> ItensEstoque => Set<ItemEstoque>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
-    public DbSet<OrdemServico> OrdensServico => Set<OrdemServico>();
+    public virtual DbSet<OrdemServico> OrdensServico => Set<OrdemServico>();
     public DbSet<Servico> Servicos => Set<Servico>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

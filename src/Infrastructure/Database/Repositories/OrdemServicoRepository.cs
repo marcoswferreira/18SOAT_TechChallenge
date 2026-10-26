@@ -1,5 +1,6 @@
 using Domain.Common.Paginate;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces.Repositories;
 using Domain.ValueObjects;
 using Infrastructure.Database.DbContexts;
@@ -50,4 +51,24 @@ public class OrdemServicoRepository(ApplicationDbContext context) : BaseReposito
             .OrderByDescending(os => os.Id)
             .ToPaginateAsync(index, size, 0, cancellationToken);
     }
+
+    public async Task<IEnumerable<TimeSpan>> ObterTemposDeExecucaoAsync(
+        DateTime? de, DateTime? ate, CancellationToken ct = default)
+    {
+        var query = _dbSet
+            .AsNoTracking()
+            .Include(os => os.Historico)
+            .Where(os => os.Historico.Any(r =>
+                r.Para == StatusOrdemServico.Finalizada &&
+                (de == null || r.Em >= de) &&
+                (ate == null || r.Em <= ate)));
+
+        var ordens = await query.ToListAsync(ct);
+
+        return ordens
+            .Select(os => os.TempoDeExecucao())
+            .Where(t => t.HasValue)
+            .Select(t => t!.Value);
+    }
+
 }
