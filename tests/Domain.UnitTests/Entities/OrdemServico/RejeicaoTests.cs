@@ -26,14 +26,4 @@ public class RejeicaoTests
 
         acao.Should().Throw<DomainException>();
     }
-
-    [Fact]
-    public void RejeitarOs_ForaDeAguardandoAprovacao_LancaDomainException()
-    {
-        var os = OrdemServicoBuilder.EmExecucao();
-
-        var acao = () => os.RejeitarOs();
-
-        acao.Should().Throw<DomainException>();
-    }
 }

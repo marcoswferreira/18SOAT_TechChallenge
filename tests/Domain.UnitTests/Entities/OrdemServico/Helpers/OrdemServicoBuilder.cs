@@ -1,4 +1,5 @@
-﻿using Domain.ValueObjects;
+﻿using Domain.Enums;
+using Domain.ValueObjects;
 using DomainEntities = Domain.Entities;
 
 namespace Domain.UnitTests.Entities.OrdemServico.Helpers;

@@ -1,9 +1,10 @@
-using System.Collections.Concurrent;
-using System.Linq.Expressions;
 using Domain.Common.Paginate;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces.Repositories;
 using Domain.ValueObjects;
+using System.Collections.Concurrent;
+using System.Linq.Expressions;
 
 namespace IntegrationTests.Common;
 
@@ -292,4 +293,19 @@ public class InMemoryOrdemServicoRepository : InMemoryBaseRepository<OrdemServic
 
     public Task<IPaginate<OrdemServico>> GetPagedAsync(int index, int size, CancellationToken cancellationToken = default)
         => GetListAsync(index, size, cancellationToken);
+
+    public Task<IEnumerable<TimeSpan>> ObterTemposDeExecucaoAsync(
+    DateTime? de = null, DateTime? ate = null, CancellationToken ct = default)
+    {
+        var tempos = _items.Values
+            .Where(os => os.Historico.Any(r =>
+                r.Para == StatusOrdemServico.Finalizada &&
+                (de == null || r.Em >= de) &&
+                (ate == null || r.Em <= ate)))
+            .Select(os => os.TempoDeExecucao())
+            .Where(t => t.HasValue)
+            .Select(t => t!.Value);
+
+        return Task.FromResult(tempos);
+    }
 }
