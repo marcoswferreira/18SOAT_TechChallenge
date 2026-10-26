@@ -50,11 +50,16 @@ graph TD
 | `Infrastructure` | `Domain`, `Application` | Implementa as portas (repositórios, e-mail, notificações, token, hash de senha). |
 | `SIAES.API` | `Application`, `Infrastructure` | Composition root: registra os casos de uso e os adaptadores na injeção de dependência. |
 
-### 1.2. Diagramas de Componentes (C3 do Modelo C4)
+### 1.2. Documentação da Arquitetura no Modelo C4 (C1, C2 e C3)
 
-Para a decomposição detalhada dos componentes internos do contêiner da API Backend, consulte os diagramas C3 dedicados:
-- **[C3 — Ordem de Serviço](../architecture/c3-ordem-servico.md)**: Diagrama C3 detalhando os controladores, casos de uso, entidades e adaptadores que sustentam o agregado Ordem de Serviço e seus fluxos com estoque e mensageria.
-- **[C3 — Gerenciamento de Estado (Status)](../architecture/c3-gerenciamento-estado.md)**: Diagrama C3 da Máquina de Estados da OS, invariantes de domínio, persistência do histórico relacional e tratamento de exceções de negócio.
+A arquitetura do sistema foi modelada seguindo os níveis do **C4 Model**:
+- **[C1 — Contexto do Sistema](../architecture/c1-contexto.md)**: Visão macro do escopo do sistema SIAES, personas da oficina (`Atendente`, `Mecânico`, `Administrador`) e integrações externas (serviço de e-mails).
+- **[C2 — Contêineres do Sistema](../architecture/c2-container.md)**: Decomposição do sistema em contêineres executáveis (`SIAES.API` em ASP.NET Core e `SIAES_DB` em PostgreSQL 16), e os protocolos de comunicação (`HTTP / REST`, `SQL via EF Core`, `API / SMTP`).
+- **[C3 — Cliente e Veículo](../architecture/c3-cliente-veiculo.md)**: Diagrama C3 estruturado por camadas Clean Architecture (Controllers -> Casos de Uso -> Domínio -> Persistência -> EF Core -> PostgreSQL), validações e LGPD.
+- **[C3 — Ordem de Serviço](../architecture/c3-ordem-servico.md)**: Diagrama C3 detalhando controladores, casos de uso de ciclo de vida e consulta, entidades e adaptadores do agregado central da oficina.
+- **[C3 — Gerenciamento de Estado (Status)](../architecture/c3-gerenciamento-estado.md)**: Diagrama C3 da Máquina de Estados da OS, invariantes de domínio, persistência do histórico relacional e auditoria imutável.
+
+> Os diagramas originais editáveis do Draw.io estão disponíveis na pasta [`docs/architecture/drawio/`](../architecture/drawio/).
 
 ---
 

@@ -1,6 +1,8 @@
-# Arquitetura de Componentes (C3) — Gerenciamento de Estado (Status da OS)
+# Diagrama de Componentes (C3 do Modelo C4) — Gerenciamento de Estado (Status da OS)
 
 Este documento descreve a arquitetura do **Gerenciamento de Estado** da Ordem de Serviço no sistema **SIAES**, apresentando o **Diagrama de Componentes (C3 do modelo C4)** que retrata a Máquina de Estados Finita (FSM), suas regras de transição, invariantes, auditoria imutável e efeitos colaterais.
+
+O modelo segue fielmente a estrutura e a representação de camadas definida no arquivo [`C4_GerenciamentoEstado_Component_C3.drawio`](drawio/C4_GerenciamentoEstado_Component_C3.drawio).
 
 ---
 
@@ -19,104 +21,58 @@ O gerenciamento de estado da Ordem de Serviço é implementado com foco em **int
 ```mermaid
 flowchart TD
     %% Usuários
-    AtorOperacional(["Atendente / Mecânico\n[Ator Operacional]"]):::person
-    ClienteConsulta(["Cliente\n[Ator Externo - Consulta Pública]"]):::person
+    Usuarios["Usuários da Oficina\n[Persons]\nAtendentes, Mecânicos e Administradores"]:::person
 
-    subgraph ContainerAPI ["Contêiner: SIAES Backend API (.NET 10 / ASP.NET Core)"]
+    %% Fronteira do Sistema SIAES (API Backend)
+    subgraph SIAESBoundary ["SIAES [API Backend — ASP.NET Core]"]
 
-        %% Apresentação
-        subgraph PresentationLayer ["Camada de Apresentação (SIAES.API)"]
-            OSController["OrdensServicoController\n[Component: ASP.NET Core Controller]\nExpõe rotas de comando de transição e consultas públicas"]:::component
-            GlobalExceptionHandler["ExceptionHandler\n[Component: IExceptionHandler]\nMapeia DomainException -> 422 Unprocessable Entity"]:::component
+        %% Camada de Apresentação
+        subgraph CamadaApresentacao ["Camada Apresentação"]
+            ControllerStatus["Controller de Status da OS\n[Status da OS]\nExpõe rotas de comando para avanço\nde status da OS e consultas públicas."]:::component
+            GlobalExHandler["ExceptionHandler Global\n[Exception Handler]\nCaptura exceções de transição de status\ninválida e retorna HTTP 422."]:::component
         end
 
-        %% Aplicação
-        subgraph ApplicationLayer ["Camada de Aplicação (Application)"]
-            subgraph TransitionUseCases ["Use Cases de Transição de Estado"]
-                UC_Diag["IniciarDiagnosticoUseCase\n[Component]\nRecebida -> EmDiagnostico"]:::component
-                UC_Budget["GerarOrcamentoUseCase\n[Component]\nEmDiagnostico -> AguardandoAprovacao"]:::component
-                UC_Approve["AprovarOrcamentoUseCase\n[Component]\nAguardandoAprovacao -> EmExecucao"]:::component
-                UC_AddApproval["SolicitarAprovacaoAdicionalUseCase\n[Component]\nEmExecucao -> AguardandoAprovacao"]:::component
-                UC_Reject["RejeitarOrcamentoUseCase\n[Component]\nAguardandoAprovacao -> Cancelada"]:::component
-                UC_Finish["FinalizarOrdemServicoUseCase\n[Component]\nEmExecucao -> Finalizada"]:::component
-                UC_Deliver["EntregarVeiculoUseCase\n[Component]\nFinalizada -> Entregue"]:::component
-            end
-
-            subgraph StatusQueries ["Use Cases de Consulta de Status"]
-                UC_GetStatus["GetStatusOrdemServicoUseCase\n[Component]\nConsulta pública (ID / CPF / CNPJ)"]:::component
-            end
+        %% Camada Aplicação
+        subgraph CamadaAplicacao ["Camada Aplicação [Container]"]
+            CasosUsoTransicao["Casos de Uso de Transição de Estado\n[Status da OS]\nOrquestra as transições de status da OS e\ncoordena efeitos de estoque e notificações."]:::component
         end
 
-        %% Domínio
-        subgraph DomainLayer ["Camada de Domínio (Domain - Core Puro)"]
-            subgraph StateMachine ["Máquina de Estados no Agregado"]
-                OSAggregate["OrdemServico (Aggregate Root)\n[Component: Entity]\nStatus atual: StatusOrdemServico"]:::component
-                MudarStatusMethod["MudarStatus(novoStatus)\n[Método Privado]\nValida fluxo e cria RegistroStatus"]:::component
-                RegistroStatusEntity["RegistroStatus\n[Component: Entity]\nHistórico: De, Para, Data/Hora UTC"]:::component
-            end
-
-            DomainExceptions["DomainException\n[Component: Exception]\nViolação de regra de transição de status"]:::component
-            
-            subgraph StatePorts ["Portas de Persistência e Efeitos"]
-                IOSRepoPort["IOrdemServicoRepository\n[Interface: Porta]"]:::interface
-                IStockPort["IItemEstoqueRepository\n[Interface: Porta]"]:::interface
-                INotifPort["IOrdemServicoNotificationService\n[Interface: Porta]"]:::interface
-            end
+        %% Camada Domínio
+        subgraph CamadaDominio ["Camada Domínio [Container]"]
+            FSM["Máquina de Estados da OS (FSM)\n[Status da OS]\nMétodo MudarStatus no agregado OrdemServico,\nvalida fluxo estrito e gera RegistroStatus."]:::component
         end
 
-        %% Infraestrutura
-        subgraph InfrastructureLayer ["Camada de Infraestrutura (Infrastructure)"]
-            OSRepository["OrdemServicoRepository\n[Component: EF Core Repository]\nPersiste OS + Histórico em cascata"]:::component
-            StockRepository["ItemEstoqueRepository\n[Component: EF Core Repository]\nGerencia saldo físico e reservas"]:::component
-            NotificationService["OrdemServicoNotificationService\n[Component: C# Service]\nDispara templates de e-mail por status"]:::component
-            DbContext["ApplicationDbContext\n[Component: EF Core]\nMapeia tabelas relacionais"]:::component
+        %% Camada Infraestrutura
+        subgraph CamadaInfra ["Camada Infraestrutura [Container]"]
+            PersistenciaHist["Persistência do Histórico da OS\n[Status da OS]\nPersiste a OS e grava registros imutáveis\nna tabela OrdensServico_Historico."]:::component
+            DisparoNotif["Disparo de Notificações de Status\n[Notificação]\nEnvia e-mails transacionais automáticos\npara cada etapa concluída da OS."]:::component
+            EFCore["Entity Framework Core\n[Entity Framework]\nMapeamento relacional e auditoria\nindelével de transições de status."]:::component
         end
 
     end
 
-    %% Provedores Externos
-    subgraph ExternalSystems ["Persistência e Mensageria Externa"]
-        PostgresDB[("PostgreSQL 16\n[Database]\nOrdensServico e OrdensServico_Historico")]:::db
-        ResendSaaS["Resend Email Service\n[SaaS Externo]\nEnvio transacional de e-mails"]:::external
-    end
+    %% Banco de Dados Externo
+    DB[("SIAES_DB\n[Container: PostgreSQL 16]\nBanco de dados relacional: tabelas\nOrdensServico e OrdensServico_Historico.")]:::db
 
-    %% Conexões de Apresentação
-    AtorOperacional -->|"POST /{id}/[acao]"| OSController
-    ClienteConsulta -->|"GET /{id}/status ou /documento/{doc}/status"| OSController
-    OSController --> TransitionUseCases
-    OSController --> StatusQueries
-    OSController -.->|"Captura exceção de transição"| GlobalExceptionHandler
+    %% Provedor Externo
+    EmailService["Serviço de envio de e-mails\n[Software System]\nServiço externo (Resend) utilizado para\nenvio de notificações aos clientes."]:::external
 
-    %% Conexões de Aplicação para Domínio
-    TransitionUseCases -->|"Invoca método de transição"| OSAggregate
-    StatusQueries -->|"Lê status e histórico"| IOSRepoPort
-    OSAggregate --> MudarStatusMethod
-    MudarStatusMethod -->|"Cria e adiciona"| RegistroStatusEntity
-    MudarStatusMethod -.->|"Se status inválido"| DomainExceptions
+    %% Relações e Fluxos
+    Usuarios -->|"HTTP / REST\n(JSON, Bearer Token)"| ControllerStatus
+    ControllerStatus -->|"Comandos de transição"| CasosUsoTransicao
+    ControllerStatus -.->|"Tratamento 422"| GlobalExHandler
+    CasosUsoTransicao -->|"Valida e aplica transição"| FSM
+    FSM -->|"Persiste estado e histórico"| PersistenciaHist
+    CasosUsoTransicao -->|"Dispara notificações"| DisparoNotif
+    PersistenciaHist -->|"Operações de dados"| EFCore
+    EFCore -->|"SQL / TCP 5432"| DB
+    DisparoNotif -->|"API / HTTPS\n(Resend SDK)"| EmailService
 
-    %% Efeitos Colaterais das Transições
-    UC_Reject -->|"Libera reservas"| IStockPort
-    UC_Finish -->|"Baixa física"| IStockPort
-    TransitionUseCases -->|"Dispara e-mail correspondente"| INotifPort
-    TransitionUseCases -->|"Persiste estado e histórico"| IOSRepoPort
-
-    %% Implementações de Infraestrutura
-    OSRepository -.->|"Implementa"| IOSRepoPort
-    StockRepository -.->|"Implementa"| IStockPort
-    NotificationService -.->|"Implementa"| INotifPort
-
-    %% Acesso a Banco e Rede
-    OSRepository --> DbContext
-    StockRepository --> DbContext
-    DbContext -->|"SQL / TCP"| PostgresDB
-    NotificationService -->|"HTTPS / REST"| ResendSaaS
-
-    %% Estilos visuais C4
-    classDef person fill:#08427b,stroke:#052e56,color:#ffffff;
-    classDef component fill:#1168bd,stroke:#0b4884,color:#ffffff;
-    classDef interface fill:#85bb65,stroke:#557a3e,color:#ffffff;
-    classDef db fill:#1f77b4,stroke:#0f5280,color:#ffffff;
-    classDef external fill:#666666,stroke:#444444,color:#ffffff;
+    %% Estilos visuais C4 (alinhados ao Draw.io)
+    classDef person fill:#083F75,stroke:#06315C,color:#ffffff;
+    classDef component fill:#1061B0,stroke:#0D5091,color:#ffffff;
+    classDef db fill:#23A2D9,stroke:#0E7DAD,color:#ffffff;
+    classDef external fill:#8C8496,stroke:#736782,color:#ffffff;
 ```
 
 ---
@@ -224,4 +180,11 @@ Para permitir que o cliente consulte o andamento do seu veículo sem necessidade
 - **Por CPF/CNPJ**: `GET /api/v1/ordens-servico/documento/{documento}/status`
 
 O retorno traduz os termos técnicos para linguagem amigável ao cliente consumidor (ex.: `EmExecucao` torna-se *"Reparo autorizado e serviço em andamento"*).
+
+---
+
+## 7. Arquivo Draw.io Nativo
+
+O diagrama original editável está disponível em:
+- 📁 [`docs/architecture/drawio/C4_GerenciamentoEstado_Component_C3.drawio`](drawio/C4_GerenciamentoEstado_Component_C3.drawio)
 

@@ -6,11 +6,23 @@ Nesta documentação você encontrará toda a arquitetura técnica, modelagem de
 
 ## 🏛️ Arquitetura e Diagramas C4
 
-| Documento | Nível / Foco | Descrição |
+A arquitetura do SIAES segue a metodologia **C4 Model** (Contexto, Contêineres e Componentes):
+
+| Documento | Nível C4 | Descrição |
 | :--- | :--- | :--- |
-| **[Arquitetura e Estrutura da Solução](ddd/architecture.md)** | Visão Geral | Padrão Clean Architecture, divisão em camadas, regras de dependência, catálogo de casos de uso e estratégia de testes |
-| **[C3 — Ordem de Serviço](architecture/c3-ordem-servico.md)** | Nível C3 (Componentes) | Diagrama C3 detalhando os componentes do contêiner API que sustentam o agregado Ordem de Serviço, catálogo de componentes e fluxos de orquestração |
-| **[C3 — Gerenciamento de Estado](architecture/c3-gerenciamento-estado.md)** | Nível C3 (Componentes) | Diagrama C3 da Máquina de Estados da OS, regras de transição, invariantes, auditoria em banco relacional e tratamento de exceções de domínio |
+| **[C1 — Contexto do Sistema](architecture/c1-contexto.md)** | **Nível 1 (Context)** | Diagrama de Contexto: escopo do sistema SIAES, personas da oficina (Atendente, Mecânico, Administrador) e serviço externo de e-mails |
+| **[C2 — Contêineres do Sistema](architecture/c2-container.md)** | **Nível 2 (Container)** | Diagrama de Contêineres: `SIAES.API` (.NET 10), `SIAES_DB` (PostgreSQL 16) e integrações via HTTP/REST, SQL e SMTP/API |
+| **[C3 — Cliente e Veículo](architecture/c3-cliente-veiculo.md)** | **Nível 3 (Component)** | Diagrama de Componentes C3 alinhado ao Clean Architecture: Controllers, Casos de Uso, Domínio, Persistência e conformidade LGPD |
+| **[C3 — Ordem de Serviço](architecture/c3-ordem-servico.md)** | **Nível 3 (Component)** | Diagrama C3 detalhando os componentes do contêiner API que sustentam o agregado Ordem de Serviço, estoque e mensageria |
+| **[C3 — Gerenciamento de Estado](architecture/c3-gerenciamento-estado.md)** | **Nível 3 (Component)** | Diagrama C3 da Máquina de Estados da OS, regras de transição, invariantes, auditoria em banco relacional e exceções |
+| **[Arquitetura e Estrutura da Solução](ddd/architecture.md)** | Visão Geral | Padrão Clean Architecture, divisão em camadas, regras de dependência, catálogo de casos de uso e testes |
+
+> 📁 **Arquivos nativos editáveis do Draw.io** disponíveis na pasta [`docs/architecture/drawio/`](architecture/drawio/):
+> - [`C4_ClientesVeiculos_Contexto_C1.drawio`](architecture/drawio/C4_ClientesVeiculos_Contexto_C1.drawio) — Contexto do Sistema (C1)
+> - [`C4_ClientesVeiculos_Container_C2.drawio`](architecture/drawio/C4_ClientesVeiculos_Container_C2.drawio) — Contêineres do Sistema (C2)
+> - [`C4_ClientesVeiculos_Component_C3.drawio`](architecture/drawio/C4_ClientesVeiculos_Component_C3.drawio) — Componentes de Cliente e Veículo (C3)
+> - [`C4_OrdemServico_Component_C3.drawio`](architecture/drawio/C4_OrdemServico_Component_C3.drawio) — Componentes de Ordem de Serviço (C3)
+> - [`C4_GerenciamentoEstado_Component_C3.drawio`](architecture/drawio/C4_GerenciamentoEstado_Component_C3.drawio) — Componentes do Gerenciamento de Estado / FSM (C3)
 
 ---
 
