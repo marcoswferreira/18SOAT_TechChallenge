@@ -282,5 +282,44 @@ public class OrdensServicoControllerIntegrationTests : IClassFixture<CustomWebAp
         Assert.NotNull(output);
         Assert.Equal("Cancelada", output.Status);
     }
+
+    [Fact]
+    public async Task ObterTempoMedioExecucao_Autenticado_DeveRetornar200Ok_ComMetricas()
+    {
+        // Act
+        var response = await _authClient.GetAsync("/api/v1/ordens-servico/metricas/tempo-medio-execucao");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var output = await response.Content.ReadFromJsonAsync<Application.UseCases.OrdensServico.Dto.MetricaTempoExecucaoResponse>();
+        Assert.NotNull(output);
+        Assert.True(output.QuantidadeOs >= 0);
+    }
+
+    [Fact]
+    public async Task ObterTempoMedioExecucao_ComFiltroPeriodo_DeveRetornar200Ok()
+    {
+        // Arrange
+        var de = Uri.EscapeDataString(DateTime.UtcNow.AddMonths(-1).ToString("o"));
+        var ate = Uri.EscapeDataString(DateTime.UtcNow.ToString("o"));
+
+        // Act
+        var response = await _authClient.GetAsync($"/api/v1/ordens-servico/metricas/tempo-medio-execucao?de={de}&ate={ate}");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var output = await response.Content.ReadFromJsonAsync<Application.UseCases.OrdensServico.Dto.MetricaTempoExecucaoResponse>();
+        Assert.NotNull(output);
+    }
+
+    [Fact]
+    public async Task ObterTempoMedioExecucao_NaoAutenticado_DeveRetornar401Unauthorized()
+    {
+        // Act
+        var response = await _anonymousClient.GetAsync("/api/v1/ordens-servico/metricas/tempo-medio-execucao");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
 }
 

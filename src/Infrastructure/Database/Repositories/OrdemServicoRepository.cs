@@ -53,9 +53,10 @@ public class OrdemServicoRepository(ApplicationDbContext context) : BaseReposito
     }
 
     public async Task<IEnumerable<TimeSpan>> ObterTemposDeExecucaoAsync(
-    DateTime? de, DateTime? ate, CancellationToken ct = default)
+        DateTime? de, DateTime? ate, CancellationToken ct = default)
     {
-        var query = context.OrdensServico
+        var query = _dbSet
+            .AsNoTracking()
             .Include(os => os.Historico)
             .Where(os => os.Historico.Any(r =>
                 r.Para == StatusOrdemServico.Finalizada &&
