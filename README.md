@@ -382,17 +382,22 @@ A API utiliza autenticação JWT com controle de acesso por perfis (`Roles`): `A
 
 ## 📐 Documentação DDD e Arquitetura (C4 Model)
 
-A documentação detalhada de **Domain-Driven Design** e **Arquitetura de Componentes** desenvolvida pelo grupo encontra-se em [`docs/`](docs/):
+A documentação detalhada de **Domain-Driven Design** e **Arquitetura (C4 Model)** desenvolvida pelo grupo encontra-se em [`docs/`](docs/):
 
-| Documento | Descrição |
-| :--- | :--- |
-| **[Linguagem Ubíqua](docs/ddd/linguagem-ubiqua.md)** | Vocabulário padronizado compartilhado entre especialistas de negócio e desenvolvedores |
-| **[Domain Storytelling](docs/ddd/domain-storytelling.md)** | Narrativas e diagramas dos fluxos operacionais da oficina (*Cenários 1, 2 e 3*) |
-| **[Event Storming](docs/ddd/event-storming.md)** | Mapeamento de eventos de domínio, comandos e reações do sistema |
-| **[Arquitetura](docs/ddd/architecture.md)** | Decisões arquiteturais, camadas e roadmap técnico |
-| **[C3 — Ordem de Serviço](docs/architecture/c3-ordem-servico.md)** | Diagrama C3 (Componentes C4) da Ordem de Serviço, catálogo de componentes e fluxos |
-| **[C3 — Gerenciamento de Estado](docs/architecture/c3-gerenciamento-estado.md)** | Diagrama C3 da Máquina de Estados da OS, regras de transição, invariantes e auditoria |
-| **[ADR 001 — Banco de Dados](docs/adrs/adr-001-escolha-do-banco-de-dados.md)** | Análise comparativa e justificativa da escolha do PostgreSQL |
+| Documento | Nível / Assunto | Descrição |
+| :--- | :--- | :--- |
+| **[C1 — Contexto do Sistema](docs/architecture/c1-contexto.md)** | **C4 Nível 1** | Diagrama de Contexto: escopo do sistema SIAES, personas e serviço de e-mails |
+| **[C2 — Contêineres do Sistema](docs/architecture/c2-container.md)** | **C4 Nível 2** | Diagrama de Contêineres: `SIAES.API`, `SIAES_DB` e integrações REST/SQL/SMTP |
+| **[C3 — Cliente e Veículo](docs/architecture/c3-cliente-veiculo.md)** | **C4 Nível 3** | Diagrama de Componentes por camadas Clean Architecture, validações e LGPD |
+| **[C3 — Ordem de Serviço](docs/architecture/c3-ordem-servico.md)** | **C4 Nível 3** | Diagrama C3 da Ordem de Serviço, catálogo de componentes e fluxos |
+| **[C3 — Gerenciamento de Estado](docs/architecture/c3-gerenciamento-estado.md)** | **C4 Nível 3** | Diagrama C3 da Máquina de Estados da OS, regras de transição e auditoria |
+| **[Arquitetura da Solução](docs/ddd/architecture.md)** | Visão Geral | Decisões arquiteturais, camadas, catálogo de casos de uso e roadmap |
+| **[Linguagem Ubíqua](docs/ddd/linguagem-ubiqua.md)** | DDD | Vocabulário padronizado compartilhado entre especialistas de negócio e devs |
+| **[Domain Storytelling](docs/ddd/domain-storytelling.md)** | DDD | Narrativas e diagramas dos fluxos operacionais da oficina (*Cenários 1, 2 e 3*) |
+| **[Event Storming](docs/ddd/event-storming.md)** | DDD | Mapeamento de eventos de domínio, comandos e reações do sistema |
+| **[ADR 001 — Banco de Dados](docs/adrs/adr-001-escolha-do-banco-de-dados.md)** | ADR | Análise comparativa e justificativa da escolha do PostgreSQL |
+
+> 📁 Os arquivos originais editáveis do Draw.io estão disponíveis na pasta [`docs/architecture/drawio/`](docs/architecture/drawio/).
 
 ---
 

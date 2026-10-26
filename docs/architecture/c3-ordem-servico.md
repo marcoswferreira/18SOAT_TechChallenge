@@ -1,6 +1,8 @@
-# Arquitetura de Componentes (C3) — Ordem de Serviço
+# Diagrama de Componentes (C3 do Modelo C4) — Ordem de Serviço
 
 Este documento detalha o **Diagrama de Componentes (C3 do modelo C4)** para o ecossistema da **Ordem de Serviço (OS)** no sistema **SIAES**. Ele descreve como o contêiner da **API Backend (.NET 10)** decompõe suas responsabilidades internas entre as camadas de **Apresentação**, **Aplicação**, **Domínio** e **Infraestrutura**, em estrita conformidade com o código-fonte implementado.
+
+O modelo segue fielmente a estrutura e a representação de camadas definida no arquivo [`C4_OrdemServico_Component_C3.drawio`](drawio/C4_OrdemServico_Component_C3.drawio).
 
 ---
 
@@ -12,124 +14,61 @@ A **Ordem de Serviço** é o agregado central do SIAES. Ela orquestra todo o cic
 
 ---
 
-## 2. Diagrama C3 de Componentes (C4 Model)
+## 2. Diagrama C3 — Componentes de Ordem de Serviço
 
 ```mermaid
 flowchart TD
-    %% Atores e Clientes Externos
-    UsuarioOperacional(["Atendente / Mecânico / Gerente / Admin\n[Ator Humano]"]):::person
-    ClienteOficina(["Cliente da Oficina\n[Ator Humano - Consulta Pública]"]):::person
+    %% Usuários
+    Usuarios["Usuários da Oficina\n[Persons]\nAtendentes, Mecânicos e Administradores"]:::person
 
-    subgraph ContainerAPI ["Contêiner: SIAES Backend API (.NET 10 / ASP.NET Core)"]
-        
+    %% Fronteira do Sistema SIAES (API Backend)
+    subgraph SIAESBoundary ["SIAES [API Backend — ASP.NET Core]"]
+
         %% Camada de Apresentação
-        subgraph PresentationLayer ["Camada de Apresentação (SIAES.API)"]
-            OSController["OrdensServicoController\n[Component: ASP.NET Core Controller]\nRoteamento REST, validação de rotas e autorização RBAC"]:::component
-            AuthFilter["Middleware de Segurança & JWT\n[Component: ASP.NET Core Middleware]\nValidação de Claims de Perfil (Roles)"]:::component
+        subgraph CamadaApresentacao ["Camada Apresentação"]
+            ControllerOS["Controller de Ordens de Serviço\n[Ordem de Serviço]\nRecebe requisições HTTP REST, valida\npermissões e encaminha operações."]:::component
         end
 
-        %% Camada de Aplicação
-        subgraph ApplicationLayer ["Camada de Aplicação (Application)"]
-            subgraph LifeCycleUseCases ["Casos de Uso de Ciclo de Vida"]
-                CreateOS["CreateOrdemServicoUseCase\n[Component: C# Class]\nCria OS inicial (Recebida)"]:::component
-                StartDiag["IniciarDiagnosticoUseCase\n[Component: C# Class]\nInicia avaliação técnica"]:::component
-                AddItem["AdicionarPecaOrdemServicoUseCase\n[Component: C# Class]\nAdiciona peças e reserva estoque"]:::component
-                AddService["AdicionarServicoOrdemServicoUseCase\n[Component: C# Class]\nAdiciona serviços da oficina"]:::component
-                GenBudget["GerarOrcamentoUseCase\n[Component: C# Class]\nConsolida valores e envia p/ aprovação"]:::component
-                ApproveBudget["AprovarOrcamentoUseCase\n[Component: C# Class]\nRegistra aprovação e inicia execução"]:::component
-                ReqAddApproval["SolicitarAprovacaoAdicionalUseCase\n[Component: C# Class]\nRetorna OS para aprovação extra"]:::component
-                RejectBudget["RejeitarOrcamentoUseCase\n[Component: C# Class]\nCancela OS e libera reserva de estoque"]:::component
-                FinishOS["FinalizarOrdemServicoUseCase\n[Component: C# Class]\nBaixa estoque físico e conclui OS"]:::component
-                DeliverVehicle["EntregarVeiculoUseCase\n[Component: C# Class]\nRegistra entrega do automóvel"]:::component
-            end
-
-            subgraph QueryUseCases ["Casos de Uso de Consulta"]
-                GetById["GetOrdemServicoByIdUseCase\n[Component: C# Class]\nDetalhes da OS (peças, serviços e histórico)"]:::component
-                GetPaged["GetOrdensServicoPagedUseCase\n[Component: C# Class]\nListagem paginada operacional"]:::component
-                GetStatus["GetStatusOrdemServicoUseCase\n[Component: C# Class]\nConsulta pública de status por ID ou CPF/CNPJ"]:::component
-            end
-
-            DTOs["DTOs & Mappings\n[Component: Records]\nCreateOrdemServicoInput, OrdemServicoOutput, etc."]:::component
+        %% Camada Aplicação
+        subgraph CamadaAplicacao ["Camada Aplicação [Container]"]
+            CasosUsoOS["Casos de Uso da OS\n[Ordem de Serviço]\nOrquestra ciclo de vida: abertura, diagnóstico,\npeças/serviços, orçamento, aprovação e conclusão."]:::component
         end
 
-        %% Camada de Domínio
-        subgraph DomainLayer ["Camada de Domínio (Domain - Core Puro)"]
-            OSAggregate["OrdemServico (Aggregate Root)\n[Component: C# Entity]\nEncapsula invariantes, cálculos e histórico"]:::component
-            ItemPecaVO["ItemPeca (Value Object)\n[Component: Record]\nVínculo com ItemEstoque e valores"]:::component
-            ItemServicoVO["ItemServico (Value Object)\n[Component: Record]\nDescrição, quantidade e valor unitário"]:::component
-            RegistroStatusVO["RegistroStatus (Entity/VO)\n[Component: C# Entity]\nRastreabilidade imutável de transições"]:::component
-            
-            subgraph DomainPorts ["Portas do Domínio (Interfaces)"]
-                IOSRepo["IOrdemServicoRepository\n[Interface: Porta]"]:::interface
-                IStockRepo["IItemEstoqueRepository\n[Interface: Porta]"]:::interface
-                ICliRepo["IClienteRepository\n[Interface: Porta]"]:::interface
-                IVeicRepo["IVeiculoRepository\n[Interface: Porta]"]:::interface
-                INotificationService["IOrdemServicoNotificationService\n[Interface: Porta]"]:::interface
-            end
+        %% Camada Domínio
+        subgraph CamadaDominio ["Camada Domínio [Container]"]
+            DominioOS["Domínio da Ordem de Serviço\n[Ordem de Serviço]\nRaiz de agregado OrdemServico, itens de\npeça/serviço, cálculos e regras de negócio."]:::component
         end
 
-        %% Camada de Infraestrutura
-        subgraph InfrastructureLayer ["Camada de Infraestrutura (Infrastructure)"]
-            OSRepo["OrdemServicoRepository\n[Component: EF Core Repository]\nConsultas otimizadas com AsSplitQuery"]:::component
-            StockRepo["ItemEstoqueRepository\n[Component: EF Core Repository]\nControle de concorrência e saldo"]:::component
-            AppDbContext["ApplicationDbContext\n[Component: EF Core DbContext]\nMapeamento relacional e auditoria"]:::component
-            NotificationAdapter["OrdemServicoNotificationService\n[Component: C# Service]\nMontagem de templates HTML responsivos"]:::component
-            ResendAdapter["ResendEmailService\n[Component: C# Service]\nCliente de integração HTTP"]:::component
+        %% Camada Infraestrutura
+        subgraph CamadaInfra ["Camada Infraestrutura [Container]"]
+            PersistenciaOS["Persistência da OS e Estoque\n[Ordem de Serviço]\nImplementa repositórios IOrdemServicoRepository\ne IItemEstoqueRepository."]:::component
+            ServicoNotif["Serviço de Notificação\n[Notificação]\nGera templates HTML e dispara e-mails\nnas mudanças de status da OS."]:::component
+            EFCore["Entity Framework Core\n[Entity Framework]\nMapeamento objeto-relacional (ORM)\ne controle transacional ACID."]:::component
         end
 
     end
 
-    %% Contêineres e Sistemas Externos
-    subgraph ExternalContainers ["Contêineres e Provedores Externos"]
-        Database[("PostgreSQL 16 Database\n[Container: SGBD Relacional]\nTabelas OrdensServico, ItensEstoque, etc.")]:::db
-        ResendAPI["Resend Email API\n[Software Externo: SaaS]\nEnvio transacional de e-mails"]:::external
-    end
+    %% Banco de Dados Externo
+    DB[("SIAES_DB\n[Container: PostgreSQL 16]\nBanco de dados relacional: tabelas\nOrdensServico, ItensEstoque, etc.")]:::db
 
-    %% Relacionamentos Presentation -> Auth
-    UsuarioOperacional -->|"HTTP REST autenticado (Bearer JWT)"| OSController
-    ClienteOficina -->|"HTTP GET público (/status)"| OSController
-    OSController --> AuthFilter
+    %% Provedor Externo
+    EmailService["Serviço de envio de e-mails\n[Software System]\nServiço externo (Resend) utilizado para\nenvio de notificações aos clientes."]:::external
 
-    %% Relacionamentos Controller -> Use Cases
-    OSController -->|"Invoca operações de escrita"| LifeCycleUseCases
-    OSController -->|"Invoca consultas de leitura"| QueryUseCases
-    LifeCycleUseCases -.-> DTOs
-    QueryUseCases -.-> DTOs
+    %% Relações e Fluxos
+    Usuarios -->|"HTTP / REST\n(JSON, Bearer Token)"| ControllerOS
+    ControllerOS -->|"Invoca operações"| CasosUsoOS
+    CasosUsoOS -->|"Executa regras de negócio"| DominioOS
+    DominioOS -->|"Persistência via Portas"| PersistenciaOS
+    CasosUsoOS -->|"Dispara notificações"| ServicoNotif
+    PersistenciaOS -->|"Operações de dados"| EFCore
+    EFCore -->|"SQL / TCP 5432"| DB
+    ServicoNotif -->|"API / HTTPS\n(Resend SDK)"| EmailService
 
-    %% Relacionamentos Use Cases -> Domain
-    LifeCycleUseCases -->|"Invoca métodos de negócio"| OSAggregate
-    CreateOS -->|"Valida existência"| ICliRepo
-    CreateOS -->|"Valida existência"| IVeicRepo
-    AddItem -->|"Reserva quantidade"| IStockRepo
-    RejectBudget -->|"Libera reservas"| IStockRepo
-    FinishOS -->|"Baixa física de estoque"| IStockRepo
-    LifeCycleUseCases -->|"Persiste estado"| IOSRepo
-    LifeCycleUseCases -->|"Dispara e-mail de evento"| INotificationService
-    QueryUseCases -->|"Lê agregados"| IOSRepo
-
-    %% Composição do Agregado
-    OSAggregate -->|"Contém"| ItemPecaVO
-    OSAggregate -->|"Contém"| ItemServicoVO
-    OSAggregate -->|"Contém"| RegistroStatusVO
-
-    %% Implementação de Portas (Ports & Adapters)
-    OSRepo -.->|"Implementa"| IOSRepo
-    StockRepo -.->|"Implementa"| IStockRepo
-    NotificationAdapter -.->|"Implementa"| INotificationService
-
-    %% Relacionamentos de Infraestrutura
-    OSRepo --> AppDbContext
-    StockRepo --> AppDbContext
-    NotificationAdapter --> ResendAdapter
-    AppDbContext -->|"Npgsql / TCP 5432"| Database
-    ResendAdapter -->|"HTTPS / REST"| ResendAPI
-
-    %% Estilos visuais
-    classDef person fill:#08427b,stroke:#052e56,color:#ffffff;
-    classDef component fill:#1168bd,stroke:#0b4884,color:#ffffff;
-    classDef interface fill:#85bb65,stroke:#557a3e,color:#ffffff;
-    classDef db fill:#1f77b4,stroke:#0f5280,color:#ffffff;
-    classDef external fill:#666666,stroke:#444444,color:#ffffff;
+    %% Estilos visuais C4 (alinhados ao Draw.io)
+    classDef person fill:#083F75,stroke:#06315C,color:#ffffff;
+    classDef component fill:#1061B0,stroke:#0D5091,color:#ffffff;
+    classDef db fill:#23A2D9,stroke:#0E7DAD,color:#ffffff;
+    classDef external fill:#8C8496,stroke:#736782,color:#ffffff;
 ```
 
 ---
@@ -274,4 +213,11 @@ sequenceDiagram
 1. **Agregado Transacional Coeso**: O valor do orçamento (`ValorTotal`) é uma propriedade calculada e protegida dentro de `OrdemServico`, impedindo divergências entre o total da OS e a soma dos itens de peças e serviços.
 2. **Separação Estrita de Portas e Adaptadores**: A camada de Aplicação (`Application`) comunica-se com a Infraestrutura estritamente por interfaces de Domínio (`IOrdemServicoRepository`, `IItemEstoqueRepository`). Isso permite testes de integração 100% isolados em memória com `WebApplicationFactory` e troca transparente de fornecedores externos sem impacto no núcleo de negócio.
 3. **Reserva e Baixa em Duas Fases**: A adoção de reservas no diagnóstico (`AdicionarPeca`) e baixa física apenas na finalização (`FinalizarServico`) protege a oficina contra indisponibilidade de peças durante a execução dos serviços. Caso o cliente rejeite o orçamento, o caso de uso `RejeitarOrcamentoUseCase` executa a liberação imediata das reservas com `itemEstoque.LiberarReserva()`.
+
+---
+
+## 6. Arquivo Draw.io Nativo
+
+O diagrama original editável está disponível em:
+- 📁 [`docs/architecture/drawio/C4_OrdemServico_Component_C3.drawio`](drawio/C4_OrdemServico_Component_C3.drawio)
 
