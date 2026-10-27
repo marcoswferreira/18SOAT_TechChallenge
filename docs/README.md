@@ -41,3 +41,18 @@ A arquitetura do SIAES segue a metodologia **C4 Model** (Contexto, Contêineres 
 | ADR | Título | Status |
 | :--- | :--- | :--- |
 | **[ADR 001](adrs/adr-001-escolha-do-banco-de-dados.md)** | Seleção do Banco de Dados Relacional (PostgreSQL 16 com EF Core 10) | Aprovado |
+
+---
+
+## ⚡ API, Swagger e Testes End-to-End (Insomnia & Thunder Client)
+
+| Recurso | Localização | Descrição |
+| :--- | :--- | :--- |
+| **OpenAPI / Swagger** | [`docs/swagger.json`](swagger.json) | Especificação OpenAPI 3.0 exportada da aplicação com 100% dos contratos e schemas |
+| **Collection Insomnia (Nativa)** | [`docs/insomnia/Insomnia_SIAES_Collection.json`](insomnia/Insomnia_SIAES_Collection.json) | Suíte E2E nativa do Insomnia com 51 requisições encadeadas e variáveis dinâmicas |
+| **Guia Insomnia** | [`docs/insomnia/README.md`](insomnia/README.md) | Instruções para importar e rodar a suíte no Insomnia |
+| **Collection Postman / Insomnia** | [`docs/insomnia/Postman_SIAES_Collection.json`](insomnia/Postman_SIAES_Collection.json) | Formato Postman v2.1 importável no Insomnia com scripts de teste |
+| **Collection Thunder Client** | [`docs/thunder-client/thunder-collection_SIAES.json`](thunder-client/thunder-collection_SIAES.json) | Suíte completa para Thunder Client (VS Code) |
+| **Guia Thunder Client** | [`docs/thunder-client/README.md`](thunder-client/README.md) | Passo a passo para importar e rodar no Thunder Client |
+
+

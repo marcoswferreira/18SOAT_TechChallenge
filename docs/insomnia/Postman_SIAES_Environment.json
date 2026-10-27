@@ -1,0 +1,71 @@
+{
+  "id": "env_siaes_postman",
+  "name": "SIAES - Local Development",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5180",
+      "enabled": true
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@siaes.com",
+      "enabled": true
+    },
+    {
+      "key": "adminPassword",
+      "value": "SenhaAdmin1!",
+      "enabled": true
+    },
+    {
+      "key": "clienteDocumento",
+      "value": "52998224725",
+      "enabled": true
+    },
+    {
+      "key": "veiculoPlaca",
+      "value": "SIA2E26",
+      "enabled": true
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "testUserId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "clienteId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "veiculoId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "servicoId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "itemEstoqueId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "osId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "osIdAlt",
+      "value": "",
+      "enabled": true
+    }
+  ]
+}

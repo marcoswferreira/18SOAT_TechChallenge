@@ -1,0 +1,1926 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-26T22:15:00.000Z",
+  "__export_source": "insomnia.desktop.app:v13.3.1",
+  "resources": [
+    {
+      "_id": "wrk_siaes_api",
+      "parentId": null,
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "SIAES - API E2E",
+      "description": "Suíte End-to-End da API SIAES para Insomnia",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_siaes_base",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "http://localhost:5180",
+        "adminEmail": "admin@siaes.com",
+        "adminPassword": "SenhaAdmin1!",
+        "clienteDocumento": "52998224725",
+        "veiculoPlaca": "SIA2E26",
+        "authToken": "",
+        "testUserId": "",
+        "clienteId": "",
+        "veiculoId": "",
+        "servicoId": "",
+        "itemEstoqueId": "",
+        "osId": "",
+        "osIdAlt": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "baseUrl",
+          "adminEmail",
+          "adminPassword",
+          "authToken",
+          "clienteId",
+          "veiculoId",
+          "servicoId",
+          "itemEstoqueId",
+          "osId",
+          "osIdAlt",
+          "testUserId"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1793052555305,
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_01_auth",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "01 - Autenticação & Usuários",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 10000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_02_clientes",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "02 - Gestão de Clientes",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 20000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_03_veiculos",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "03 - Gestão de Veículos",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 30000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_04_servicos",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "04 - Catálogo de Serviços",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 40000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_05_estoque",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "05 - Estoque de Peças",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 50000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_06_os_principal",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "06 - Ordem de Serviço (Fluxo Principal)",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 60000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_07_os_alternativo",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "07 - Ordem de Serviço (Fluxo Alternativo)",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 70000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_08_cleanup",
+      "parentId": "wrk_siaes_api",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "name": "08 - Limpeza e Soft Delete (Cleanup)",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 80000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_01_login",
+      "parentId": "fld_01_auth",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Auth/login",
+      "name": "1.1 - Login Admin [Gera Token]",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"{{ _.adminEmail }}\",\n  \"password\": \"{{ _.adminPassword }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 10100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_01_create_user",
+      "parentId": "fld_01_auth",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Users",
+      "name": "1.2 - Criar Usuário (Autocadastro)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"teste.insomnia@siaes.com\",\n  \"password\": \"SenhaTeste1!\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 10200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_01_get_user",
+      "parentId": "fld_01_auth",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Users/{% response 'body', 'req_01_create_user', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "1.3 - Obter Usuário por ID",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 10300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_01_list_users",
+      "parentId": "fld_01_auth",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Users?pageIndex=0&pageSize=10",
+      "name": "1.4 - Listar Usuários (Paginado)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 10400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_01_change_pwd",
+      "parentId": "fld_01_auth",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Users/{% response 'body', 'req_01_create_user', 'b64::JC5pZA==::46b', 'never', 60 %}/password",
+      "name": "1.5 - Alterar Senha do Usuário",
+      "description": "",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"currentPassword\": \"SenhaTeste1!\",\n  \"newPassword\": \"NovaSenhaTeste1!\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 10500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_01_update_user",
+      "parentId": "fld_01_auth",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Users/{% response 'body', 'req_01_create_user', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "1.6 - Atualizar Usuário",
+      "description": "",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"teste.atualizado@siaes.com\",\n  \"roles\": [\n    \"User\"\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 10600,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_01_delete_user",
+      "parentId": "fld_01_auth",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Users/{% response 'body', 'req_01_create_user', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "1.7 - Deletar Usuário de Teste",
+      "description": "",
+      "method": "DELETE",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 10700,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_02_create_cliente",
+      "parentId": "fld_02_clientes",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Clientes",
+      "name": "2.1 - Criar Novo Cliente",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Cliente Insomnia E2E\",\n  \"cpfcnpj\": \"{{ _.clienteDocumento }}\",\n  \"email\": \"cliente.insomnia@exemplo.com\",\n  \"telefone\": \"(11) 97777-8888\",\n  \"endereco\": {\n    \"logradouro\": \"Av. Paulista\",\n    \"numero\": \"1578\",\n    \"complemento\": \"Masp\",\n    \"bairro\": \"Bela Vista\",\n    \"cidade\": \"São Paulo\",\n    \"estado\": \"SP\",\n    \"cep\": \"01310200\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 20100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_02_get_cliente",
+      "parentId": "fld_02_clientes",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Clientes/{% response 'body', 'req_02_create_cliente', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "2.2 - Obter Cliente por ID",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 20200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_02_list_clientes",
+      "parentId": "fld_02_clientes",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Clientes?pageIndex=0&pageSize=10",
+      "name": "2.3 - Listar Clientes (Paginado)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 20300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_02_update_cliente",
+      "parentId": "fld_02_clientes",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Clientes/{% response 'body', 'req_02_create_cliente', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "2.4 - Atualizar Dados do Cliente",
+      "description": "",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Cliente Insomnia Atualizado\",\n  \"email\": \"cliente.atualizado@exemplo.com\",\n  \"telefone\": \"(11) 98888-9999\",\n  \"endereco\": {\n    \"logradouro\": \"Rua Oscar Freire\",\n    \"numero\": \"200\",\n    \"complemento\": \"Casa\",\n    \"bairro\": \"Cerqueira César\",\n    \"cidade\": \"São Paulo\",\n    \"estado\": \"SP\",\n    \"cep\": \"01426000\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 20400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_03_create_veiculo",
+      "parentId": "fld_03_veiculos",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Veiculos",
+      "name": "3.1 - Criar Veículo Vinculado ao Cliente",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"clienteId\": \"{% response 'body', 'req_02_create_cliente', 'b64::JC5pZA==::46b', 'never', 60 %}\",\n  \"placa\": \"{{ _.veiculoPlaca }}\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Corolla Altis Hybrid\",\n  \"ano\": 2023\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 30100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_03_get_veiculo",
+      "parentId": "fld_03_veiculos",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Veiculos/{% response 'body', 'req_03_create_veiculo', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "3.2 - Obter Veículo por ID",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 30200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_03_list_veiculos",
+      "parentId": "fld_03_veiculos",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Veiculos?pageIndex=0&pageSize=10",
+      "name": "3.3 - Listar Veículos (Paginado)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 30300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_03_update_veiculo",
+      "parentId": "fld_03_veiculos",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Veiculos/{% response 'body', 'req_03_create_veiculo', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "3.4 - Atualizar Dados do Veículo",
+      "description": "",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"placa\": \"{{ _.veiculoPlaca }}\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Corolla GR-Sport\",\n  \"ano\": 2024\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 30400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_04_create_servico",
+      "parentId": "fld_04_servicos",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Servicos",
+      "name": "4.1 - Criar Serviço no Catálogo",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Troca de Óleo e Filtros Insomnia E2E\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 40100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_04_get_servico",
+      "parentId": "fld_04_servicos",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Servicos/{% response 'body', 'req_04_create_servico', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "4.2 - Obter Serviço por ID",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 40200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_04_list_servicos",
+      "parentId": "fld_04_servicos",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Servicos?pageIndex=0&pageSize=10",
+      "name": "4.3 - Listar Serviços (Paginado)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 40300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_04_update_servico",
+      "parentId": "fld_04_servicos",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Servicos/{% response 'body', 'req_04_create_servico', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "4.4 - Atualizar Serviço",
+      "description": "",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id\": \"{% response 'body', 'req_04_create_servico', 'b64::JC5pZA==::46b', 'never', 60 %}\",\n  \"nome\": \"Revisão Geral e Troca de Óleo Insomnia E2E\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 40400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_05_create_item",
+      "parentId": "fld_05_estoque",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ItensEstoque",
+      "name": "5.1 - Cadastrar Peça no Estoque",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"codigo\": \"PEC-INS-001\",\n  \"nome\": \"Filtro de Óleo Sintético Insomnia\",\n  \"descricao\": \"Filtro de alta performance\",\n  \"unidadeMedida\": \"Unidade\",\n  \"precoUnitario\": 45.0\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 50100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_05_entrada_item",
+      "parentId": "fld_05_estoque",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ItensEstoque/{% response 'body', 'req_05_create_item', 'b64::JC5pZA==::46b', 'never', 60 %}/entradas",
+      "name": "5.2 - Registrar Entrada de Estoque (Abastecer)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantidade\": 20\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 50200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_05_get_item",
+      "parentId": "fld_05_estoque",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ItensEstoque/{% response 'body', 'req_05_create_item', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "5.3 - Obter Item de Estoque por ID",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 50300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_05_list_itens",
+      "parentId": "fld_05_estoque",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ItensEstoque?pageIndex=0&pageSize=10",
+      "name": "5.4 - Listar Itens de Estoque (Paginado)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 50400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_05_update_item",
+      "parentId": "fld_05_estoque",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ItensEstoque/{% response 'body', 'req_05_create_item', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "5.5 - Atualizar Item de Estoque",
+      "description": "",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Filtro de Óleo Sintético Premium Insomnia\",\n  \"descricao\": \"Filtro blindado de alta durabilidade\",\n  \"unidadeMedida\": \"Unidade\",\n  \"precoUnitario\": 50.0\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 50500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_create_os",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico",
+      "name": "6.1 - Criar OS (Status: Recebida)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"clienteId\": \"{% response 'body', 'req_02_create_cliente', 'b64::JC5pZA==::46b', 'never', 60 %}\",\n  \"veiculoId\": \"{% response 'body', 'req_03_create_veiculo', 'b64::JC5pZA==::46b', 'never', 60 %}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 60100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_get_os",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "6.2 - Obter Detalhes da OS (Recebida)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 60200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_diag_os",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}/diagnostico",
+      "name": "6.3 - Iniciar Diagnóstico (Status: EmDiagnostico)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 60300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_add_servico",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}/servicos",
+      "name": "6.4 - Adicionar Serviço à OS",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"servicoId\": \"{% response 'body', 'req_04_create_servico', 'b64::JC5pZA==::46b', 'never', 60 %}\",\n  \"descricao\": \"Execução de revisão de óleo e filtros\",\n  \"valorUnitario\": 120.0,\n  \"quantidade\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 60400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_add_peca",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}/pecas",
+      "name": "6.5 - Adicionar Peça com Reserva de Estoque",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"itemEstoqueId\": \"{% response 'body', 'req_05_create_item', 'b64::JC5pZA==::46b', 'never', 60 %}\",\n  \"quantidade\": 2,\n  \"valorUnitario\": 50.0\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 60500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_orc_os",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}/orcamento",
+      "name": "6.6 - Gerar Orçamento (Status: AguardandoAprovacao)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 60600,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_status_id",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}/status",
+      "name": "6.7 - Consulta Pública Status por ID (Sem Auth)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 60700,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_status_doc",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/documento/{{ _.clienteDocumento }}/status",
+      "name": "6.8 - Consulta Pública Status por CPF (Sem Auth)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 60800,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_aprovar_os",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}/aprovar",
+      "name": "6.9 - Aprovar Orçamento (Status: EmExecucao)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 60900,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_finalizar_os",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}/finalizar",
+      "name": "6.10 - Finalizar Serviços (Status: Finalizada - Baixa Estoque)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 61000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_entregar_os",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}/entregar",
+      "name": "6.11 - Entregar Veículo (Status: Entregue)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 61100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_get_concluida",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_06_create_os', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "6.12 - Consultar OS Concluída (Histórico Completo)",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 61200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_metricas",
+      "parentId": "fld_06_os_principal",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/metricas/tempo-medio-execucao",
+      "name": "6.13 - Métrica: Tempo Médio de Execução das OS",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 61300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_create_os_alt",
+      "parentId": "fld_07_os_alternativo",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico",
+      "name": "7.1 - Criar 2ª OS",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"clienteId\": \"{% response 'body', 'req_02_create_cliente', 'b64::JC5pZA==::46b', 'never', 60 %}\",\n  \"veiculoId\": \"{% response 'body', 'req_03_create_veiculo', 'b64::JC5pZA==::46b', 'never', 60 %}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 70100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_diag_os_alt",
+      "parentId": "fld_07_os_alternativo",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_07_create_os_alt', 'b64::JC5pZA==::46b', 'never', 60 %}/diagnostico",
+      "name": "7.2 - Iniciar Diagnóstico 2ª OS",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 70200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_add_peca_alt",
+      "parentId": "fld_07_os_alternativo",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_07_create_os_alt', 'b64::JC5pZA==::46b', 'never', 60 %}/pecas",
+      "name": "7.3 - Adicionar Peça com Reserva 2ª OS",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"itemEstoqueId\": \"{% response 'body', 'req_05_create_item', 'b64::JC5pZA==::46b', 'never', 60 %}\",\n  \"quantidade\": 1,\n  \"valorUnitario\": 50.0\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 70300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_orc_os_alt",
+      "parentId": "fld_07_os_alternativo",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_07_create_os_alt', 'b64::JC5pZA==::46b', 'never', 60 %}/orcamento",
+      "name": "7.4 - Gerar Orçamento 2ª OS",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 70400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_aprovar_os_alt",
+      "parentId": "fld_07_os_alternativo",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_07_create_os_alt', 'b64::JC5pZA==::46b', 'never', 60 %}/aprovar",
+      "name": "7.5 - Aprovar Orçamento 2ª OS (EmExecucao)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 70500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_solicitar_adicional",
+      "parentId": "fld_07_os_alternativo",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_07_create_os_alt', 'b64::JC5pZA==::46b', 'never', 60 %}/solicitar-aprovacao-adicional",
+      "name": "7.6 - Solicitar Aprovação Adicional (Volta AguardandoAprovacao)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 70600,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_rejeitar_os_alt",
+      "parentId": "fld_07_os_alternativo",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_07_create_os_alt', 'b64::JC5pZA==::46b', 'never', 60 %}/rejeitar",
+      "name": "7.7 - Rejeitar Orçamento (Status: Cancelada - Libera Estoque)",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 70700,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_get_cancelada",
+      "parentId": "fld_07_os_alternativo",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ordens-servico/{% response 'body', 'req_07_create_os_alt', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "7.8 - Validar Status Cancelada",
+      "description": "",
+      "method": "GET",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 70800,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_08_delete_item",
+      "parentId": "fld_08_cleanup",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/ItensEstoque/{% response 'body', 'req_05_create_item', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "8.1 - Deletar Peça de Estoque (Soft Delete)",
+      "description": "",
+      "method": "DELETE",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 80100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_08_delete_servico",
+      "parentId": "fld_08_cleanup",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Servicos/{% response 'body', 'req_04_create_servico', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "8.2 - Deletar Serviço do Catálogo (Soft Delete)",
+      "description": "",
+      "method": "DELETE",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 80200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_08_delete_veiculo",
+      "parentId": "fld_08_cleanup",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Veiculos/{% response 'body', 'req_03_create_veiculo', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "8.3 - Deletar Veículo (Soft Delete)",
+      "description": "",
+      "method": "DELETE",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 80300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_08_delete_cliente",
+      "parentId": "fld_08_cleanup",
+      "modified": 1793052555305,
+      "created": 1793052555305,
+      "url": "{{ _.baseUrl }}/api/v1/Clientes/{% response 'body', 'req_02_create_cliente', 'b64::JC5pZA==::46b', 'never', 60 %}",
+      "name": "8.4 - Deletar Cliente (Soft Delete)",
+      "description": "",
+      "method": "DELETE",
+      "body": {
+        "mimeType": "",
+        "text": ""
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{% response 'body', 'req_01_login', 'b64::JC5hY2Nlc3NUb2tlbg==::46b', 'never', 60 %}",
+        "disabled": false
+      },
+      "metaSortKey": 80400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    }
+  ]
+}
