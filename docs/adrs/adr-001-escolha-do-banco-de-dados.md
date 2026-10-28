@@ -2,7 +2,7 @@
 
 * **Status**: Aceito
 * **Data**: 2026-19-07
-* **Autores**: Grupo X
+* **Autores**: Grupo 21
 * **Contexto Técnico**: .NET 10, Monólito em Camadas (DDD), Docker / Docker Compose
 
 ---

@@ -10,7 +10,7 @@
 | :--- | :--- |
 | **Curso** | SOAT — Software Architecture |
 | **Fase** | 1 |
-| **Número do Grupo** | Grupo X |
+| **Número do Grupo** | Grupo 21 |
 | **Linguagem Principal** | C# 13 (.NET 10 LTS) |
 | **Tecnologias Utilizadas** | ASP.NET Core Web API, Entity Framework Core 10, PostgreSQL 16, Docker, Testcontainers, xUnit, NSubstitute, SonarCloud, Resend API |
 | **Data de Entrega** | Outubro / 2026 |
