@@ -1,5 +1,7 @@
 # Bem-vindo à Documentação do SIAES (18SOAT Tech Challenge)
 
+> 🎓 **Documento Oficial de Entrega (Fase 1)**: Para visualização ou exportação para PDF da entrega da Fase 1, acesse [`docs/ENTREGA_FASE1.md`](ENTREGA_FASE1.md) (ou na raiz [`ENTREGA_FASE1.md`](../ENTREGA_FASE1.md)).
+
 Nesta documentação você encontrará toda a arquitetura técnica, modelagem de domínio com Domain-Driven Design (DDD), diagramas C4 e decisões arquiteturais (ADRs) adotadas no projeto **SIAES**.
 
 ---
