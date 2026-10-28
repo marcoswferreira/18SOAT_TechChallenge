@@ -413,11 +413,11 @@ O vídeo demonstrativo com a explicação da arquitetura, fluxo de execução, t
 
 | Nome | RM |
 | :--- | :--- |
-| Alexandre Martins Placido | RMXXXXXX |
-| Diego Estefan Conceição de Pádua | RMXXXXXX |
-| Jayr Rufino de Almeida Junior | RMXXXXXX |
+| Alexandre Martins Placido | RM378588 |
+| Diego Estefan Conceição de Pádua | RM378740 |
+| Jayr Rufino de Almeida Junior | RM378096 |
 | Marcos Welington Ferreira | RM378531 |
-| Milena Vargas Leonardi | RMXXXXXX |
+| Milena Vargas Leonardi | RM378633 |
 
 ---
 
