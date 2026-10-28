@@ -21,11 +21,11 @@
 
 | Nome Completo | RM | Usuário Discord |
 | :--- | :---: | :---: |
-| **Alexandre Martins Placido** | *RMXXXXXX* | *@alexandre.placido* |
-| **Diego Estefan Conceição de Pádua** | *RMXXXXXX* | *@diego.padua* |
-| **Jayr Rufino de Almeida Junior** | *RMXXXXXX* | *@jayr.rufino* |
-| **Marcos Welington Ferreira** | **RM378531** | *@marcoswferreira* |
-| **Milena Vargas Leonardi** | *RMXXXXXX* | *@milena.leonardi* |
+| **Alexandre Martins Placido** | *RM378588* | *@arthus.sp* |
+| **Diego Estefan Conceição de Pádua** | *RM378740* | *@diego.estefan* |
+| **Jayr Rufino de Almeida Junior** | *RM378740* | *@jayrrufino_88046* |
+| **Marcos Welington Ferreira** | *RM378531* | *@marcos.wferreira* |
+| **Milena Vargas Leonardi** | *RM378633* | *@milenaleonardi* |
 
 <div style="page-break-after: always;"></div>
 
