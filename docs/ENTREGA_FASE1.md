@@ -21,7 +21,7 @@
 
 | Nome Completo | RM | Usuário Discord |
 | :--- | :---: | :---: |
-| **Alexandre Martins Placido** | *RM378588* | *@arthus.sp* |
+| **Alexandre Martins Placido** | *RM378588* | *@amplacido.sp* |
 | **Diego Estefan Conceição de Pádua** | *RM378740* | *@diego.estefan* |
 | **Jayr Rufino de Almeida Junior** | *RM378740* | *@jayrrufino_88046* |
 | **Marcos Welington Ferreira** | *RM378531* | *@marcos.wferreira* |
