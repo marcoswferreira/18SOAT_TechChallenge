@@ -15,6 +15,8 @@
 | **Tecnologias Utilizadas** | ASP.NET Core Web API, Entity Framework Core 10, PostgreSQL 16, Docker, Testcontainers, xUnit, NSubstitute, SonarCloud, Resend API |
 | **Data de Entrega** | Outubro / 2026 |
 
+<br />
+
 #### Integrantes do Grupo
 
 | Nome Completo | RM | Usuário Discord |
@@ -25,8 +27,6 @@
 | **Marcos Welington Ferreira** | **RM378531** | *@marcoswferreira* |
 | **Milena Vargas Leonardi** | *RMXXXXXX* | *@milena.leonardi* |
 
----
-
 <div style="page-break-after: always;"></div>
 
 ### 2. Repositório do Projeto
@@ -36,6 +36,8 @@
 * **Branch de Entrega**: `main`
 * **Commit Hash da Versão Final**: `29d6cfd` (ou versão tag correspondente)
 * **Políticas de Proteção de Branch**: A branch `main` é estritamente protegida; todas as alterações foram consolidadas via **Pull Requests revisados**, passando por validação de build, testes automatizados e análise de código no GitHub Actions.
+
+---
 
 ### 3. Vídeo da Entrega
 
@@ -67,16 +69,17 @@
   * Domain Storytelling: [`docs/ddd/domain-storytelling.md`](https://github.com/marcoswferreira/18SOAT_TechChallenge/blob/main/docs/ddd/domain-storytelling.md)
   * Arquitetura de Componentes C4: [`docs/architecture/`](https://github.com/marcoswferreira/18SOAT_TechChallenge/tree/main/docs/architecture)
 
+<div style="page-break-after: always;"></div>
+
 ### 5. Qualidade de Software, Cobertura de Testes e Evidência SonarCloud
 
 A garantia de qualidade da solução foi validada por testes automatizados em três níveis e inspecionada continuamente pelo **SonarCloud**:
 
 ```text
-SIAES.slnx
+SIAES.slnx (414 testes automatizados — 0 falhas)
 ├── tests/Domain.UnitTests        (185 testes unitários de entidades, VOs e regras de negócio)
 ├── tests/Application.UnitTests   (125 testes unitários de casos de uso e DTOs)
 └── tests/IntegrationTests        (104 testes de integração com WebApplicationFactory e EF Core)
-Total: 414 testes automatizados (0 falhas)
 ```
 
 #### Cobertura dos Módulos Críticos de Domínio
@@ -111,11 +114,9 @@ Total: 414 testes automatizados (0 falhas)
 | **Duplications** | **0.0%** | $< 3.0\%$ | ✅ Aprovado |
 
 <div align="center">
-  <img src="images/sonarcloud_evidence.png" alt="Painel SonarCloud - Branch main" width="90%" />
+  <img src="images/sonarcloud_evidence.png" alt="Painel SonarCloud - Branch main" width="80%" />
   <p><em>Figura 1: Evidência do painel SonarCloud na branch main — Quality Gate Passed com 84.9% de cobertura e 0 vulnerabilidades.</em></p>
 </div>
-
----
 
 <div style="page-break-after: always;"></div>
 
