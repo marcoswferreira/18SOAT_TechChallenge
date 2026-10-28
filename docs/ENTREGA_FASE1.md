@@ -143,7 +143,7 @@ cd 18SOAT_TechChallenge
 docker compose up -d
 
 # 3. Acessar a documentação interativa Swagger
-# Abrir no navegador: http://localhost:5180/swagger (ou http://localhost:8080/swagger)
+# Abrir no navegador: http://localhost:5180/swagger (ou http://localhost:8082/swagger)
 ```
 
 #### Execução dos Testes Automatizados
