@@ -78,6 +78,8 @@ stateDiagram-v2
     Cancelada --> [*]
 ```
 
+> A transição `EmExecucao → AguardandoAprovacao` (aprovação adicional) já existe no Domain, mas ainda não possui endpoint.
+
 - **Geração Automática do Orçamento**: O valor total da OS é calculado a partir da soma dos serviços e peças adicionados.
 - **Consistência de Estoque Integrada ao Ciclo de Vida**:
   - Ao **adicionar peças** à OS ➔ Reserva o saldo no estoque (`itemEstoque.Reservar()`).
@@ -251,6 +253,7 @@ http://localhost:8082/swagger  # (ou http://localhost:5180/swagger em execução
 ```
 
 > ⚡ **Suítes de Testes End-to-End Prontas**:
+>
 > - **Insomnia**: Arquivo [`docs/insomnia/Insomnia_SIAES_Collection.json`](docs/insomnia/Insomnia_SIAES_Collection.json) (ver [Guia Insomnia](docs/insomnia/README.md))
 > - **Thunder Client**: Arquivo [`docs/thunder-client/thunder-collection_SIAES.json`](docs/thunder-client/thunder-collection_SIAES.json) (ver [Guia Thunder Client](docs/thunder-client/README.md))
 
@@ -290,7 +293,7 @@ http://localhost:8082/swagger  # (ou http://localhost:5180/swagger em execução
 
 A qualidade da solução e a ausência de vulnerabilidades de segurança são monitoradas e validadas continuamente via pipeline de CI no **GitHub Actions** e inspecionadas no **SonarCloud**:
 
-* 🔗 **Painel Oficial SonarCloud (Branch `main`)**: [https://sonarcloud.io/summary/overall?id=marcoswferreira_18SOAT_TechChallenge&branch=main](https://sonarcloud.io/summary/overall?id=marcoswferreira_18SOAT_TechChallenge&branch=main)
+- 🔗 **Painel Oficial SonarCloud (Branch `main`)**: [https://sonarcloud.io/summary/overall?id=marcoswferreira_18SOAT_TechChallenge&branch=main](https://sonarcloud.io/summary/overall?id=marcoswferreira_18SOAT_TechChallenge&branch=main)
 
 | Indicador de Qualidade | Resultado Obtido | Requisito do Edital | Status |
 | :--- | :---: | :---: | :---: |
@@ -302,7 +305,6 @@ A qualidade da solução e a ausência de vulnerabilidades de segurança são mo
 | **Manutenibilidade** | **Rating A** | Rating A | ✅ Aprovado |
 | **Security Hotspots** | **0** | 0 | ✅ Aprovado |
 | **Duplicações de Código** | **0.0%** | $< 3.0\%$ | ✅ Aprovado |
-
 
 ## 🗄️ Banco de Dados — Decisão e Justificativa (ADR 001)
 
@@ -419,9 +421,9 @@ A API utiliza autenticação JWT com controle de acesso por perfis (`Roles`): `A
 
 ## 📐 Documentação DDD e Arquitetura (C4 Model)
 
-* **Boards Oficiais do Event Storming no Miro (Públicos)**:
-  * 📋 **Criação e Acompanhamento da Ordem de Serviço**: [https://miro.com/app/board/uXjVHntHpys=/](https://miro.com/app/board/uXjVHntHpys=/)
-  * 📦 **Gestão de Peças e Insumos (Estoque)**: [https://miro.com/app/board/uXjVHrbvJdE=/](https://miro.com/app/board/uXjVHrbvJdE=/)
+- **Boards Oficiais do Event Storming no Miro (Públicos)**:
+  - 📋 **Criação e Acompanhamento da Ordem de Serviço**: [https://miro.com/app/board/uXjVHntHpys=/](https://miro.com/app/board/uXjVHntHpys=/)
+  - 📦 **Gestão de Peças e Insumos (Estoque)**: [https://miro.com/app/board/uXjVHrbvJdE=/](https://miro.com/app/board/uXjVHrbvJdE=/)
 
 A documentação detalhada de **Domain-Driven Design** e **Arquitetura (C4 Model)** desenvolvida pelo grupo encontra-se em [`docs/`](docs/):
 
@@ -454,11 +456,11 @@ O vídeo demonstrativo com a explicação da arquitetura, fluxo de execução, t
 
 | Nome | RM |
 | :--- | :--- |
-| Alexandre Martins Placido | RMXXXXXX |
-| Diego Estefan Conceição de Pádua | RMXXXXXX |
-| Jayr Rufino de Almeida Junior | RMXXXXXX |
+| Alexandre Martins Placido | RM378588 |
+| Diego Estefan Conceição de Pádua | RM378740 |
+| Jayr Rufino de Almeida Junior | RM378096 |
 | Marcos Welington Ferreira | RM378531 |
-| Milena Vargas Leonardi | RMXXXXXX |
+| Milena Vargas Leonardi | RM378633 |
 
 ---
 
