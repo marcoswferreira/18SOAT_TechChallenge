@@ -401,6 +401,7 @@ A documentação detalhada de **Domain-Driven Design** e **Arquitetura (C4 Model
 | **[C3 — Cliente e Veículo](docs/architecture/c3-cliente-veiculo.md)** | **C4 Nível 3** | Diagrama de Componentes por camadas Clean Architecture, validações e LGPD |
 | **[C3 — Ordem de Serviço](docs/architecture/c3-ordem-servico.md)** | **C4 Nível 3** | Diagrama C3 da Ordem de Serviço, catálogo de componentes e fluxos |
 | **[C3 — Gerenciamento de Estado](docs/architecture/c3-gerenciamento-estado.md)** | **C4 Nível 3** | Diagrama C3 da Máquina de Estados da OS, regras de transição e auditoria |
+| **[C3 — Estoque](docs/architecture/c3-estoque.md)** | **C4 Nível 3** | Diagrama C3 do Estoque: itens (peças/insumos), entrada de saldo e reserva/baixa pela OS |
 | **[Arquitetura da Solução](docs/ddd/architecture.md)** | Visão Geral | Decisões arquiteturais, camadas, catálogo de casos de uso e roadmap |
 | **[Linguagem Ubíqua](docs/ddd/linguagem-ubiqua.md)** | DDD | Vocabulário padronizado compartilhado entre especialistas de negócio e devs |
 | **[Domain Storytelling](docs/ddd/domain-storytelling.md)** | DDD | Narrativas e diagramas dos fluxos operacionais da oficina (*Cenários 1, 2 e 3*) |
