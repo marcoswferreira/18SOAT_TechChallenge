@@ -35,21 +35,19 @@ flowchart TD
 
         %% Camada Aplicação
         subgraph CamadaAplicacao ["Camada Aplicação [Container]"]
-            CasosUsoVeic["Casos de Uso\n[Veiculo]\nOrquestra as operações de\ngestão de veículos."]:::component
-            CasosUsoCli["Casos de Uso\n[Cliente]\nOrquestra as operações de\ngestão de clientes."]:::component
+            CasosUsoServicos["Casos de Uso\n[Servico]\nOrquestra as operações de\ntipos de serviços."]:::component
         end
 
         %% Camada Domínio
         subgraph CamadaDominio ["Camada Domínio [Container]"]
-            DominioVeic["Domínio\n[Veículo]\nRepresenta as regras e os\nconceitos de negócio dos veículos."]:::component
-            DominioCli["Domínio\n[Cliente]\nRepresenta as regras e os conceitos\nde negócio dos clientes."]:::component
+            DominioVeic["Domínio\n[Servico]\nRepresenta as regras e os\nconceitos dos serviços."]:::component
+            
         end
 
         %% Camada Infraestrutura
         subgraph CamadaInfra ["Camada Infraestrutura [Container]"]
-            PersistenciaVeic["Persistência\n[Veiculos]\nImplementa o acesso e a\npersistência dos dados de veículos."]:::component
-            PersistenciaCli["Persistência\n[Clientes]\nImplementa o acesso e a\npersistência dos dados de clientes."]:::component
-            EFCore["Entity Framework Core\n[Entity Framework]\nMapeamento objeto-relacional (ORM)\ne conversões de criptografia LGPD"]:::component
+            PersistenciaServico["Persistência\n[Servico]\nImplementa o acesso e a\npersistência dos serviços."]:::component
+            EFCore["Entity Framework Core\n[Entity Framework]\nMapeamento objeto-relacional (ORM)"]:::component
         end
 
     end
@@ -60,12 +58,10 @@ flowchart TD
     %% Relações e Fluxo (exatamente conforme o modelo C3)
     Usuario -->|"HTTP / REST\n(JSON, Bearer Token)"| ServicosController
 
-    ControllerVeic -->|"Invoca operações"| CasosUsoVeic
+    ControllerServicos -->|"Invoca operações"| CasosUsoServicos
 
-    CasosUsoVeic -->|"Executa regras de negócio"| DominioVeic
+    CasosUsoServicos -->|"Executa regras de negócio"| DominioServicos
   
-    DominioVeic -->|"Persistência via Portas"| PersistenciaVeic
-    
     PersistenciaVeic -->|"Operações de dados"| EFCore
    
     EFCore -->|"SQL / TCP 5432"| DB
@@ -90,7 +86,7 @@ flowchart TD
 
 | Componente | Casos de Uso Implementados | Responsabilidade |
 | :--- | :--- | :--- |
-| **`Casos de Uso [Servico]`** | • `CreateServicoUseCase`<br>• `GetServicoByIdUserCase`<br>• `GetServicoPagedUseCase`<br>• `UpdateServicoUseCase`<br>• `DeleteServicoUseCase` coordenação de transações e transformação de entidades em DTOs mascarados. |
+| **`Casos de Uso [Servico]`** | • `CreateServicoUseCase`<br>• `GetServicoByIdUserCase`<br>• `GetServicoPagedUseCase`<br>• `UpdateServicoUseCase`<br>• `DeleteServicoUseCase` <br> coordenação de transações e transformação de entidades em DTOs mascarados. |
 
 ### 3.3. Camada de Domínio (`src/Domain`)
 
