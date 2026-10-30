@@ -54,9 +54,9 @@ flowchart TD
     DB[("SIAES_DB\n[Container: PostgreSQL 16]\nBanco de dados relacional do sistema SIAES\nTabelas Serviços com índices únicos")]:::db
 
     %% Relações e Fluxo (exatamente conforme o modelo C3)
-    Usuario -->|"HTTP / REST\n(JSON, Bearer Token)"| ControllerServicos
+    Usuario -->|"HTTP / REST\n(JSON, Bearer Token)"| ControllerServico
 
-    ControllerServicos -->|"Invoca operações"| CasosUsoServico
+    ControllerServico -->|"Invoca operações"| CasosUsoServico
 
     CasosUsoServico -->|"Executa regras de negócio"| DominioServico
 
