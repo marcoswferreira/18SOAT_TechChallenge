@@ -30,7 +30,6 @@ flowchart TD
         %% Camada de Apresentação
         subgraph CamadaApresentacao ["Camada Apresentação"]
             ControllerServico["Controller de Serviços\n[Servico]\nRecebe requisições HTTP e\nencaminha as operações."]:::component
-            
         end
 
         %% Camada Aplicação
@@ -41,7 +40,6 @@ flowchart TD
         %% Camada Domínio
         subgraph CamadaDominio ["Camada Domínio [Container]"]
             DominioVeic["Domínio\n[Servico]\nRepresenta as regras e os\nconceitos dos serviços."]:::component
-            
         end
 
         %% Camada Infraestrutura
@@ -49,7 +47,6 @@ flowchart TD
             PersistenciaServico["Persistência\n[Servico]\nImplementa o acesso e a\npersistência dos serviços."]:::component
             EFCore["Entity Framework Core\n[Entity Framework]\nMapeamento objeto-relacional (ORM)"]:::component
         end
-
     end
 
     %% Banco de Dados Externo
