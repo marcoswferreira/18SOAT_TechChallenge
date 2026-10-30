@@ -2,7 +2,7 @@
 
 Este documento descreve a arquitetura do subsistema de **Serviço** no sistema **SIAES**, apresentando o **Diagrama de Componentes (C3 do modelo C4)** que detalha as camadas de software da API Backend, a organização do casos de uso, as regras do domínio e a persistência.
 
-O modelo segue fielmente a estrutura e a representação de camadas definida no arquivo [`C4_ClientesVeiculos_Component_C3.drawio`](drawio/C4_ClientesVeiculos_Component_C3.drawio).
+O modelo segue fielmente a estrutura e a representação de camadas definida no arquivo [`C4_Servicos_Component_C3.drawio`](drawio/C4_Servicos_Component_C3.drawio).
 
 ---
 
@@ -22,14 +22,14 @@ No modelo C4, o diagrama **C3 (Component)** detalha a organização interna do c
 ```mermaid
 flowchart TD
     %% Ator / Consumidor
-    Usuario["Usuários da Oficina\n[Persons]\nAtendentes e Administradores"]:::person
+    Usuario["Administradores"]:::person
 
     %% Fronteira do Sistema SIAES (API Backend)
     subgraph SIAESBoundary ["SIAES [API Backend — ASP.NET Core]"]
         
         %% Camada de Apresentação
         subgraph CamadaApresentacao ["Camada Apresentação"]
-            ControllerVeic["Controller de Veículos\n[Veiculo]\nRecebe requisições HTTP e\nencaminha as operações."]:::component
+            ControllerServico["Controller de Serviços\n[Servico]\nRecebe requisições HTTP e\nencaminha as operações."]:::component
             
         end
 
