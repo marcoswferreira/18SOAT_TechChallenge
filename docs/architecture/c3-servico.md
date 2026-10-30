@@ -22,47 +22,48 @@ No modelo C4, o diagrama **C3 (Component)** detalha a organização interna do c
 ```mermaid
 flowchart TD
     %% Ator / Consumidor
-    Usuario["Administradores"]:::person
+    Usuario["Administrador da Oficina\n[Persons]\Administradores"]:::person
 
     %% Fronteira do Sistema SIAES (API Backend)
     subgraph SIAESBoundary ["SIAES [API Backend — ASP.NET Core]"]
         
         %% Camada de Apresentação
         subgraph CamadaApresentacao ["Camada Apresentação"]
-            ControllerServico["Controller de Serviços\n[Servico]\nRecebe requisições HTTP e\nencaminha as operações."]:::component
+            ControllerServico["Controller de Serviços\n[Servicos]\nRecebe requisições HTTP e\nencaminha as operações."]:::component
         end
 
         %% Camada Aplicação
         subgraph CamadaAplicacao ["Camada Aplicação [Container]"]
-            CasosUsoServicos["Casos de Uso\n[Servico]\nOrquestra as operações de\ntipos de serviços."]:::component
+            CasosUsoServico["Casos de Uso\n[Servico]\nOrquestra as operações de\ngestão dos tipos de serviços oferecidos."]:::component
         end
 
         %% Camada Domínio
         subgraph CamadaDominio ["Camada Domínio [Container]"]
-            DominioServico["Domínio\n[Servico]\nRepresenta as regras e os\nconceitos dos serviços."]:::component
+            DominioServico["Domínio\n[Servico]\nRepresenta as regras e os\nconceitos dos tipos de serviços oferecidos."]:::component
         end
 
         %% Camada Infraestrutura
         subgraph CamadaInfra ["Camada Infraestrutura [Container]"]
-            PersistenciaServico["Persistência\n[Servico]\nImplementa o acesso e a\npersistência dos serviços."]:::component
-            EFCore["Entity Framework Core\n[Entity Framework]\nMapeamento objeto-relacional (ORM)"]:::component
+            PersistenciaServico["Persistência\n[Servico]\nImplementa o acesso e a\npersistência dos tipos de serviços oferecidos."]:::component
+            EFCore["Entity Framework Core\n[Entity Framework]\nMapeamento objeto-relacional (ORM)\ne conversões de criptografia LGPD"]:::component
         end
+
     end
 
     %% Banco de Dados Externo
-    DB[("SIAES_DB\n[Container: PostgreSQL 16]\nBanco de dados relacional do sistema SIAES\nTabela Servico com índice único")]:::db
+    DB[("SIAES_DB\n[Container: PostgreSQL 16]\nBanco de dados relacional do sistema SIAES\nTabelas Serviços com índices únicos")]:::db
 
     %% Relações e Fluxo (exatamente conforme o modelo C3)
     Usuario -->|"HTTP / REST\n(JSON, Bearer Token)"| ControllerServicos
 
     ControllerServicos -->|"Invoca operações"| CasosUsoServicos
 
-    CasosUsoServicos -->|"Executa regras de negócio"| DominioServico
-  
-    DominioServico -->|"Operações de dados"| PersistenciaServico
+    CasosUsoServicos -->|"Executa regras de negócio"| DominioServicos
 
-    PersistenciaServico -->|"Operações de dados"| EFCore
-   
+    DominioServicos -->|"Persistência via Portas"| PersistenciaServicos
+
+    PersistenciaServicos -->|"Operações de dados"| EFCore
+
     EFCore -->|"SQL / TCP 5432"| DB
 
     %% Estilos visuais C4 (alinhados ao Draw.io)
