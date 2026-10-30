@@ -14,13 +14,13 @@
 - [Arquitetura](#-arquitetura)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
 - [Pré-requisitos](#-pré-requisitos)
-- [Instruções para Execução](#-instruções-para-execução)
+- [Instruçõe Gerais para Execução](#-instruções-gerais-para-execução)
 - [Instruções para Execução dos Testes](#-instruções-para-execução-dos-testes)
 - [Documentação da API (Swagger & Endpoints)](#-documentação-da-api-swagger--endpoints)
 - [Banco de Dados — Decisão e Justificativa (ADR 001)](#-banco-de-dados--decisão-e-justificativa-adr-001)
 - [Autenticação e Credenciais de Demonstração](#-autenticação-e-credenciais-de-demonstração)
 - [Estrutura do Projeto](#-estrutura-do-projeto)
-- [Documentação DDD](#-documentação-ddd)
+- [Documentação DDD e C4 Model](#-documentação-ddd-e-arquitetura-c4-model)
 - [Vídeo da Entrega](#-vídeo-da-entrega)
 - [Autores](#-autores)
 
@@ -182,7 +182,9 @@ Para executar e testar a aplicação em ambiente local:
 
 ---
 
-## ▶️ Instruções para Execução
+## 🧪 Instruções Gerais para Execução
+
+Instruções gerais para execução
 
 ### 1. Clonar o repositório
 
