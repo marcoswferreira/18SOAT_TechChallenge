@@ -39,7 +39,7 @@ flowchart TD
 
         %% Camada Domínio
         subgraph CamadaDominio ["Camada Domínio [Container]"]
-            DominioVeic["Domínio\n[Servico]\nRepresenta as regras e os\nconceitos dos serviços."]:::component
+            DominioServico["Domínio\n[Servico]\nRepresenta as regras e os\nconceitos dos serviços."]:::component
         end
 
         %% Camada Infraestrutura
@@ -55,11 +55,13 @@ flowchart TD
     %% Relações e Fluxo (exatamente conforme o modelo C3)
     Usuario -->|"HTTP / REST\n(JSON, Bearer Token)"| ControllerServicos
 
-    ControllerServicos -->|"Invoca operações"| CamadaAplicacao
+    ControllerServicos -->|"Invoca operações"| CasosUsoServicos
 
-    CamadaAplicacao -->|"Executa regras de negócio"| CamadaDominio
+    CasosUsoServicos -->|"Executa regras de negócio"| DominioServico
   
-    CamadaDominio -->|"Operações de dados"| EFCore
+    DominioServico -->|"Operações de dados"| PersistenciaServico
+
+    PersistenciaServico -->|"Operações de dados"| EFCore
    
     EFCore -->|"SQL / TCP 5432"| DB
 
