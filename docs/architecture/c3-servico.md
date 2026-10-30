@@ -56,13 +56,13 @@ flowchart TD
     %% Relações e Fluxo (exatamente conforme o modelo C3)
     Usuario -->|"HTTP / REST\n(JSON, Bearer Token)"| ControllerServicos
 
-    ControllerServicos -->|"Invoca operações"| CasosUsoServicos
+    ControllerServicos -->|"Invoca operações"| CasosUsoServico
 
-    CasosUsoServicos -->|"Executa regras de negócio"| DominioServicos
+    CasosUsoServico -->|"Executa regras de negócio"| DominioServico
 
-    DominioServicos -->|"Persistência via Portas"| PersistenciaServicos
+    DominioServico -->|"Persistência via Portas"| PersistenciaServico
 
-    PersistenciaServicos -->|"Operações de dados"| EFCore
+    PersistenciaServico -->|"Operações de dados"| EFCore
 
     EFCore -->|"SQL / TCP 5432"| DB
 
