@@ -17,6 +17,7 @@ A arquitetura do SIAES segue a metodologia **C4 Model** (Contexto, Contêineres 
 | **[C3 — Cliente e Veículo](architecture/c3-cliente-veiculo.md)** | **Nível 3 (Component)** | Diagrama de Componentes C3 alinhado ao Clean Architecture: Controllers, Casos de Uso, Domínio, Persistência e conformidade LGPD |
 | **[C3 — Ordem de Serviço](architecture/c3-ordem-servico.md)** | **Nível 3 (Component)** | Diagrama C3 detalhando os componentes do contêiner API que sustentam o agregado Ordem de Serviço, estoque e mensageria |
 | **[C3 — Gerenciamento de Estado](architecture/c3-gerenciamento-estado.md)** | **Nível 3 (Component)** | Diagrama C3 da Máquina de Estados da OS, regras de transição, invariantes, auditoria em banco relacional e exceções |
+| **[C3 — Estoque](architecture/c3-estoque.md)** | **Nível 3 (Component)** | Diagrama C3 do Estoque: cadastro de itens (peças/insumos), entrada de saldo, reserva/liberação/baixa pela OS, concorrência otimista e carga inicial |
 | **[Arquitetura e Estrutura da Solução](ddd/architecture.md)** | Visão Geral | Padrão Clean Architecture, divisão em camadas, regras de dependência, catálogo de casos de uso e testes |
 
 > 📁 **Arquivos nativos editáveis do Draw.io** disponíveis na pasta [`docs/architecture/drawio/`](architecture/drawio/):
@@ -25,6 +26,7 @@ A arquitetura do SIAES segue a metodologia **C4 Model** (Contexto, Contêineres 
 > - [`C4_ClientesVeiculos_Component_C3.drawio`](architecture/drawio/C4_ClientesVeiculos_Component_C3.drawio) — Componentes de Cliente e Veículo (C3)
 > - [`C4_OrdemServico_Component_C3.drawio`](architecture/drawio/C4_OrdemServico_Component_C3.drawio) — Componentes de Ordem de Serviço (C3)
 > - [`C4_GerenciamentoEstado_Component_C3.drawio`](architecture/drawio/C4_GerenciamentoEstado_Component_C3.drawio) — Componentes do Gerenciamento de Estado / FSM (C3)
+> - [`C4_Estoque_Component_C3.drawio`](architecture/drawio/C4_Estoque_Component_C3.drawio) — Componentes de Estoque (C3)
 
 ---
 
@@ -50,7 +52,6 @@ A arquitetura do SIAES segue a metodologia **C4 Model** (Contexto, Contêineres 
 
 | Recurso | Localização | Descrição |
 | :--- | :--- | :--- |
-| **OpenAPI / Swagger** | [`docs/swagger.json`](swagger.json) | Especificação OpenAPI 3.0 exportada da aplicação com 100% dos contratos e schemas |
 | **Collection Insomnia (Nativa)** | [`docs/insomnia/Insomnia_SIAES_Collection.json`](insomnia/Insomnia_SIAES_Collection.json) | Suíte E2E nativa do Insomnia com 51 requisições encadeadas e variáveis dinâmicas |
 | **Guia Insomnia** | [`docs/insomnia/README.md`](insomnia/README.md) | Instruções para importar e rodar a suíte no Insomnia |
 | **Collection Postman / Insomnia** | [`docs/insomnia/Postman_SIAES_Collection.json`](insomnia/Postman_SIAES_Collection.json) | Formato Postman v2.1 importável no Insomnia com scripts de teste |
