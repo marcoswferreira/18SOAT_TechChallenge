@@ -2,8 +2,6 @@
 
 ## Tech Challenge — Fase 1 (Entrega Final)
 
----
-
 ### 1. Identificação da Entrega
 
 | Campo | Informação |
@@ -34,7 +32,7 @@
 * **Link do Repositório GitHub**: [https://github.com/marcoswferreira/18SOAT_TechChallenge](https://github.com/marcoswferreira/18SOAT_TechChallenge)
 * **Status do Repositório**: Público
 * **Branch de Entrega**: `main`
-* **Commit Hash da Versão Final**: `29d6cfd` (ou versão tag correspondente)
+* **Commit Hash da Versão Final**: `a4c2102` (ou versão tag correspondente)
 * **Políticas de Proteção de Branch**: A branch `main` é estritamente protegida; todas as alterações foram consolidadas via **Pull Requests revisados**, passando por validação de build, testes automatizados e análise de código no GitHub Actions.
 
 ---

@@ -1,0 +1,8 @@
+{
+  "markdown-pdf.sanitize": "gfm-allow-style",
+  "markdown-pdf.format": "A4",
+  "markdown-pdf.margin.top": "1.5cm",
+  "markdown-pdf.margin.bottom": "1.5cm",
+  "markdown-pdf.margin.left": "1.5cm",
+  "markdown-pdf.margin.right": "1.5cm"
+}
