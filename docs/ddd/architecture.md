@@ -58,6 +58,7 @@ A arquitetura do sistema foi modelada seguindo os níveis do **C4 Model**:
 - **[C3 — Cliente e Veículo](../architecture/c3-cliente-veiculo.md)**: Diagrama C3 estruturado por camadas Clean Architecture (Controllers -> Casos de Uso -> Domínio -> Persistência -> EF Core -> PostgreSQL), validações e LGPD.
 - **[C3 — Ordem de Serviço](../architecture/c3-ordem-servico.md)**: Diagrama C3 detalhando controladores, casos de uso de ciclo de vida e consulta, entidades e adaptadores do agregado central da oficina.
 - **[C3 — Gerenciamento de Estado (Status)](../architecture/c3-gerenciamento-estado.md)**: Diagrama C3 da Máquina de Estados da OS, invariantes de domínio, persistência do histórico relacional e auditoria imutável.
+- **[C3 — Serviço](../architecture/c3-servico.md)**: Diagrama C3 detalhando controladores, casos de uso de ciclo de vida e consulta, entidades e adaptadores dos serviços oferecidos pela oficina.
 
 > Os diagramas originais editáveis do Draw.io estão disponíveis na pasta [`docs/architecture/drawio/`](../architecture/drawio/).
 
